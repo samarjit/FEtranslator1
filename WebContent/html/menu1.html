@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+  <!--link rel="stylesheet" href="http://www.sitepoint.com/examples/megadropdowns/styles.css" type="text/css" /-->
+<style type="text/css">
+ul#menu li{
+float:left;
+}
+
+ ul#menu li {  
+  display: inline;  
+  position: relative;  
+} 
+ul#menu div {  
+  display: none;  
+}  
+ul#menu li.mega div {  
+  width: 18em;  
+  position: absolute;  
+  top: 1.6em;  
+  left: 0em;  
+}  
+ul#menu li.hovering div {  
+  display: block;  
+}  
+
+</style>
+
+
+ <script src="file:///C:/work/lib/javascript/jquery-ui-1.8.4.custom/js/jquery-1.4.2.min.js"></script>
+ <script src="file:///C:/work/lib/javascript/jquery-ui-1.8.4.custom/js/jquery-ui-1.8.4.custom.min.js"></script>
+ <script src="file:///C:/work/lib/javascript/jquery.validate.js"></script>
+ <script type="text/javascript" src="C:/Eclipse/workspace1/UserManagement/WebContent/js/jquery.hoverIntent.js"></script>
+ </HEAD>
+<script type="text/javascript">
+<!--
+$(document).ready(function(){
+  
+function addMega(){  
+  $(this).addClass("hovering");  
+  }  
+function removeMega(){  
+  $(this).removeClass("hovering");  
+  }  
+  
+  var megaConfig = {      
+     interval: 50,  
+     sensitivity: 4,  
+	 over: addMega,  
+	 timeout: 50,  
+	out: removeMega  
+};
+
+$("li.mega").hoverIntent(megaConfig)  
+ 
+  });
+//-->
+</script>
+ <BODY>
+ <input type="button" value="button" onclick="fn();" />
+  <ul id="menu">  
+  <li><a href="#">Home</a></li>  
+  <li class="mega">  
+  <h2>  
+    <a href="#">Stuff for him</a>  
+  </h2>  
+  <div>  
+      <h3>  
+        Menswear  
+      </h3>  
+      <p>  
+        <a href="#">Shirts</a>,   
+        <a href="#">T-shirts</a>,   
+        <a href="#">Accessories</a>,  
+        <a href="#">More...</a>  
+      </p>  
+      <h3>  
+        Gifts  
+      </h3>  
+      <p>  
+        <a href="#">Sporting goods</a>,   
+        <a href="#">Gadgets</a>,   
+        <a href="#">More...</a>  
+      </p>  
+      <h3>  
+        Clearance!  
+      </h3>  
+      <p>  
+        40% off all photo accessories   
+        this weekend only.   
+        <a href="#">Don't miss out!</a>  
+      </p>  
+    <a href="#" class="more">  
+      More stuff for him...</a>  
+  </div>  
+</li>  
+  <li><a href="#">Stuff for her</a></li>  
+  <li><a href="#">Stuff for kids</a></li>  
+  <li><a href="#">Stuff for pets</a></li>  
+</ul>
+
+
+
+ </BODY>
+</HTML>

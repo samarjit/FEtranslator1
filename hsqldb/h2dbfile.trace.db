@@ -1,0 +1,88 @@
+02-17 10:24:18 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "INSERT INTO TEST VALUES('sam','2010-12-12 00:00:00.000000')
+INSERT[*] INTO TEST2 VALUES('sam','2010-12-12')
+INSERT INTO TEST2 VALUES('sam sam','2011-02-14')
+INSERT INTO PROGRAMDETAILS VALUES('NewProg','NwProg desc','SINGAPORE')
+INSERT INTO PROGRAMDETAILS VALUES('NewProg','NwProg desc','SINGAPORE')
+INSERT INTO PROGRAMDETAILS VALUES('NewProg','NwProg desc','SINGAPORE')
+INSERT INTO PROGRAMDETAILS VALUES('NewProg','NwProg desc','SINGAPORE')
+INSERT INTO PROGRAMDETAILS VALUES('NewCard','Some desc','AUSTRALIA')
+INSERT INTO PROGRAMDETAILS VALUES('TRACARD','Travel Card Program','INDIA')
+INSERT INTO PROGRAMDETAILS VALUES('NewCard','Some desc','AUSTRALIA')
+INSERT INTO PROGRAMDETAILS VALUES('LOYCARD','Loyalty Card Program','PHILIPPINES')"; SQL statement:
+INSERT INTO TEST VALUES('sam','2010-12-12 00:00:00.000000')
+INSERT INTO TEST2 VALUES('sam','2010-12-12')
+INSERT INTO TEST2 VALUES('sam sam','2011-02-14')
+INSERT INTO PROGRAMDETAILS VALUES('NewProg','NwProg desc','SINGAPORE')
+INSERT INTO PROGRAMDETAILS VALUES('NewProg','NwProg desc','SINGAPORE')
+INSERT INTO PROGRAMDETAILS VALUES('NewProg','NwProg desc','SINGAPORE')
+INSERT INTO PROGRAMDETAILS VALUES('NewProg','NwProg desc','SINGAPORE')
+INSERT INTO PROGRAMDETAILS VALUES('NewCard','Some desc','AUSTRALIA')
+INSERT INTO PROGRAMDETAILS VALUES('TRACARD','Travel Card Program','INDIA')
+INSERT INTO PROGRAMDETAILS VALUES('NewCard','Some desc','AUSTRALIA')
+INSERT INTO PROGRAMDETAILS VALUES('LOYCARD','Loyalty Card Program','PHILIPPINES') [42000-148]
+02-17 10:48:12 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "CREATE ALIAS TO_CHAR AS    
+import java.text.SimpleDateFormat;
+import java.util.Date;
+@CODE
+ String toChar(String date, String pattern) throws Exception { 
+		pattern = pattern.replaceAll(""YY"",""yy"");
+		pattern = pattern.replaceAll(""DD"",""dd"");
+		pattern = pattern.replaceAll(""HH24|hh24"",""HH"");
+		pattern = pattern.replaceAll(""HH?!24|hh?!24"",""KK"");
+		pattern = pattern.replaceAll(""MON|mon"",""MMM"");
+		pattern = pattern.replaceAll(""mm"",""MM"");
+		pattern = pattern.replaceAll(""MI|mi"",""mm"");
+		pattern = pattern.replaceAll(""SS|ss"",""ss"");
+		pattern = pattern.replaceAll(""AM|PM"",""aa"");
+		System.out.println(pattern);
+		SimpleDateFormat sm = new SimpleDateFormat(pattern);
+		java.util.Date dt; 
+		  	if(date.length() > 10)dt = java.sql.Timestamp.valueOf(date);
+			else
+			 dt = java.sql.Date.valueOf(date);
+		  	return sm.format(dt); 
+		 
+	} 
+  
+
+SELECT[*] TO_CHAR(BDAY,'dd/mm/yyyy hh24:mi:ss AM') FROM TEST "; SQL statement:
+create alias TO_CHAR as $$ 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+@CODE
+ String toChar(String date, String pattern) throws Exception { 
+		pattern = pattern.replaceAll("YY","yy");
+		pattern = pattern.replaceAll("DD","dd");
+		pattern = pattern.replaceAll("HH24|hh24","HH");
+		pattern = pattern.replaceAll("HH?!24|hh?!24","KK");
+		pattern = pattern.replaceAll("MON|mon","MMM");
+		pattern = pattern.replaceAll("mm","MM");
+		pattern = pattern.replaceAll("MI|mi","mm");
+		pattern = pattern.replaceAll("SS|ss","ss");
+		pattern = pattern.replaceAll("AM|PM","aa");
+		System.out.println(pattern);
+		SimpleDateFormat sm = new SimpleDateFormat(pattern);
+		java.util.Date dt; 
+		  	if(date.length() > 10)dt = java.sql.Timestamp.valueOf(date);
+			else
+			 dt = java.sql.Date.valueOf(date);
+		  	return sm.format(dt); 
+		 
+	} 
+$$
+
+select TO_CHAR(bday,'dd/mm/yyyy hh24:mi:ss AM') from test [42000-148]
+02-18 12:47:24 jdbc[2]: connection not closed
+java.lang.Exception: Stack Trace
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:121)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:94)
+	at org.h2.Driver.connect(Driver.java:62)
+	at org.h2.server.web.WebServer.getConnection(WebServer.java:636)
+	at org.h2.server.web.WebApp.login(WebApp.java:895)
+	at org.h2.server.web.WebApp.process(WebApp.java:205)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:164)
+	at org.h2.server.web.WebThread.process(WebThread.java:137)
+	at org.h2.server.web.WebThread.run(WebThread.java:93)
+	at java.lang.Thread.run(Thread.java:619)

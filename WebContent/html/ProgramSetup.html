@@ -1,0 +1,495 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD Xhtml 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+ 
+<html>
+ <head>
+  <title>Program Details</title>
+  <meta name="Generator" content="EditPlus" />
+  <meta name="Autdor" content="" />
+  <meta name="Keywords" content="" />
+  <meta name="Description" content="" />
+  <meta name="charset" content="utf-8" />
+  <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
+<link type="text/css" href="../css/jquery-ui-1.8.8.custom.css" rel="stylesheet" /> 
+<link href="../css/main.css" rel="stylesheet" type="text/css">
+<link href="../css/body.css" rel="stylesheet" type="text/css">
+ 
+ 
+
+ <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
+ 
+ 
+<script  src="../js/jquery-1.4.4.min.js"></script>
+<script  src="../js/jquery.validate.js"></script>
+<script type="text/javascript" src="../js/fg.menu.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.js"></script>
+<script type="text/javascript" src="../js/jsonStringify.js"></script>
+<script type="text/javascript" src="../js/iadtframework.js"></script>
+
+ 
+<script type="text/javascript">
+ 
+var rule={
+		rules:{
+			programname: {
+				required: true
+			},
+			issuername:{
+				required : true	
+			},
+			txtnewprogname:{
+				required: true
+			}
+			
+		},
+		messages:{
+			programname: {
+				required: "Program Name is required"
+			},
+			issuername:{
+				required : "Issuer Name is required"	
+			} 
+		}
+	};
+
+var formvalidator = null;	
+$(document).ready(function(){
+    formvalidator = $("#form1").validate(rule);
+	createMenu();
+	iadt.setFieldlist(fieldlist);
+		 
+  });
+
+ 
+ function callsubmit(){
+ 	document.forms[0].submit();
+ }
+
+ 
+function initial()
+{
+
+}
+function clearall() {
+	
+	formvalidator.resetForm();
+	//$('#from1').reset();
+}
+
+/**
+ * Callback from iadt.copySeltohidden()
+ */
+function  populateFieldsToModify(){
+  if($("#programname").val() == 'New'){
+ 	   $('#txtstatus').val("New");
+ 	  $('#btnModify').attr("disabled","disabled");
+ 	  iadt.setScreenMode("addrow");
+  }else {
+	  $("#issuername").val("HSBC Bank");
+      if($("#programname").val() == 'LOYCARD') $("#txtprogramdesc").val("Loyalty Card Program");
+      if($("#programname").val() == 'TRACARD') $("#txtprogramdesc").val("Travel Card Program");
+	  $("#countryofissue").val("SINGAPORE");
+	  $('#txtstatus').val("Modify");
+	  $('#btnModify').removeAttr("disabled");
+	  $('#btnAdd').attr("disabled","disabled");
+	  //iadt.setScreenMode("updaterow");
+  }
+}
+
+
+
+function onAdd (formid) {
+	if(!$(formid).valid())return;
+
+	 if(screenMode == 'addrow')
+		iadt.addrow(formid);
+ 
+	 
+	iadt.setScreenMode("addrow");
+	enableDisableFlds();
+}
+
+
+function onModify (formid) {
+	if(!$(formid).valid())return;
+    $("#txtstatus").val('Modify');
+    
+	 if(screenMode == 'addrow')
+	iadt.addrow(formid);
+	 
+	 if(screenMode == 'updaterow')
+	iadt.updaterow(formid);
+	
+	iadt.setScreenMode("addrow");
+	enableDisableFlds();
+}
+
+function onClose (formid) {
+	if(!$(formid).valid())return;
+	if(confirm("Do you really want to close the program? Press ok to confirm otherwise press Cancel")==false) return;
+	$("#txtstatus").val('Close');
+	 if(screenMode == 'addrow')
+	 iadt.addrow(formid);
+	 
+	 if(screenMode == 'updaterow')
+	iadt.updaterow(formid);
+	 
+	 iadt.setScreenMode("addrow");
+	 enableDisableFlds();
+}
+function onCancel() {
+	iadt.setScreenMode("addrow");
+	enableDisableFlds();
+	clearall();
+}
+
+function onSearch(){
+	//Dummy data$('#multiplerows .trlightgrey').parent().append($('#searchtemp').find('tr').parent().html());
+	var submitdata = {whereval:"NewCard"};
+	var submitstring = JSONstring.make(submitdata);
+	jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata=[{command='jsonrpc',data={whereval:'LOYCARD'}}]",function (data){
+		alert(data);
+	var json = jQuery.parseJSON(data);
+		if(json != null){
+			json = json.data.form1;
+			 var templateResult = {};
+			var tablehtml = '<table width="100%" class="table1" ><tr>';
+			$.each(json,function (i,v){
+				var templatedata = $(iadt.options.listtemplate).html();
+				   templateResult = 	$.tmpl(templatedata,v);
+				tablehtml+=templateResult.find("tr").parent().html();
+			});
+			tablehtml +="</table>";		
+			$('body').append(tablehtml);
+		}
+	
+	});
+
+	
+}
+function onViewDetails(){
+if(	$('#multiplerows .trlightgrey').siblings().find('input[type=radio]:checked').length > 0)
+	location.href = 'ProgramSetupViewDetails.html';
+else 
+	iadt.showMessage("Please select a record to view details");
+}
+
+function deleteMe ( objthis) {
+	$(objthis.parentNode.parentNode.parentNode).remove();
+	iadt.setScreenMode("addrow");
+	enableDisableFlds();
+}
+
+
+
+
+function editMe ( objthis, radClickCallback) {
+	//get the radio
+	 $('input[type=radio]',objthis.parentNode.parentNode.parentNode).attr("checked","checked");
+	
+	 $('#btnAdd').attr('disabled','disabled'); 
+	 $('#btnModify').removeAttr('disabled');
+	 iadt.populateToFields($(objthis.parentNode.parentNode.parentNode).get(0), radClickCallback);
+	
+}
+
+/**
+*deprecated only delete icon will be used
+*/
+function onDelete (formid) {
+	if(!$(formid).valid())return;
+	
+	var arList =  iadt.getFieldlist();
+	var selectedRadio =$(iadi.options.divlist+' input[type=radio]:checked');
+	var selectedIndex = selectedRadio.val(); 
+	if (typeof(selectedIndex) == 'undefined') {
+		iadt.showMessage("Please select a record to delete");
+		return;
+	}
+	//remove all <td> tags
+	var TRref = selectedRadio.parent().parent();
+	selectedRadio.parent().parent().remove();
+	refreshHoverIcon (); 
+}
+
+function radClick (obj, radClickCallback) {
+	$('#btnAdd').attr('disabled','disabled'); 
+    iadt.populateToFields($(obj.parentNode.parentNode).get(0), radClickCallback); 
+	 
+}
+
+/**
+ * Caleld after radClick() event to hide unhide widgets 
+ * @param {Object} obj
+ */
+function radClickCallback (obj) {
+	if($('#programname').val()=='New'){
+		$('#newprog').show();
+	}else{
+		$('#newprog').hide();
+	}
+}
+
+function onSubmit (args) {
+	//document.getElementById("form1").submit();
+	var formdata = {form1:[]};
+	
+	$(iadt.options.divlist).find("tr:gt(0)").each(function(id, obj){
+        var rowobj={};		
+        rowobj["row"] = id;
+ 
+		$("input:gt(0)", this).each(function(i,v){
+			 rowobj[v.name] = v.value;
+			 }); 
+		formdata["form1"].push(rowobj);	 
+	});
+
+	
+	var submitdata = "screenName=ProgramSetup&submitdata="+JSONstring.make(formdata);
+	$('#form2')[0].action = "programsetupsave.action";
+//	$('#form2').append("<input type='hidden' id='submitdata' name='submitdata' />");
+//	$('#submitdata').val(submitdata);
+	 
+	$.get("programsetupsave.action",submitdata, prgsubmitCallback);
+	 
+}
+
+function prgsubmitCallback (data) {
+	iadt.showMessage("Data saved successfully" + data);
+}
+
+function onNext (args) {
+	location.href = 'BinGroup.html';
+}
+
+function enableDisableFlds() {
+	if(screenMode == 'updaterow' && $('#txtstatus').val() == 'New'){
+	   
+	   var updateonar = fieldlist;
+		for ( var i = 0; i < updateonar.length; i++) {
+			var arelm = updateonar[i];
+			jQuery("#"+ arelm).attr('disabled','disabled');
+		}
+	}else if(screenMode == 'updaterow' && $('#txtstatus').val() == 'Modify'){
+	   var updateonar = keylist;
+	  for ( var i = 0; i < updateonar.length; i++) {
+			var arelm = updateonar[i];
+			jQuery("#"+ arelm).attr('disabled','disabled');
+		}
+	}
+	if(screenMode == 'addrow'){
+	    $('#btnAdd').removeAttr('disabled'); 
+	    $.each(fieldlist, function(i,v){
+	    	$("#"+v).val("");
+	    });
+	}
+	 
+}
+
+
+
+
+
+function setScreenMode(s) {
+	$('.head2 .screenMode').text("Screen Mode: "+s);
+	screenMode = s;
+}
+var fieldlist = "programname,txtnewprogname,txtprogramdesc,issuername,countryofissue,txtstatus".split(",");
+
+var keylist = "programname,txtnewprogname,txtstatus".split(",");
+
+</script>
+</head>
+ 
+ </head>
+ <body onLoad="initial();">
+ 
+ <div align="center"  class="wrap">	
+ <div class="navbar"><span class="disabled">Logged in as Henry</span> | <span class="enabled">Home</span> | <span class="enabled">Sign-Out</span></div>
+  <div class="shrink">
+		 <div class="menuheader  ">
+		 	
+		   </div>
+   
+ 
+		 <div class="body">
+		 <form id="form1"  >
+		  <div class="displayLabel"><a href="ProgramSetup.html">Program Setup </a>&gt;&gt;<a href="BinGroup.html"> Bin Group</a> &gt;&gt; <a href="BinDetails.html">Bin Details</a></div>
+		  <hr />
+		
+		 <div class="infoBar" style="display:none"></div>
+		 <p>&nbsp;</p>
+		 
+		 
+		 
+		 
+
+ 
+<table class="head2" border="0" cellspacing="0" height="20" cellpadding="0" width="100%">
+	<tr>
+		<td><b>Program details</b></td>
+		<td style="text-align:right;font-weight:normal"><div class="screenMode"> addrow</div> </td>
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="5" class="table">
+	<tr class="even">
+		<td width="400">Program Name <span class="star">*</span></td>
+		<td>
+        <select name="programname" id="programname"  maxlength="50" class="field" onchange="iadt.copySeltohidden(this,'newprog','txtnewprogname',populateFieldsToModify)" >
+        	<option value="">Select</option>
+            <option value="New">New</option>
+            <option value="LOYCARD">Loyalty Card</option>
+            <option value="TRACARD">Travel Card</option>
+         </select>
+         <span id="newprog"  style="display:none;padding-left:10px"> &nbsp;Enter new Program Name 
+         <input name="txtnewprogname" id="txtnewprogname" type="text" class="field"  value=""  /></span>&nbsp;<input  type="hidden" id="hidProgName" name="hidProgName" class="field"/></td>
+	</tr>
+    <tr class="even"><td width="400">Description</td>
+    <td><input type="text" class="field"    name="txtprogramdesc" id="txtprogramdesc" /></td></tr>
+    <tr class="odd" >
+      <td width="400" >Issuer Name <span class="star">*</span></td>
+       <td ><input name="issuername" type="text"  id="issuername" class="field" /></td>
+    </tr>
+    <tr class="odd" >
+      <td width="400" >Country of Issue</td>      
+      <td ><input  style="display:none" class="field" />
+        <select name="countryofissue" maxlength="50" class="field" id="countryofissue">
+        <option value="" selected="selected">Select</option>
+        <option value="INDIA">India</option>
+        <option value="SINGAPORE">Singapore</option>
+        <option value="AUSTRALIA">Australia</option>
+        <option value="PHILIPPINES">Philippines</option>
+        </select>        </td>
+    </tr>
+    <tr class="odd"   >
+      <td width="400" >Status</td>
+      <td ><input name="txtstatus" type="text" class="field" id="txtstatus" value="New" /></td>
+    </tr>
+</table>
+   
+
+<p>&nbsp;</p>
+ 
+
+   
+ 
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td bgcolor="#FFFFFF">&nbsp;</td>
+    </tr>
+  </table>
+  <div id="showsubcan" class="buttonPosition">
+<table  border="0"   >
+
+  <tr>
+         <td    style="cursor:hand">
+             <button class="buttonenabled" type="button"  onclick="onAdd('#form1');" id="btnAdd">Add</button>
+         </td> 
+         <td      style="cursor:hand">
+             <button class="buttonenabled" type="button" onclick="onModify('#form1');"  id="btnModify">Modify</button>
+         </td> 		
+		 <td     style="cursor:hand">
+             <button class="buttonenabled" type="button" onclick="onClose('#form1');" id="btnClose">Close</button>
+         </td> 
+		   <td     style="cursor:hand">
+             <button class="buttonenabled" type="button"   onclick='onCancel();' id="btnCancel">Cancel</button>
+         </td>
+         <td     style="cursor:hand">
+             <button class="buttonenabled" type="button"   onclick='onSearch();' id="btnCancel">Search</button>
+         </td>
+         
+        <td     style="cursor:hand">
+             <button class="buttonenabled" type="button"   onclick='onViewDetails();' id="btnCancel">View Details</button>
+         </td>
+     </tr>
+ </table>
+</div>
+ 
+
+ 
+
+</form>
+
+<div id="listtemplate" cols="200" style="display:none" >
+    	<table><tr class='even'>
+	  <td>
+       <input type='radio' value='${rowcount}' name='check' id='check${rowcount}' onclick='radClick(this,radClickCallback );' />
+	    &nbsp;<span class='icons'><span class='ui-icon ui-icon-pencil' onclick='editMe(this, radClickCallback);' ></span></span>
+	          <span class='icons'><span class='ui-icon ui-icon-closethick' onclick='deleteMe(this)' ></span></span>
+      </td>
+      	<td style='display:none'>${programname}<input type='hidden' value='${programname}' id='programname__${rowcount}' name='programname'/></td>
+  		<td style='display:table-cell'>${txtnewprogname}<input type='hidden' value='${txtnewprogname}' id='txtnewprogname__${rowcount}' name='txtnewprogname'/></td>
+        <td style='display:table-cell'>${txtprogramdesc}<input type='hidden' value='${txtprogramdesc}' id='txtprogramdesc__${rowcount}' name='txtprogramdesc'/></td>
+        <td style='display:table-cell'>${issuername}<input type='hidden' value='${issuername}' id='issuername__${rowcount}' name='issuername'/></td>
+        <td style='display:table-cell'>${countryofissue}<input type='hidden' value='${countryofissue}' id='countryofissue__${rowcount}' name='countryofissue'/></td>
+        <td style='display:table-cell'>${txtstatus}<input type='hidden' value='${txtstatus}' id='txtstatus__${rowcount}' name='txtstatus'/></td>
+        </tr></table>
+</div>
+    
+<form id="form2"  >
+<DIV id=multiplerows>
+    <div class="headerlist" style="display:none;">
+        programname,txtnewprogname,txtprogramdesc,issuername,countryofissue,txtstatus</div>
+		
+    <BR>
+    <TABLE id=tablespace class=table1 border=0 cellSpacing=0 cellPadding=5 width="100%">
+        <TR class=trlightgrey >
+            <th width="6%" align=middle>Select</th>
+            <th width="9%"  style="display:none">Program Select</th>
+            <th width="9%">Prgram Name</th>
+             <th width="12%">Prgram Description</th>
+            <th width="12%">Issuer Name</th>
+            <th width="12%">Country of Issue</th>
+            <th width="12%">Status</th>
+        </TR>
+       
+    </TABLE>
+</DIV>
+<p>&nbsp;</p>
+ <div id="showsubcan" style="display:block" class="buttonPosition">
+<table  border="0"  >
+  <tr>
+         <td    style="cursor:hand">
+         		<button type="button" onclick="onCancel()" class="buttonenabled">Cancel</button>
+         </td> 
+         <td    style="cursor:hand">
+         		<button type="button" onclick="onSubmit()" class="buttonenabled" >Submit</button>
+         </td> 
+         <td    style="cursor:hand">
+         		<button type="button" onclick="onNext()" class="buttonenabled" >Next</button>
+         </td> 
+     </tr>
+ </table>
+</div>
+
+</form>
+
+<div id="searchtemp" class="" style="display:none">
+   
+     <table>  
+    <tr class="even">    <td>        <input value="1" name="check" id="check1" onclick='radClick(this,"#multiplerows",".headerlist",radClickCallback );' type="radio"></td>        
+    <td style="display: none;">LOYCARD<input value="LOYCARD" id="programname__1" name="programname__{rowcount}" type="hidden"></td>     <td style="display: table-cell;">LOYCARD<input value="LOYCARD" id="txtnewprogname__1" name="txtnewprogname__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">Loyalty Card Program<input value="Loyalty Card Program" id="txtprogramdesc__1" name="txtprogramdesc__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">HSBC Bank<input value="HSBC Bank" id="issuername__1" name="issuername__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">SINGAPORE<input value="SINGAPORE" id="countryofissue__1" name="countryofissue__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">Modify<input value="Modify" id="txtstatus__1" name="txtstatus__{rowcount}" type="hidden"></td>         </tr><tr class="even">    <td>        <input value="2" name="check" id="check2" onclick='radClick(this,"#multiplerows",".headerlist",radClickCallback );' type="radio"></td>        
+    <td style="display: none;">New<input value="New" id="programname__2" name="programname__{rowcount}" type="hidden"></td>     <td style="display: table-cell;">Fevo Card<input value="Fevo Card" id="txtnewprogname__2" name="txtnewprogname__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">Prepaid Fevo card<input value="Prepaid Fevo card" id="txtprogramdesc__2" name="txtprogramdesc__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">ezLink<input value="ezLink" id="issuername__2" name="issuername__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">SINGAPORE<input value="SINGAPORE" id="countryofissue__2" name="countryofissue__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">New<input value="New" id="txtstatus__2" name="txtstatus__{rowcount}" type="hidden"></td>         </tr><tr class="even">    <td>        <input value="3" name="check" id="check3" onclick='radClick(this,"#multiplerows",".headerlist",radClickCallback );' type="radio"></td>        
+    <td style="display: none;">TRACARD<input value="TRACARD" id="programname__3" name="programname__{rowcount}" type="hidden"></td>     <td style="display: table-cell;">TRACARD<input value="TRACARD" id="txtnewprogname__3" name="txtnewprogname__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">Travel Card Program<input value="Travel Card Program" id="txtprogramdesc__3" name="txtprogramdesc__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">HSBC Bank<input value="HSBC Bank" id="issuername__3" name="issuername__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">SINGAPORE<input value="SINGAPORE" id="countryofissue__3" name="countryofissue__{rowcount}" type="hidden"></td>         <td style="display: table-cell;">Modify<input value="Modify" id="txtstatus__3" name="txtstatus__{rowcount}" type="hidden"></td>         </tr> </table>
+  </div>
+  
+<p>&nbsp;</p>
+ 		 </div><!-- body div-->
+	<!-- shrink -->
+  </div>
+  <div class="push"></div>
+  <!-- center align div-->
+ </div>
+
+<div class="footer">
+ <center>
+  <div class="shrink" >
+	 <hr />
+  	<div  style="float:left"> www.XYZ.com</div> 
+<div style="float:right">Copyright © 2011 XYZ </div>
+  </div>
+  </center>	
+</div>
+
+</body>
+</html>

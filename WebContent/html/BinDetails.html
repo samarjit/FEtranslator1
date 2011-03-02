@@ -1,0 +1,492 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD Xhtml 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+ 
+<html>
+ <head>
+  <title>Bin Details</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Autdor" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+
+  <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
+<link type="text/css" href="../css/jquery-ui-1.8.8.custom.css" rel="stylesheet" /> 
+<link href="../css/main.css" rel="stylesheet" type="text/css">
+<link href="../css/body.css" rel="stylesheet" type="text/css">
+ 
+ 
+
+ <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
+
+ 
+<script  src="../js/jquery.js"></script>
+<script  src="../js/jquery.validate.js"></script>
+<script type="text/javascript" src="../js/fg.menu.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.js"></script>
+<script type="text/javascript" src="../js/iadtframework.js"></script>
+<script type="text/javascript" src="../js/gears_init.js"></script>
+<script type="text/javascript" src="../js/jsonStringify.js"></script>
+
+<script type="text/javascript">
+ 
+var rule={
+		rules:{
+			loginid: {
+				required: true
+			}
+		},
+		messages:{
+			loginid:{
+				required: "Email ID/Login ID is required"
+			}
+		}
+	};
+
+	
+$(document).ready(function(){
+    $("#form1").validate();
+	createMenu();
+	iadt.setFieldlist(fieldlist);
+	iadt.detectGears();
+	selectOnload ();
+	
+	
+  });
+
+function selectOnload () {
+    /*var db = google.gears.factory.create('beta.database');
+    db.open('database-test');
+    db.execute('create table if not exists BINDETAILS  (BINID INTEGER PRIMARY KEY, BINGROUPCODE text , DATA TEXT)').close();
+    var rs = db.execute('select BINID,DATA from BINDETAILS where bingroupcode=? order by  1', [$.QueryString["bingroupcode"]]);
+    try {
+        var count = 1;
+        while (rs.isValidRow()) {
+			var binid = rs.field(0);
+			 
+            var data = rs.field(1);
+            var datamodel = {
+                rowcount: count,
+                divlist: iadt.options.divlist,
+                divheaderlist: iadt.options.divheaderlist
+            };
+			
+            var json = jQuery.parseJSON(data);
+            $.each(json, function(i, v){
+                datamodel[v.name] = v.value;
+            });
+			datamodel['txtbinid'] = binid;
+			
+            var templatedata = $('#listtemplate').html();
+            console.dir(datamodel);
+            var templateResult = $.tmpl(templatedata, datamodel);
+            
+            $(iadt.options.divlist + ' table').append($('tr', templateResult).parent().html());
+            
+            rs.next();
+            count++;
+        }
+        rs.close();
+    } 
+    catch (e) {
+        alert("error" + e);
+        rs.close();
+    }*/
+		clearall();
+		$('#bingroup').val($.QueryString["bingroupcode"]);
+}
+ 
+ function callsubmit(){
+ 	document.forms[0].submit();
+ }
+
+ 
+function initial()
+{
+
+}
+function clearall()
+{
+	
+	//$('.field, .field2').validation().resetFrom();
+	$('#form1')[0].reset();
+}
+
+function onAdd(formid){
+	if(!$(formid).valid())return;
+//	var db = google.gears.factory.create('beta.database');
+//	db.open('database-test');
+//	db.execute('insert into BINDETAILS(BINGROUPCODE,DATA) values (?, ?)', [$('#bingroup').val(),
+//                                                 JSONstring.make($('#form1').serializeArray())]).close();
+//    db.close(); 
+	if(!$(formid).valid())return;
+	
+	 iadt.addrow(formid);
+		 
+	iadt.setScreenMode("addrow");
+	enableDisableFlds();												 
+}
+
+function onModify(formid){
+    $("#txtstatus").val('Modify');
+    
+    if (screenMode == 'addrow') 
+        iadt.addrow(formid);
+    
+    if (screenMode == 'updaterow') 
+        iadt.updaterow(formid);
+    
+//    var db = google.gears.factory.create('beta.database');
+//    db.open('database-test');
+//    
+//    
+//    db.execute('update BINDETAILS set BINGROUPCODE=?, DATA=? where BINID=?', [$('#bingroup').val(), JSONstring.make($('#form1').serializeArray()),$('#txtbinid').val()]);
+    //alert(res);
+//    $(iadt.options.divlist).find("tr:gt(0)").remove();
+//	
+//	selectOnload ();
+	
+    iadt.setScreenMode("addrow");
+    enableDisableFlds();
+}
+function onClose (fomrid) {
+	$("#txtstatus").val('Close');
+    
+//    if (screenMode == 'addrow') 
+//        iadt.addrow(formid);
+//    
+//    if (screenMode == 'updaterow') 
+//        iadt.updaterow(formid);
+    
+//    var db = google.gears.factory.create('beta.database');
+//    db.open('database-test');
+//    
+//    
+//    db.execute('update BINDETAILS set BINGROUPCODE=?, DATA=? where BINID=?', [$('#bingroup').val(), JSONstring.make($('#form1').serializeArray()),$('#txtbinid').val()]);
+    //alert(res);
+    $(iadt.options.divlist).find("tr:gt(0)").remove();
+	
+	selectOnload ();
+	
+    iadt.setScreenMode("addrow");
+    //enableDisableFlds();
+}
+function onCancel(formid){
+	$(formid)[0].reset();
+	$('#btnAdd').removeAttr("disabled");
+	iadt.setScreenMode("addrow");
+    enableDisableFlds();
+}
+
+function deleteMe (objcross) {
+	var rowbinid = $('#txtbinid__'+$(objcross.parentNode.parentNode).find(":input").val()).val();
+	 
+//	 var db = google.gears.factory.create('beta.database');
+//    try {
+//		db.open('database-test');
+//		db.execute('delete from BINDETAILS where BINID =?',[rowbinid]).close();
+//		iadt.showMessage("Bin details for BinId:"+rowbinid+" is deleted");
+//	} catch (e) {
+//		console.log(e);
+//	}
+//	db.close();
+	$(objcross.parentNode.parentNode.parentNode).remove();
+	iadt.setScreenMode("addrow");
+	enableDisableFlds();
+}
+function editMe ( objthis, radClickCallback) {
+	//get the radio
+	 $('input[type=radio]',objthis.parentNode.parentNode.parentNode).attr("checked","checked");
+	
+	 $('#btnAdd').attr('disabled','disabled'); 
+	 iadt.populateToFields($(objthis.parentNode.parentNode.parentNode).get(0), radClickCallback);
+	
+}
+/**
+ * Caleld after radClick() event to hide unhide widgets 
+ * @param {Object} obj
+ */
+function radClickCallback(obj){
+
+}
+
+function enableDisableFlds() {
+	if(screenMode == 'updaterow' && $('#txtstatus').val() == 'New'){
+	 
+	   var updateonar = iadt.getFieldlist();
+		for ( var i = 0; i < updateonar.length; i++) {
+			var arelm = updateonar[i];
+			jQuery("#"+ arelm).attr('disabled','disabled');
+		}
+	}else if(screenMode == 'updaterow' && $('#txtstatus').val() == 'Modify'){
+	   var updateonar = keylist;
+	  for ( var i = 0; i < updateonar.length; i++) {
+			var arelm = updateonar[i];
+			jQuery("#"+ arelm).attr('disabled','disabled');
+		}
+	}
+	if(screenMode == 'addrow'){
+	    $('#btnAdd').removeAttr('disabled'); 
+	    $.each(fieldlist, function(i,v){
+	    	$("#"+v).val("");
+	    });
+	}
+	 
+}
+
+var screenMode = 'addrow';
+var fieldlist = "bingroup,txtbinid,txtbindesc,bincurency,settlementcurency,seltypeofcard,issuername,countryofissue,txtstatus,txtmakerid,txtmakerdate".split(",");
+</script>
+ </head>
+ 
+ </head>
+ <body onLoad="initial();">
+ 
+ <div align="center"  class="wrap">	
+ <div class="navbar"><span class="disabled">Logged in as Henry</span> | <span class="enabled">Home</span> | <span class="enabled">Sign-Out</span></div>
+  <div class="shrink">
+		 <div class="menuheader  ">
+		 	
+		   </div>
+   
+ 
+		 <div class="body">
+		 <form id="form1">
+		  <div class="displayLabel"><a href="ProgramSetup.html">Program Setup </a>&gt;&gt;<a href="BinGroup.html"> Bin Group</a> &gt;&gt; <a href="BinDetails.html">Bin Details</a></div>
+		  <hr />
+		<div class="infoBar" style="display:none"></div>
+		<p>&nbsp;</p>
+		 
+		 
+		 
+		 
+		 
+		 
+
+ 
+<table class="head2" border="0" cellspacing="0" height="20" cellpadding="0" width="100%">
+	<tr>
+		<td><b>Bin  Details</b></td>
+		
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="5" class="table">
+	<tr class="even">
+		<td width="400"><strong>Bin group</strong></td>
+		<td> 
+          
+         <select name="bingroup" id="bingroup" class="field" >
+          <option selected value="">Select</option>
+          <option value="BINGRP1"  >BINGRP1</option>
+          <option value="BINGRP2"  >BINGRP2</option>
+         </select>
+         <input type="hidden" name="txtbinid" id="txtbinid" /></td>
+	</tr>
+    <tr class="odd" >
+      <td ><strong>Bin Description</strong></td>
+       <td ><label>
+         <input type="text" name="txtbindesc" id="txtbindesc" class="field" />
+       </label></td>
+    </tr>
+    <tr class="even"><td>Bin Currency</td>
+      <td>
+        <select id="bincurency"
+					name="bincurency" class="field" style="width: 130px;">
+					<option selected="" value="">select</option>
+					<option value="USD">USD~US Dollar</option>
+					<option value="INR">INR~Indian Rupees</option>
+					<option value="AUD">AUD~Australian Dollar</option>
+					<option value="SGD">SGD~Singapore Dollar</option>
+					<option value="THB">THB~Thailand Baht</option>
+					<option value="MYR">MYR~Malaysia Ringgit</option>
+					<option value="PHP">PHP~Philipines Peso</option>
+					<option value="IDR">IDR~Indonesia Rupiah</option>
+				</select>
+			</td>
+		 </tr>
+     <tr class="even"> 
+     	<td>Settlement currency</td>
+        <td>
+        	<select id="settlementcurency" name="settlementcurency" class="field" style="width: 130px;">
+                <option selected="selected" value="">select</option>
+                <option value="USD">USD~US Dollar</option>
+                <option value="INR">INR~Indian Rupees</option>
+                <option value="AUD">AUD~Australian Dollar</option>
+                <option value="SGD">SGD~Singapore Dollar</option>
+                <option value="THB">THB~Thailand Baht</option>
+                <option value="MYR">MYR~Malaysia Ringgit</option>
+                <option value="PHP">PHP~Philipines Peso</option>
+                <option value="IDR">IDR~Indonesia Rupiah</option>
+              </select>
+     	</td>
+     </tr>
+     <tr class="even" >
+       <td><strong>Type of Card</strong></td>
+       <td><SELECT style="WIDTH: 130px" class="field"  name="seltypeofcard" id="seltypeofcard">
+            <OPTION value="">select</OPTION>
+            <OPTION value="CONTACT">Contact</OPTION>
+            <OPTION selected="selected" value="CONTACTLESS">Contactless</OPTION>
+            <OPTION value="EMV">EMV</OPTION>
+          </SELECT>
+          </td>
+     </tr>
+    <tr class="odd" ><td> <strong>Issuer Name</strong></td>
+    <td><input type="text" name="issuername" id="issuername" class="field" /></td></tr>
+    <tr class="even" >
+      <td ><strong>Country of Issue</strong></td>      
+      <td ><input  style="display:none" class="field" />
+        <select name="countryofissue" maxlength="50" class="field" id="countryofissue">
+        <option value="">Select</option>
+        <option value="INDIA">India</option>
+        <option value="SINGAPORE">Singapore</option>
+        <option value="AUSTRALIA">Australia</option>
+        <option value="PHILIPPINES">Philippines</option>
+        </select>        </td>
+    </tr>
+    <tr>
+    	<td>Status</td><td><input name="txtstatus" type="text" class="field" id="txtstatus" value="New" /></td>
+	<tr>
+	  <td>Maker Id</td>
+	  <td><input name="txtmakerid" type="text" class="field" id="txtmakerid" value="Henry" /></td>
+	  <tr>
+	    <td>Maker date</td>
+	    <td><input name="txtmakerdate" type="text" class="field" id="txtmakerdate" value="10/12/2010" /></td>
+	    </table>
+   
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    
+    <tr>
+      <td  >&nbsp;</td>
+    </tr>
+  </table>
+
+   
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td bgcolor="#FFFFFF">&nbsp;</td>
+    </tr>
+  </table>
+
+
+
+		
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+ 
+
+   
+ 
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td bgcolor="#FFFFFF">&nbsp;</td>
+    </tr>
+  </table>
+  <div class="buttonPosition">
+    <table  border="0"   >
+    
+      <tr>
+             <td    style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onAdd('#form1')" >Add</button>
+             </td> 
+             <td      style="cursor:hand">
+                 <button class="buttonenabled"   type="button" onclick="onModify('#form1')" >Modify</button>
+             </td> 
+               <td     style="cursor:hand">
+                 <button class="buttonenabled"   type="reset" onclick="onCancel('#form1')" >Cancel	</button>
+             </td> 
+             <td     style="cursor:hand">
+                 <button class="buttonenabled"   type="reset" onclick="onClose('#form1')" >Close	</button>
+             </td>  
+         </tr>
+     </table>
+</div>
+
+  <div id="showsubcan" style="display:none">
+<table  border="0" cellspacing="0" cellpadding="0" >
+
+  <tr>
+         <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';"  style="cursor:hand">Modify
+         </td><td>&nbsp;</td>
+         <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';"  style="cursor:hand">Next</button>
+         </td><td>&nbsp;</td>
+		 <td class="buttonenabled" onClick="location.href='welcome.html';" style="cursor:hand">Ok
+         </td>
+     </tr>
+ </table>
+</div>
+
+ </form>
+ 
+ 
+   <div id="listtemplate" cols="200" style="display:none" >
+    	<table><tr class='even'>
+	  <td>
+       <input type='radio' value='{{= rowcount}}' name='check' id='check{{= rowcount}}' onclick='radClick(this,radClickCallback );' />
+	    &nbsp;<span class='icons'><span class='ui-icon ui-icon-pencil' onclick='editMe(this, radClickCallback);' ></span></span>
+	          <span class='icons'><span class='ui-icon ui-icon-closethick' onclick='deleteMe(this)' ></span></span>      </td>
+        <td style='display:table-cell'>{{= bingroup}}<input type='hidden' value='{{= bingroup}}' id='bingroup__{{= rowcount}}' name='bingroup__{{= rowcount}}'/></td>
+        <td style='display:table-cell'>{{= txtbinid}}<input type='hidden' value='{{= txtbinid}}' id='txtbinid__{{= rowcount}}' name='txtbinid__{{= rowcount}}'/></td>
+      	<td style='display:table-cell'>{{= txtbindesc}}<input type='hidden' value='{{= txtbindesc}}' id='txtbindesc__{{= rowcount}}' name='txtbindesc__{{= rowcount}}'/></td>
+        <td style='display:table-cell'>{{= bincurency}}<input type='hidden' value='{{= bincurency}}' id='bincurency__{{= rowcount}}' name='bincurency__{{= rowcount}}'/></td>
+        <td style='display:table-cell'>{{= settlementcurency}}<input type='hidden' value='{{= settlementcurency}}' id='settlementcurency__{{= rowcount}}' name='settlementcurency__{{= rowcount}}'/></td>
+        <td style='display:table-cell'>{{= seltypeofcard}}<input type='hidden' value='{{= seltypeofcard}}' id='seltypeofcard__{{= rowcount}}' name='seltypeofcard__{{= rowcount}}'/></td>        
+		<td style='display:table-cell'>{{= issuername}}<input type='hidden' value='{{= issuername}}' id='issuername__{{= rowcount}}' name='issuername__{{= rowcount}}'/></td>
+		
+        <td style='display:table-cell'>{{= countryofissue}}<input type='hidden' value='{{= countryofissue}}' id='countryofissue__{{= rowcount}}' name='countryofissue__{{= rowcount}}'/></td>
+        <td style='display:table-cell'>{{= txtstatus}}<input type='hidden' value='{{= txtstatus}}' id='txtstatus__{{= rowcount}}' name='txtstatus__{{= rowcount}}'/></td>
+		<td style='display:table-cell'>{{= txtmakerid}}<input type='hidden' value='{{= txtmakerid}}' id='txtmakerid__{{= rowcount}}' name='txtmakerid__{{= rowcount}}'/></td>
+
+		<td style='display:table-cell'>{{= txtmakerdate}}<input type='hidden' value='{{= txtmakerdate}}' id='txtmakerdate__{{= rowcount}}' name='txtmakerdate__{{= rowcount}}'/></td>
+        </tr></table>
+</div>
+
+ 
+ <form id="form2"  >
+<DIV id=multiplerows>
+    <div class="headerlist" style="display:none;">
+       bingroup,txtbinid,txtbindesc,bincurency,settlementcurency,seltypeofcard,issuername,countryofissue,txtstatus,txtmakerid,txtmakerdate   
+    </div>
+		
+    <BR>
+    <TABLE id=tablespace class=table1 border=0 cellSpacing=0 cellPadding=5 width="100%">
+        <TR class=trlightgrey >
+             <th width="6%" align=middle>Select</th>
+             <th  >Bin Group Code</th>
+             <th  >Bin Id</th>
+             <th  >Bin Description</th>
+             <th  >Bin Currency</th>
+             <th  >Settlement Currency</th>
+             <th  >Type of Card</th>
+             <th  >Issuer Name</th>
+             <th  >Country of Issue</th>  
+             <th  >Status</th>  
+			 <th  >Maker Id</th>
+             <th  >Maker Date</th>                      
+        </TR>
+    </TABLE>
+</DIV>
+</form>
+
+ 		 </div><!-- body div-->
+	<!-- shrink -->
+  </div>
+  <div class="push"></div>
+  <!-- center align div-->
+ </div>
+<p>&nbsp;</p>
+<div class="footer">
+ <center>
+  <div class="shrink" >
+	 <hr />
+  	<div  style="float:left"> www.XYZ.com</div> 
+<div style="float:right">Copyright ‚© 2011 XYZ </div>
+  </div>
+  </center>	
+</div>
+
+</body>
+</html>

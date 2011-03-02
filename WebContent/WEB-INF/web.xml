@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>FETranslator1</display-name>
+  <filter>
+    <filter-name>struts-cleanup</filter-name>
+    <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
+  </filter>
+  <filter>
+    <filter-name>decorator</filter-name>
+    <filter-class>actionclass.DecoratorFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>hitcounter</filter-name>
+    <filter-class>actionclass.HitCounterFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>XSLTFilter</filter-name>
+    <filter-class>actionclass.XSLTFilter</filter-class>
+  </filter>
+  
+  <filter>
+    <filter-name>struts-execute</filter-name>
+    <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+  </filter><!--
+  
+  
+  <filter-mapping>
+    <filter-name>struts-cleanup</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  --><!--<filter-mapping>
+    <filter-name>decorator</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  --><!--<filter-mapping>
+    <filter-name>hitcounter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  --><!--<filter-mapping>
+    <filter-name>XSLTFilter</filter-name>
+    <url-pattern>/third.jsp</url-pattern>
+  </filter-mapping>
+  --><filter-mapping>
+    <filter-name>struts-execute</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+<servlet>
+    <servlet-name>JspSupportServlet</servlet-name>
+    <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+    <listener>
+	  	<listener-class>
+	  		com.ycs.fe.InitFE
+	  	</listener-class>
+    </listener>
+    
+  <welcome-file-list>
+    <welcome-file>/index.jsp</welcome-file>
+  </welcome-file-list>
+
+
+
+</web-app>

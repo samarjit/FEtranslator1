@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+ </HEAD>
+   
+   <script src="file:///C:/work/lib/javascript/jquery-ui-1.8.4.custom/js/jquery-1.4.2.min.js"></script>
+   <script src="file:///C:/work/lib/javascript/jquery-ui-1.8.4.custom/js/jquery-ui-1.8.4.custom.min.js"></script>
+   <script src="file:///C:/work/lib/javascript/jquery.validate.js"></script>
+    <script type="text/javascript" src="C:/Eclipse/workspace1/UserManagement/WebContent/js/jquery.hoverIntent.js"></script>
+<style type="text/css">
+ul#topnav {
+	margin: 0; padding: 0;
+	float:left;
+	width: 100%;
+	list-style: none;
+	font-size: 1.1em;
+}
+ul#topnav li {
+	float: left;
+	margin: 0; padding: 0;
+	position: relative; /*--Important--*/
+}
+ul#topnav li a {
+	float: left;
+	text-indent: -9999px; /*--Push text off of page--*/
+	height: 44px;
+}
+ul#topnav li:hover a, ul#topnav li a:hover { background-position: left bottom; } /*--Hover State--*/
+ul#topnav a.home {
+	background: url(http://www.sohtanaka.com/web-design/examples/mega-dropdowns/nav_home.png) no-repeat;
+	width: 78px;
+}
+ul#topnav a.products {
+	background: url(http://www.sohtanaka.com/web-design/examples/mega-dropdowns/nav_products.png) no-repeat;
+	width: 117px;
+}
+ul#topnav a.sale {
+	background: url(http://www.sohtanaka.com/web-design/examples/mega-dropdowns/nav_sale.png) no-repeat;
+	width: 124px;
+}
+ul#topnav a.community {
+	background: url(http://www.sohtanaka.com/web-design/examples/mega-dropdowns/nav_community.png) no-repeat;
+	width: 124px;
+}
+ul#topnav a.store {
+	background: url(http://www.sohtanaka.com/web-design/examples/mega-dropdowns/nav_store.png) no-repeat;
+	width: 141px;
+}
+
+
+
+
+
+
+
+
+
+
+	
+	ul#topnav li .sub {
+	position: absolute; /*--Important--*/
+	top: 44px; left: 0;
+	z-index: 99999;
+	background: #344c00 url(http://www.sohtanaka.com/web-design/examples/mega-dropdowns/sub_bg.png) repeat-x; /*--Background gradient--*/
+	padding: 20px 20px 20px;
+	float: left;
+	/*--Bottom right rounded corner--*/
+	-moz-border-radius-bottomright: 5px;
+	-khtml-border-radius-bottomright: 5px;
+	-webkit-border-bottom-right-radius: 5px;
+	/*--Bottom left rounded corner--*/
+	-moz-border-radius-bottomleft: 5px;
+	-khtml-border-radius-bottomleft: 5px;
+	-webkit-border-bottom-left-radius: 5px;
+	display: none; /*--Hidden for those with js turned off--*/
+}
+ul#topnav li .row { /*--If needed to break out into rows--*/
+	clear: both;
+	float: left;
+	width: 100%;
+	margin-bottom: 10px;
+}
+ul#topnav li .sub ul{
+	list-style: none;
+	margin: 0; padding: 0;
+	width: 150px;
+	float: left;
+}
+ul#topnav .sub ul li {
+	width: 100%; /*--Override parent list item--*/
+	color: #fff;
+}
+ul#topnav .sub ul li h2 { /*--Sub nav heading style--*/
+	padding: 0;  margin: 0;
+	font-size: 1.3em;
+	font-weight: normal;
+}
+ul#topnav .sub ul li h2 a { /*--Sub nav heading link style--*/
+	padding: 5px 0;
+	background-image: none;
+	color: #e8e000;
+}
+ul#topnav .sub ul li a {
+	float: none;
+	text-indent: 0; /*--Override text-indent from parent list item--*/
+	height: auto; /*--Override height from parent list item--*/
+	background: url(http://www.sohtanaka.com/web-design/examples/mega-dropdowns/navlist_arrow.png) no-repeat 5px 12px;
+	padding: 7px 5px 7px 15px;
+	display: block;
+	text-decoration: none;
+	color: #fff;
+}
+ul#topnav .sub ul li a:hover {
+	color: #ddd;
+	background-position: 5px 12px ;/*--Override background position--*/
+}
+</style>
+<script type="text/javascript">
+ $(document).ready(function() {
+	//On Hover Over
+function megaHoverOver(){
+    $(this).find(".sub").stop().fadeTo('fast', 1).show(); //Find sub and fade it in
+    (function($) {
+        //Function to calculate total width of all ul's
+        jQuery.fn.calcSubWidth = function() {
+            rowWidth = 0;
+            //Calculate row
+            $(this).find("ul").each(function() { //for each ul...
+                rowWidth += $(this).width(); //Add each ul's width together
+            });
+        };
+    })(jQuery); 
+
+    if ( $(this).find(".row").length > 0 ) { //If row exists...
+
+        var biggestRow = 0;	
+
+        $(this).find(".row").each(function() {	//for each row...
+            $(this).calcSubWidth(); //Call function to calculate width of all ul's
+            //Find biggest row
+            if(rowWidth > biggestRow) {
+                biggestRow = rowWidth;
+            }
+        });
+
+        $(this).find(".sub").css({'width' :biggestRow}); //Set width
+        $(this).find(".row:last").css({'margin':'0'});  //Kill last row's margin
+
+    } else { //If row does not exist...
+
+        $(this).calcSubWidth();  //Call function to calculate width of all ul's
+        $(this).find(".sub").css({'width' : rowWidth}); //Set Width
+
+    }
+}
+//On Hover Out
+function megaHoverOut(){
+  $(this).find(".sub").stop().fadeTo('fast', 0, function() { //Fade to 0 opactiy
+      $(this).hide();  //after fading, hide it
+  });
+}
+
+
+//Set custom configurations
+var config = {
+     sensitivity: 2, // number = sensitivity threshold (must be 1 or higher)
+     interval: 100, // number = milliseconds for onMouseOver polling interval
+     over: megaHoverOver, // function = onMouseOver callback (REQUIRED)
+     timeout: 500, // number = milliseconds delay before onMouseOut
+     out: megaHoverOut // function = onMouseOut callback (REQUIRED)
+};
+
+$("ul#topnav li .sub").css({'opacity':'0'}); //Fade sub nav to 0 opacity on default
+$("ul#topnav li").hoverIntent(config); //Trigger Hover intent with custom configurations
+
+});
+</script>
+ <BODY>
+ <input type="button" value="button" onclick="fn();" />
+  <ul id="topnav">
+    <li><a href="#" class="home">Home</a></li>
+    <li>
+    	<a href="#" class="products">Products</a>
+        <div class="sub">
+            <ul>
+                <li><h2><a href="#">Desktop</a></h2></li>
+                <li><a href="#">Navigation Link</a></li>
+                <li><a href="#">Navigation Link</a></li>
+            </ul>
+            <ul>
+                <li><h2><a href="#">Laptop</a></h2></li>
+                <li><a href="#">Navigation Link</a></li>
+                <li><a href="#">Navigation Link</a></li>
+            </ul>
+            <ul>
+                <li><h2><a href="#">Accessories</a></h2></li>
+                <li><a href="#">Navigation Link</a></li>
+                <li><a href="#">Navigation Link</a></li>
+            </ul>
+            <ul>
+                <li><h2><a href="#">Accessories</a></h2></li>
+                <li><a href="#">Navigation Link</a></li>
+                <li><a href="#">Navigation Link</a></li>
+            </ul>
+        </div>
+    </li>
+    <li><a href="#" class="sale">Sale</a></li>
+    <li><a href="#" class="community">Community</a></li>
+    <li><a href="#" class="store">Store Locator</a></li>
+</ul>
+ </BODY>
+</HTML>

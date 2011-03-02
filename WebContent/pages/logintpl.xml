@@ -1,0 +1,85 @@
+
+
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<title>Login</title>
+
+	</head>
+	<body>
+<form method="post" action="details.action" id="userpanel">
+		<table>
+			<tr>
+				<td>First Name</td>
+				<td>
+					<div id="userid"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>LastName </td>
+				<td>
+					<div id="password"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>Order Date</td>
+				<td>
+					<div id="dateid"></div>
+				</td>
+
+			</tr>
+			<tr>
+				<td>Gender </td>
+				<td>
+					<div id="gender"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>Select the country </td>
+				<td>
+					<div id="selcountry"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>check </td>
+				<td>
+					<div id="check"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>Select month </td>
+				<td>
+					<div id="selectmonth"></div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>Jquery datepicker :</td>
+				<td>
+					<div id="jquerydatepicker"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>Address :</td>
+				<td>
+					<div id="compositeaddress"></div>
+					First Line:<div id="firstline"></div>
+					Street:<div id="street"></div>
+				</td>
+			</tr>
+		</table>
+
+<br/>
+		
+		<input type="submit" id="loginbutton" value="Login" > </input>
+
+		<br />
+		Hello test action
+		<a href="engine.action?retrievename=somename">engine.action</a>
+		<a href="">Launch the configuration browser</a>
+		
+		
+
+</form>
+	</body>
+</html>

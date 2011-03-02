@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <xs:element name="root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="screen"/>
+        <xs:element ref="panels"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="screen">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="htmltemplate"/>
+        <xs:element ref="includedjsp"  />
+        <xs:element ref="callbackclass"/>
+        <xs:element ref="scripts"  />
+        <xs:element ref="stylesheets"/>
+      </xs:sequence>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="htmltemplate" type="xs:string"/>
+  <xs:element name="includedjsp" type="xs:string">
+     
+  </xs:element>
+  <xs:element name="callbackclass" type="xs:string"/>
+  <xs:element name="scripts">
+    <xs:complexType mixed="true">
+      <xs:choice maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="scriptinclude"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="text"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="scriptinclude" type="xs:string"/>
+  <xs:element name="stylesheets">
+    <xs:complexType mixed="true">
+      <xs:choice  maxOccurs="unbounded"> 
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="styleinclude"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="text"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="styleinclude" type="xs:string"/>
+  <xs:element name="panels">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="panel"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="panel">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="button"/>
+        <xs:element ref="crud"/>
+        <xs:element ref="fields"/>
+      </xs:choice>
+      <xs:attribute name="id" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="button">
+    <xs:complexType>
+    	<xs:attribute name="forid" use="required" type="xs:NCName" />
+    	<xs:attribute name="onclick" use="required" />
+    	<xs:attribute name="replace" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="crud">
+    <xs:complexType>
+       
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="jsonrpc"/>
+          <xs:element ref="selectonload"/>
+          <xs:element ref="sqlselect"/>
+        
+        
+          <xs:element ref="savefieldids"/>
+          <xs:element ref="sqlinsert"/>
+          <xs:element ref="sqldelete"/>
+          <xs:element ref="sqlselectcount"/>
+          <xs:element ref="sqlupdate"/>
+          
+        </xs:choice>
+     
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="jsonrpc">
+    <xs:complexType mixed="true">
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="savefieldids">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="selectonload">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="countquery"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:NCName"/>
+      <xs:attribute name="stackid" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="countquery">
+    <xs:complexType mixed="true">
+      <xs:attribute name="pagesize" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sqlselect">
+    <xs:complexType mixed="true">
+      <xs:attribute name="stackid" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sqlinsert" type="xs:string"/>
+  <xs:element name="sqldelete" type="xs:string"/>
+  <xs:element name="sqlselectcount">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NCName">
+          <xs:attribute name="refselectid" use="required" type="xs:NCName"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sqlupdate" type="xs:string"/>
+  <xs:element name="fields">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="field"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="field">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="compositefield"/>
+        <xs:element ref="customfield"/>
+        <xs:element ref="div"/>
+        <xs:element ref="input"/>
+        <xs:element ref="select"/>
+        <xs:element ref="sometype"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="compositefield">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="datafield"/>
+        <xs:element maxOccurs="unbounded" ref="displayfield"/>
+        <xs:element ref="text"/>
+        <xs:element ref="rule"/>
+        <xs:element ref="validation"/>
+        <xs:element ref="query"/>
+      </xs:sequence>
+      <xs:attribute name="class" use="required"/>
+      <xs:attribute name="column" use="required"/>
+      <xs:attribute name="dbcolsize" use="required"/>
+      <xs:attribute name="forid" use="required" type="xs:NCName"/>
+      <xs:attribute name="mask" use="required"/>
+      <xs:attribute name="replace" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required"/>
+      <xs:attribute name="validationattr" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="datafield">
+    <xs:complexType>
+      <xs:attribute name="column" use="required" type="xs:NCName"/>
+      <xs:attribute name="forid" use="required" type="xs:NCName"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="displayfield">
+    <xs:complexType>
+      <xs:attribute name="forid" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="customfield">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="text"/>
+        <xs:element minOccurs="0" ref="rule"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="validation"/>
+          <xs:element ref="query"/>
+        </xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="class"/>
+      <xs:attribute name="column" type="xs:NCName"/>
+      <xs:attribute name="dbcolsize"/>
+      <xs:attribute name="forid" use="required" type="xs:NCName"/>
+      <xs:attribute name="mask"/>
+      <xs:attribute name="replace" type="xs:NCName"/>
+      <xs:attribute name="type" type="xs:NCName"/>
+      <xs:attribute name="validationattr"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="div">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="xpath"/>
+        <xs:element ref="rule"/>
+        <xs:element minOccurs="0" ref="validation"/>
+        <xs:element ref="query"/>
+      </xs:sequence>
+      <xs:attribute name="forid" use="required" type="xs:NCName"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="replace" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="xpath">
+    <xs:complexType mixed="true">
+      <xs:attribute name="position" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="input">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="rule"/>
+        <xs:sequence minOccurs="0">
+          <xs:element ref="validation"/>
+          <xs:element ref="query"/>
+        </xs:sequence>
+      </xs:sequence>
+      <xs:attribute name="class" use="required"/>
+      <xs:attribute name="column" use="required" type="xs:NCName"/>
+      <xs:attribute name="dbcolsize" use="required"/>
+      <xs:attribute name="dbdatatype" type="xs:NCName"/>
+      <xs:attribute name="forid" use="required" type="xs:NCName"/>
+      <xs:attribute name="hidden"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="label"/>
+      <xs:attribute name="mandatory"/>
+      <xs:attribute name="mask" use="required"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+      <xs:attribute name="primarykey" type="xs:NCName"/>
+      <xs:attribute name="replace" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+      <xs:attribute name="validationattr"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="select">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="text"/>
+        <xs:element ref="rule"/>
+        <xs:element minOccurs="0" ref="validation"/>
+        <xs:element ref="query"/>
+      </xs:sequence>
+      <xs:attribute name="class" use="required"/>
+      <xs:attribute name="column" use="required" type="xs:NCName"/>
+      <xs:attribute name="dbcolsize" use="required"/>
+      <xs:attribute name="dbdatatype" type="xs:NCName"/>
+      <xs:attribute name="forid" use="required" type="xs:NCName"/>
+      <xs:attribute name="hidden"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="label"/>
+      <xs:attribute name="mandatory"/>
+      <xs:attribute name="mask" use="required"/>
+      <xs:attribute name="name" type="xs:NCName"/>
+      <xs:attribute name="replace" use="required" type="xs:NCName"/>
+      <xs:attribute name="type" type="xs:NCName"/>
+      <xs:attribute name="validationattr"/>
+      <xs:attribute name="value" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="sometype">
+    <xs:complexType>
+      <xs:attribute name="dbdatatype" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="text" type="xs:string"/>
+  <xs:element name="rule" type="xs:string"/>
+  <xs:element name="validation">
+    <xs:complexType>
+    
+    </xs:complexType> 
+  </xs:element>
+  <xs:element name="query">
+    <xs:complexType mixed="true">
+      <xs:attribute name="stackid" type="xs:NCName"/>
+      <xs:attribute name="type" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

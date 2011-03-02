@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD Xhtml 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+ 
+<html>
+ <head>
+  <title>Product Fee</title>
+  <meta name="Generator" content="EditPlus" />
+  <meta name="Autdor" content="" />
+  <meta name="Keywords" content="" />
+
+
+  <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
+<link type="text/css" href="../css/jquery-ui-1.8.8.custom.css" rel="stylesheet" /> 
+<link href="../css/main.css" rel="stylesheet" type="text/css" />
+<link href="../css/body.css" rel="stylesheet" type="text/css" />
+ 
+ 
+
+ <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
+ 
+ 
+<script  src="../js/jquery.js" ></script>
+<script type="text/javascript" src="../js/jquery-ui-1.8.8.custom.min.js"></script>
+<script  src="../js/jquery.validate.js"></script>
+<script type="text/javascript" src="../js/fg.menu.js"></script>
+
+<script type="text/javascript" src="../js/jsonStringify.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.js"></script>
+<script type="text/javascript" src="../js/gears_init.js"></script>
+<script type="text/javascript" src="../js/iadtframework.js"></script>
+
+
+<script type="text/javascript">
+ 
+var rule={
+		rules:{
+			loginid: {
+				required: true
+			}
+		},
+		messages:{
+			loginid:{
+				required: "Email ID/Login ID is required"
+			}
+		}
+	};
+	var form1validator = null;
+	$(document).ready(function () {
+	    form1validator = $("#form1").validate();
+	    createMenu();
+
+	    $("#txtFixedDate").datepicker({
+	        showOn: "button",
+	        buttonImage: "../css/images/calendar.gif",
+	        buttonImageOnly: true,
+	        altField: "#txtExpPeriod",
+	        altFormat: "dd/mm/yyyy",
+	        dateFormat: "dd/mm/yyyy"
+	    });
+
+	    iadt.detectGears();
+	    selectOnload();
+	});
+
+function getConnection() {
+    var db = google.gears.factory.create('beta.database');
+    db.open('database-test');
+      return db;
+  }
+
+function selectOnload (){
+	var product = $.QueryString["prodcode"];
+	 
+	$(".displayLabel a").each(function(i,v){
+		var link = v.href+"?prodcode="+product;
+		v.href = link;
+	});
+	 
+	$(".displayLabel + hr:first").after("<div style='text-align:left;padding:5px;font-weight:bold'>Configuring Product: "+product+
+	"<input type=hidden  id='productfrmurl' value='" + product + "'/></div>");
+
+	$('#form1')[0].reset();
+
+	var db = getConnection();
+    db.execute('create table if not exists PRODFEE  (PRODUCTID TEXT PRIMARY KEY, DATA TEXT)').close();
+    var rs = db.execute('select PRODUCTID,DATA from PRODFEE where PRODUCTID=? order by  1', [product]);
+    try {
+        var count = 1;
+        while (rs.isValidRow()) {
+            var binid = rs.field(0);
+
+            var data = rs.field(1);
+           
+            if (data != null ) {
+                var json = jQuery.parseJSON(data);
+                $.each(json, function (i, v) {
+                    $(":input[name=" + v.name + "]").val(v.value);
+                    if ($("input[name=" + v.name + "]:checkbox").length > 0) {
+                        
+                            $(":input[name=" + v.name + "]").attr("checked", "checked");
+                            console.log("checking:" + v.name);
+                        
+                    }
+                });
+            }
+
+            rs.next();
+            var json = jQuery.parseJSON(data);
+        }
+      
+    } catch (e) {
+        iadt.showMessage(e);
+    }
+
+}
+
+ function showDatePicker(obj){
+ 	if(obj.checked == true){
+ 	  $("#spantxtFixedDate").show();
+	  $("#spantxtnumMonth").hide();
+	  }
+	else{
+	  $("#spantxtFixedDate").hide();
+	}
+ } 
+ 
+ function showMonthPicker(obj){
+ 	if(obj.checked == true){
+ 		$("#spantxtnumMonth").show();
+		 $("#spantxtFixedDate").hide();
+	}
+	else 
+		$("#spantxtnumMonth").hide();	
+ } 
+ 
+ function callsubmit(){
+ 	document.forms[0].submit();
+ }
+
+ 
+function initial()
+{
+
+}
+function clearall()
+{
+
+    form1validator.resetFrom();
+	$('#form1')[0].reset();
+}
+
+function onSave() {
+    var db = getConnection();
+    var product = $("#productfrmurl").val();
+
+    try {
+        var count = 0;
+        var rs = db.execute('select * from PRODFEE where PRODUCTID=?', [product]);
+        while (rs.isValidRow()) {
+            var data = rs.field(1);
+            count++;
+            rs.next();
+        }
+        rs.close();
+        var data = JSONstring.make($('#form1').serializeArray());
+        if (count > 0) {
+            db.execute('update PRODFEE set DATA=? where PRODUCTID=?', [data, product]).close();
+            iadt.showMessage("Data updated success fully for product " + product);
+        } else {
+            db.execute('insert into PRODFEE(PRODUCTID, DATA) values(?,?) ', [product, data]);
+            iadt.showMessage("Data saved success fully for product " + product);
+        }
+       
+        db.close();
+    } catch (e) {
+        iadt.showMessage(e);
+    }
+}
+
+var fieldlist = "txtcurrencyonetime,txtamountonetime,selconsumer,txtcurrencymonthly,txtamountmonthly,selconsumermth,txtcurrencyannually,txtamountannually,selconsumerannually,txtMonthInactive,txtcurrencydor,txtamountdor,selconsumerdor".split(",");
+
+</script>
+ </head>
+ 
+ <body onload="initial();" >
+ 
+ <div align="center"  class="wrap">	
+ <div class="navbar"><span class="disabled">Logged in as Henry</span> | <span class="enabled">Home</span> | <span class="enabled">Sign-Out</span></div>
+  <div class="shrink">
+		 <div class="menuheader  ">
+		 	
+		   </div>
+   
+ 
+		 <div class="body">
+		 <form id="form1" action="#" >
+		  <div class="displayLabel"><a href="ProductSetup.html">Product Setup </a>&gt;&gt;<a href="CountrySetup.html"> Country Setup</a> &gt;&gt; <a href="ServiceDelivery.html">Service Delivery Channel</a> &gt;&gt; <a href="ClosedGroup.html">Closed Group</a> &gt;&gt; <a href="MerchantCategory.html">Merchant Category</a> &gt;&gt; <a href="ProductFee.html">Product Fee</a></div>
+		  <hr />
+		<div style="display: none;" class="infoBar"></div>
+ 
+		 <p>&nbsp;</p>
+		 
+		 
+		 
+		 
+
+ 
+<table class="head2" border="0" cellspacing="0" height="20" cellpadding="0" width="100%">
+	<tr>
+		<td><b>Product Fee Settings </b></td>
+		
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="5" class="table">
+	<tr>
+    <th>&nbsp;</th><th>&nbsp;</th><th>Currency&nbsp;</th><th>Amount&nbsp;</th><th>&nbsp;</th>
+    </tr>
+    <tr class="even">
+	  <td >
+	    <input name="radOneTime" type="checkbox" id="radOneTime" value="chkonetime" />	  </td>
+		<td >One Time Use</td>
+		<td><input name="txtcurrencyonetime" type="text" class="field" id="txtcurrencyonetime" /></td>
+        <td><input name="txtamountonetime" type="text" class="field" id="txtamountonetime" /></td>
+        <td><select name="selconsumer" id="selconsumer">
+        	<option >Select</option>
+            <option value="Consumer">Consumer</option>
+            <option value="Corporate">Corporate</option>            
+            <option value="Agency">Agency</option>                        
+        </select>        </td>
+	</tr>
+    <tr class="even">
+      <td>
+        <input name="radMonthlyCharges" type="checkbox" id="radMonthlyCharges" value="chkmonthly" />      </td>
+    	<td>
+        Monthly Charges</td>
+        <td><input name="txtcurrencymonthly" type="text" class="field" id="txtcurrencymonthly" /></td>
+        <td><input name="txtamountmonthly" type="text" class="field" id="txtamountmonthly" /></td>
+        <td><select name="selconsumermth" id="selconsumermth">
+          <option >Select</option>
+          <option value="Consumer">Consumer</option>
+          <option value="Corporate">Corporate</option>
+          <option value="Agency">Agency</option>
+        </select></td>
+    </tr>
+    <tr class="even">
+      <td>
+        <input name="radAnnualCharges" type="checkbox" id="radAnnualCharges" value="chkannual" />      </td>
+      <td>Annual Charges</td>
+      <td><input name="txtcurrencyannually" type="text" class="field" id="txtcurrencyannually" /></td>
+      <td><input name="txtamountannually" type="text" class="field" id="txtamountannually" /></td>
+      <td><select name="selconsumerannually" id="selconsumerannually">
+        <option >select</option>
+        <option value="Consumer">Consumer</option>
+        <option value="Corporate">Corporate</option>
+        <option value="Agency">Agency</option>
+      </select></td>
+    </tr>
+    <tr class="even">
+      <td><input name="radDormantCharges" type="checkbox" id="radDormantCharges" value="chkdor" /></td>
+      <td><p>Dormant Charges </p>
+        <p>Months  Inactive
+          <input type="text" name="txtMonthInactive" id="txtMonthInactive" class="field" />
+        </p></td>
+      <td><input name="txtcurrencydor" type="text" class="field" id="txtcurrencydor" /></td>
+        <td><input name="txtamountdor" type="text" class="field" id="txtamountdor" /></td>
+        <td><select name="selconsumerdor" id="selconsumerdor">
+          <option >Select</option>
+          <option value="Consumer">Consumer</option>
+          <option value="Corporate">Corporate</option>
+          <option value="Agency">Agency</option>
+        </select></td>
+    </tr>
+</table>
+<p>&nbsp;</p>
+ 
+<p>&nbsp;</p>
+  
+  <div class="buttonPosition" >
+    <table  border="0"      >
+    
+      <tr>
+             <td    style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onSave()" >Save</button>
+             </td> 
+           
+             
+               <td     style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onNext()"   >Next</button>
+             </td> 
+         </tr>
+     </table>
+</div>
+
+  <div id="showsubcan" style="display:none">
+<table  border="0" cellspacing="0" cellpadding="0" >
+
+  <tr>
+         <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';"  style="cursor:hand">Modify
+         </td><td>&nbsp;</td>
+         <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';"  style="cursor:hand">Next</button>
+         </td><td>&nbsp;</td>
+		 <td class="buttonenabled" onClick="location.href='welcome.html';" style="cursor:hand">Ok
+         </td>
+     </tr>
+ </table>
+</div>
+
+ </form>
+ 		 </div><!-- body div-->
+	<!-- shrink -->
+  </div>
+  <div class="push"></div>
+  <!-- center align div-->
+ </div>
+
+<div class="footer">
+ <center>
+  <div class="shrink" >
+	 <hr />
+  	<div  style="float:left"> www.XYZ.com</div> 
+<div style="float:right">Copyright  © 2011 XYZ </div>
+  </div>
+  </center>	
+</div>
+
+</body>
+</html>

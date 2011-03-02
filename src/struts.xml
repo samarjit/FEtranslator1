@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" 
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.convention.classes.reload" value="false" />
+	
+	<package name="yidefaultPackage" extends="struts-default">
+		<result-types>
+			<result-type name="customXMLRes" class="actionclass.XMLResult">
+			</result-type>
+		</result-types>
+		<interceptors>
+			<interceptor name="decorator" class="actionclass.DecoratorInterceptor" />
+			<interceptor-stack name="myCustomStack">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="decorator" />
+			</interceptor-stack>
+		</interceptors>
+		<global-results>
+	        <result name="exception">pages/globalerror.jsp</result>
+	    </global-results>
+	
+	    <global-exception-mappings>
+	        <exception-mapping exception="java.lang.Exception"
+	            result="exception" />
+	    </global-exception-mappings>
+	</package>
+    
+	<package name="ProductSetup" extends="yidefaultPackage" namespace="/html">
+		<action name="programsetupview" class="actionclass.ProgramSetup" method="view">
+			<interceptor-ref name="myCustomStack" />
+			<result name="view1" type="freemarker">
+				 ProgramSetup.ftl
+			</result>
+			<result name="view" type="customXMLRes">
+				<param name="resultxml">ProgramSetup.xml</param>
+			</result>
+			<result name="input">/index.jsp</result>
+		</action>
+		<action name="programsetupsave" class="actionclass.ProgramSetup" method="save">
+			<interceptor-ref name="myCustomStack" />
+			<result name="save" type="customXMLRes">
+				<param name="resultxml">ProgramSetup.xml</param>
+			</result>
+			<result name="input">/index.jsp</result>
+		</action>
+		<action name="programsetupsave" class="actionclass.ProgramSetup" method="save">
+			<param name="pageconfigxml">ProgramSetup.xml</param>
+			<result name="saveajax" type="stream">	
+				<param name="resultxml">ProgramSetup.xml</param>
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+			<result name="input">/index.jsp</result>
+		</action>
+	</package>
+	
+	<package name="xslt-example" extends="yidefaultPackage">
+
+		<action name="testxsl" class="actionclass.ExampleXSLTAction" method="preview">
+			<interceptor-ref name="myCustomStack" />
+			<result name="preview" type="customXMLRes">
+				<param name="resultxml">testxsl.xml</param>
+			</result>
+			<result name="input">/index.jsp</result>
+		</action>
+
+		<action name="details" class="actionclass.DetailsXSLTAction" method="details">
+			<interceptor-ref name="myCustomStack" />
+			<result name="resultinput" type="customXMLRes">
+				<param name="resultxml">details.xml</param>
+			</result>
+			<result name="result">/success.jsp
+				
+			</result>
+		</action>
+		
+		
+	</package>
+	
+	
+	<package name="odl-engine" extends="yidefaultPackage">
+		<!--<interceptors>
+			<interceptor-stack name="appDefault">
+				<interceptor-ref name="defaultStack">
+					<param name="exception.logEnabled"> true </param>
+					<param name="exception.logLevel"> DEBUG </param>
+				</interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="appDefault" />-->
+		<interceptors>
+			<interceptor name="decorator" class="actionclass.DecoratorInterceptor" />
+		</interceptors>
+
+		<action name="index">
+			<result>
+				/index.jsp
+            </result>
+		</action>
+
+		<action name="engine" class="actionclass.TestactionAC" method="execute">
+			<interceptor-ref name="myCustomStack" /> 
+			<result name="success">pages/logintpl.jsp</result>
+			<result name="returnajax" type="stream">
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+		<action name="testftl" class="actionclass.TestactionAC">
+			<result name="success" type="freemarker">pages/test-success.ftl</result>
+		</action>
+		<action name="templatetest" class="actionclass.TestactionAC">
+			<result name="success">pages/templatetest.jsp</result>
+		</action>
+	</package>
+	
+	<package name="old-xslt-example" extends="struts-default">
+		<result-types>
+			<result-type name="customJSON" class="actionclass.XMLResult">
+			</result-type>
+		</result-types>
+		<interceptors>
+			<interceptor name="decorator2" class="actionclass.DecoratorInterceptor" />
+			<interceptor-stack name="myCustomStack2">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="decorator2" />
+			</interceptor-stack>
+		</interceptors>
+		<action name="testxsl1" class="actionclass.ExampleXSLTAction"
+			method="preview">
+			<interceptor-ref name="myCustomStack2" />
+			<result name="preview" type="xslt">
+				<param name="stylesheetLocation">testinterceptor.xsl</param>
+			<param name="finalLocation">third.jsp</param>
+			</result>
+			<result name="input">/xslinterceptorinp.jsp</result>
+		</action>
+		<action name="testxsl-old" class="actionclass.ExampleXSLTAction"
+			method="preview">
+			
+			<interceptor-ref name="myCustomStack2" />
+			<result name="preview" type="customJSON">
+				<param name="stylesheetLocation">testinterceptor.xsl</param>
+				<param name="finalLocation">third.jsp</param>
+			</result>
+			<result name="input">/xslinterceptorinp.jsp</result>
+		</action>
+		<action name="jspmap" class="actionclass.ExampleXSLTAction"
+			method="preview">
+			
+			<interceptor-ref name="myCustomStack2" />
+			<result name="preview"  >/pages/loginmap.jsp</result>
+			<result name="input">/xslinterceptorinp.jsp</result>
+		</action>
+	</package>
+	
+	
+</struts>

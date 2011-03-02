@@ -1,0 +1,52 @@
+
+
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<title>Login</title>
+
+	</head>
+	<body>
+
+		<table>
+			<tr>
+				<td>FirstName </td>
+				<td>
+					<div id="userid"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>LastName </td>
+				<td>
+					<div id="password"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>Order Date</td>
+				<td>
+					<div id="dateid"></div>
+				</td>
+
+			</tr>
+			<tr>
+				<td>Gender </td>
+				<td>
+					<div id="gender"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>Select the country </td>
+				<td>
+					<div id="list"></div>
+				</td>
+			</tr>
+			<tr>
+				<td>check </td>
+				<td>
+					<div id="check"></div>
+				</td>
+			</tr>
+		</table>
+
+	</body>
+</html>

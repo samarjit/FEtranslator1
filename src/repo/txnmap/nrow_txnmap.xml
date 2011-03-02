@@ -1,0 +1,12 @@
+<root>
+<txn id="STUCAP"><!-- FF9000,FF0151,FF0152*FF0151,FF0148,FF0149|FF9000:H,FF0151:H,FF0152:H*FF0151:H,FF0148:H,FF0149:H -->
+<rsp><single>FF0151,FF0148,FF0149</single><multiple>FF9000,FF0151,FF0152</multiple></rsp> 
+<req><single>FF0151:H,FF0148:H,FF0149:H</single><multiple>FF9000:H,FF0151:H,FF0152:H</multiple></req></txn>
+
+<txn id="STUCNF"><!-- FF9000,FF0151,FF0152*FF0151,FF0148,FF0149|FF9000:H,FF0151:H,FF0152:H*FF0151:H,FF0148:H,FF0149:H -->
+<rsp><multiple>FF9000,FF0151,FF0152</multiple><single>FF0151,FF0148,FF0149</single><single>FF0151,FF0148,FF0149</single></rsp> 
+<req><multiple>FF9000:H,FF0151:H,FF0152:H</multiple><single>FF0151:H,FF0148:H,FF0149:H</single></req></txn>
+
+
+</root>
+
