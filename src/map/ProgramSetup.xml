@@ -33,7 +33,7 @@
 	<panels>
 		<panel id="form1">
 			<crud>
-				<jsonrpc id="1"  stackid="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS 
+				<jsonrpc id="rpc1"  stackid="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS 
 					where PROGNAME=:whereval|STRING order by 1</jsonrpc>			
 			    <selectonload stackid="form2" id="selqry1">SELECT 'LOYCARD' "txtnewprogname" from DUAL </selectonload>
 			    <selectonload stackid="form1" id="selqry2">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS
@@ -51,9 +51,10 @@
 						 where PROGNAME=:form1[0].txtnewprogname</sqlupdate>
 			</crud>
 			<commands>
+			   <cmd name="jrpcCmd1" opt="jsrpc:rpc1" stack="form1" result="ajax"  ></cmd>
 			   <cmd name="merge" opt="jsrpc:1|selectonload:1" stack="form1" result="ajax|{screenName}"  ></cmd>
-			  <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  stack="formChild"  result="ajax|{screenName}"  ></cmd>
-			 </commands>
+			   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  stack="formChild"  result="ajax|{screenName}"  ></cmd>
+			</commands>
 			
 			<fields>
 				<field>

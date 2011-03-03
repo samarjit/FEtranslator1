@@ -49,10 +49,30 @@ public class JavascriptRpc extends ActionSupport {
 		command="selectonload";
 	}
 	
-	public ResultDTO commandProcessor(String command2, JSON submitdataObj){
+	/**
+	 * command="jrpcCmd1"&
+	 * submitdata={"form1":[{"row":0,"programname":"LOYCARD","txtnewprogname":"LOYCARD","txtprogramdesc":"Loyalty Card Program",
+	 * "issuername":"HSBC Bank","countryofissue":"SINGAPORE","txtstatus":"Modify"},{"row":1,"programname":"TRACARD",
+	 * "txtnewprogname":"TRACARD","txtprogramdesc":"Travel Card Program","issuername":"HSBC Bank","countryofissue":"SINGAPORE",
+	 * "txtstatus":"Modify"}],“txnrec”:{single:””,multiple:[{aaa:’’},{aaa:’’}]}}
+	 * 
+	 * @param command
+	 * @param submitdataObj
+	 * @return
+	 */
+	public ResultDTO commandProcessor(String command, JSON submitdataObj){
 		JsrpcPojo rpc = new JsrpcPojo();
-		String querynode = "jsonrpc";
-		ResultDTO resDTO = rpc.selectData(  screenName,   panelName, querynode ,   (JSONObject)submitdataObj);
+		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
+		Element elmCmd = (Element) rootXml.selectSingleNode("//command/cmd[@name='"+command+"']");
+		String stackid = elmCmd.attributeValue("stack");
+		String operation = elmCmd.attributeValue("opt");
+		String[] opts = operation.split("|");
+		ResultDTO resDTO = null;
+		for (String opt : opts) {
+			String[] sqlcmd = opt.split(":");
+			String querynode = sqlcmd[0]+"/[@id='"+sqlcmd[1]+"']";
+			  resDTO = rpc.selectData(  screenName,   panelName, querynode ,   (JSONObject)submitdataObj);
+		}
 		return resDTO;
 	}
 	

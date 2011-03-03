@@ -36,9 +36,9 @@ private Root screenroot;
 			jaxbContext = JAXBContext.newInstance(Root.class);
 			final Root root = (Root) jaxbContext
 					.createUnmarshaller()
-					.unmarshal(
-							new File(
-									"C:/Eclipse/workspace/FEtranslator1/src/map/ProgramSetup.xml"));
+					.unmarshal(JaxbTestAC.class.getResourceAsStream("map/ProgramSetup.xml")
+					//		new File(									"C:/Eclipse/workspace1/FEtranslator1/src/map/ProgramSetup.xml")
+					);
 			screenroot = root;
 			JSONObject json = new JSONObject(root);
 			Gson gson = new Gson();
@@ -64,8 +64,9 @@ private Root screenroot;
 		try {
 			final JAXBContext jaxbContext = JAXBContext.newInstance(Root.class);
 			final Root root =
-	            (Root) jaxbContext.createUnmarshaller().unmarshal(
-	                new File("F:/eclipse/workspace/charts/FEtranslator1/src/map/ProgramSetup.xml"));
+	            (Root) jaxbContext.createUnmarshaller().unmarshal(JaxbTestAC.class.getResourceAsStream("map/ProgramSetup.xml")
+	            //    new File("F:/eclipse/workspace/charts/FEtranslator1/src/map/ProgramSetup.xml")
+	            );
 			System.out.println(root.getPanels().getPanel().get(0).getContent());
 			jaxbContext.createMarshaller().marshal(root, System.out);
 		} catch (JAXBException e) {

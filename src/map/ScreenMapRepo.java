@@ -53,7 +53,7 @@ public class ScreenMapRepo {
 		return path;
 	}
 	
-	public Element findMapXMLRoot(String scrName){
+	public static Element findMapXMLRoot(String scrName){
 		String path = findMapXML(scrName);
 		Element root = null;
 		try {
