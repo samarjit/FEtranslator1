@@ -38,7 +38,7 @@ private Root screenroot;
 					.createUnmarshaller()
 					.unmarshal(
 							new File(
-									"C:/Eclipse/workspace1/FEtranslator1/src/map/ProgramSetup.xml"));
+									"C:/Eclipse/workspace/FEtranslator1/src/map/ProgramSetup.xml"));
 			screenroot = root;
 			JSONObject json = new JSONObject(root);
 			Gson gson = new Gson();

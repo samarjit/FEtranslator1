@@ -51,9 +51,9 @@
 						 where PROGNAME=:form1[0].txtnewprogname</sqlupdate>
 			</crud>
 			<commands>
-			  <cmd name="merge" opt="jsrpc:1|selectonload:1" stack="form1" result="ajax|{screenName}"  ></cmd>
+			   <cmd name="merge" opt="jsrpc:1|selectonload:1" stack="form1" result="ajax|{screenName}"  ></cmd>
 			  <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  stack="formChild"  result="ajax|{screenName}"  ></cmd>
-			</commands>
+			 </commands>
 			
 			<fields>
 				<field>
@@ -67,19 +67,19 @@
 					</div>
 				</field>
 				<field>
-					<input type="text" class="userid" forid="txtnewprogname" value="dfgdfg" name="txtnewprogname" id="txtnewprogname" column="PROGNAME" dbdatatype="STRING" primarykey="YES" dbcolsize="" mask="" mandatory=""
+					<input type="text" class="userid" forid="txtnewprogname" value="dfgdfg" name="txtnewprogname" id="txtnewprogname" column="FF0151" dbdatatype="STRING" primarykey="YES" dbcolsize="" mask="" mandatory=""
 						hidden="" label="" replace="modify" >
 						<rule></rule>
 					</input>
 				</field>
 				<field>
-					<input type="text" class="userid" forid="txtprogramdesc" value="dfgdfg" name="txtprogramdesc" id="txtprogramdesc" column="PROGDESC" dbdatatype="STRING" dbcolsize="" mask="" mandatory=""
+					<input type="text" class="userid" forid="txtprogramdesc" value="dfgdfg" name="txtprogramdesc" id="txtprogramdesc" column="FF0148" dbdatatype="STRING" dbcolsize="" mask="" mandatory=""
 						hidden="" label="" replace="modify">
 						<rule></rule>
 					</input>
 				</field>
 				<field>
-					<select  type="text" class="userid" forid="countryofissue" value="" name="countryofissue" id="countryofissue" column="COUNTRY_ISSUE" dbdatatype="STRING"  dbcolsize="" mask="" mandatory=""
+					<select  type="text" class="userid" forid="countryofissue" value="" name="countryofissue" id="countryofissue" column="FF0149" dbdatatype="STRING"  dbcolsize="" mask="" mandatory=""
 						hidden="" label="" replace="modify">
 						<text>
 						<![CDATA[<select name="countryofissue" maxlength="50" class="field" id="countryofissue">
