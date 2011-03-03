@@ -17,7 +17,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONObject;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;

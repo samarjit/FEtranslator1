@@ -52,6 +52,19 @@ public class ScreenMapRepo {
 
 		return path;
 	}
+	
+	public Element findMapXMLRoot(String scrName){
+		String path = findMapXML(scrName);
+		Element root = null;
+		try {
+			Document doc = new SAXReader().read(path);
+			root = doc.getRootElement();
+		} catch (DocumentException e) {
+			logger.debug("XML Load Exception"+path);
+		}
+		return root;
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(ScreenMapRepo.findMapXML("ProgramSetup"));
 	}

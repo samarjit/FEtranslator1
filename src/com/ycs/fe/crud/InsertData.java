@@ -13,7 +13,7 @@ import org.apache.struts2.ServletActionContext;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import org.json.JSONObject;
+import net.sf.json.JSONObject;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.ycs.fe.dao.FETranslatorDAO;

@@ -4,15 +4,17 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
+ 
+import net.sf.json.JSONObject;
 
 import repo.txnmap.generated.Root;
 import repo.txnmap.generated.Txn;
@@ -58,16 +60,17 @@ private Logger logger = Logger.getLogger(getClass());
 		String formname = "";
 		ResultDTO result = new ResultDTO();
 		logger.debug(submitdata);
-		JSONObject jobj1 = new JSONObject(submitdata);
+		JSONObject jobj1 =   JSONObject.fromObject(submitdata);
 		
-		for (String name : JSONObject.getNames(jobj1)) {
+		for (Iterator itr = jobj1.keys();itr.hasNext();) {
+			String name = (String) itr.next();
 			formname = name; 
 			logger.debug(name);
 			JSONArray jobj = jobj1.getJSONArray(formname);
 			Gson gson = new Gson();
 			JsonElement jelm = gson.toJsonTree(submitdata);
 			
-			for (int i = 0; i < jobj.length(); i++) {
+			for (int i = 0; i < jobj.size(); i++) {
 				
 				if(jobj.getJSONObject(i).getString("txtstatus").equalsIgnoreCase("Modify")){
 				 
@@ -139,7 +142,7 @@ private Logger logger = Logger.getLogger(getClass());
 		xml += "<IDCT_MESSAGE_TYPE>01</IDCT_MESSAGE_TYPE>";
 		
 		try {
-			JSONObject jobj1 = new JSONObject(submitdatatxncode);
+			JSONObject jobj1 =   JSONObject.fromObject(submitdatatxncode);
 
 			JSONObject txnrec = jobj1.getJSONObject("txnrec");
 			JSONObject single = txnrec.getJSONObject("single");
@@ -176,7 +179,10 @@ private Logger logger = Logger.getLogger(getClass());
 		inputStream = new StringBufferInputStream(resultHtml );
 		return "saveajax";
 	}
-	
+	public String callPLSQL(String xml){
+		System.out.println(xml);
+		return xml;
+	}
 	private void mockLogin() {
 		 if(session == null){
 			logger.debug("ERROR Session is null!!");

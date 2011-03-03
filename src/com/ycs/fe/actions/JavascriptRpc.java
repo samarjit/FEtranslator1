@@ -4,6 +4,10 @@ import java.io.InputStream;
 import java.io.StringBufferInputStream;
 
 import map.ScreenMapRepo;
+import net.sf.json.JSON;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
@@ -12,11 +16,12 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
+ 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -34,7 +39,7 @@ public class JavascriptRpc extends ActionSupport {
 	private String screenName;
 	private InputStream inputStream;
 	private String panelName;
-	private String submitdata = "[]";
+	private String submitdata = "{}";
  
 	
 	public JavascriptRpc() {
@@ -43,6 +48,14 @@ public class JavascriptRpc extends ActionSupport {
 		panelName="form1";
 		command="selectonload";
 	}
+	
+	public ResultDTO commandProcessor(String command2, JSON submitdataObj){
+		JsrpcPojo rpc = new JsrpcPojo();
+		String querynode = "jsonrpc";
+		ResultDTO resDTO = rpc.selectData(  screenName,   panelName, querynode ,   (JSONObject)submitdataObj);
+		return resDTO;
+	}
+	
 	@Action(value="jsrpc",params={"configxml","ProductSetup.xml"},
 			results={@Result(name="success",type="stream",params={"contentType","text/html","inputName","inputStream","resultxml","ProductSetup.xml"})}
 //	results={@Result(name="success",location="/test.jsp")}
@@ -63,22 +76,16 @@ public class JavascriptRpc extends ActionSupport {
 				Element root = doc.getRootElement();
 				 
 				logger.debug("JsonRPC with submitdata="+submitdata);
-				JSONArray jsonArray = new JSONArray(getSubmitdata());
-				JsrpcPojo rpc = new JsrpcPojo();
+				JSON submitdataObj = JSONObject.fromObject(submitdata);
 				
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject json = jsonArray.getJSONObject(i);
-					command = json.getString("command");
-					JSONObject jsonObject  = json.getJSONObject("data"); 
-					resDTO = rpc.selectData(  screenName,   panelName,command,   jsonObject);
+				
+				resDTO = commandProcessor ( command ,   submitdataObj);  
 					
-				}
+					
+				 
 				  
 			 
 		} catch (DocumentException e) {
-			resDTO.addError("ERROR:"+e);
-			e.printStackTrace();
-		} catch (JSONException e) {
 			resDTO.addError("ERROR:"+e);
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -104,8 +111,8 @@ public class JavascriptRpc extends ActionSupport {
 //		} catch (OgnlException e1) {
 //			e1.printStackTrace();
 //		}
-		 
-		JSONObject jobj = new JSONObject(resDTO);
+		
+		JSONObject jobj = JSONObject.fromObject(resDTO);
 		try {
 			jobj.put("data",resDTO.getData());
 			jobj.put("pagination",resDTO.getPagination());

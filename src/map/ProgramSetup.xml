@@ -51,8 +51,8 @@
 						 where PROGNAME=:form1[0].txtnewprogname</sqlupdate>
 			</crud>
 			<commands>
-			  <cmd name="merge" opt="jsrpc:1|selectonload:1"  result="ajax|{screenName}"  ></cmd>
-			  <cmd name="selectlist" opt="jsrpc:2|jsonrpc:1"  result="ajax|{screenName}"  ></cmd>
+			  <cmd name="merge" opt="jsrpc:1|selectonload:1" stack="form1" result="ajax|{screenName}"  ></cmd>
+			  <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  stack="formChild"  result="ajax|{screenName}"  ></cmd>
 			</commands>
 			
 			<fields>

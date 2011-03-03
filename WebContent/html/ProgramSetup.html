@@ -156,10 +156,12 @@ function onSearch(){
 			var tablehtml = '<table width="100%" class="table1" ><tr>';
 			$.each(json,function (i,v){
 				var templatedata = $(iadt.options.listtemplate).html();
+				v.rowcount = i;
 				   templateResult = 	$.tmpl(templatedata,v);
 				tablehtml+=templateResult.find("tr").parent().html();
 			});
 			tablehtml +="</table>";		
+			 
 			$('body').append(tablehtml);
 		}
 	
@@ -420,7 +422,7 @@ var keylist = "programname,txtnewprogname,txtstatus".split(",");
       	<td style='display:none'>${programname}<input type='hidden' value='${programname}' id='programname__${rowcount}' name='programname'/></td>
   		<td style='display:table-cell'>${txtnewprogname}<input type='hidden' value='${txtnewprogname}' id='txtnewprogname__${rowcount}' name='txtnewprogname'/></td>
         <td style='display:table-cell'>${txtprogramdesc}<input type='hidden' value='${txtprogramdesc}' id='txtprogramdesc__${rowcount}' name='txtprogramdesc'/></td>
-        <td style='display:table-cell'>${issuername}<input type='hidden' value='${issuername}' id='issuername__${rowcount}' name='issuername'/></td>
+        <td style='display:table-cell'>${issuername}<input type='hidden' value="${issuername}" id='issuername__${rowcount}' name='issuername'/></td>
         <td style='display:table-cell'>${countryofissue}<input type='hidden' value='${countryofissue}' id='countryofissue__${rowcount}' name='countryofissue'/></td>
         <td style='display:table-cell'>${txtstatus}<input type='hidden' value='${txtstatus}' id='txtstatus__${rowcount}' name='txtstatus'/></td>
         </tr></table>

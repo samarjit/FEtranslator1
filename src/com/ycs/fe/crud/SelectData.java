@@ -11,8 +11,8 @@ import org.apache.struts2.ServletActionContext;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import com.ycs.fe.dao.FETranslatorDAO;
 import com.ycs.fe.dto.PrepstmtDTO;

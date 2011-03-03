@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
-import org.json.JSONException;
-import org.json.JSONObject;
+ 
 
 import com.opensymphony.xwork2.ActionContext;
 import com.ycs.fe.dto.PrepstmtDTO;
@@ -43,7 +45,7 @@ public class QueryParser{
 	}
 	
 	/**
-	 * Hash dependency on Action context for accessing ValueStack
+	 * Hash dependency on Action context for accessing ValueStack. Three conditions might come get data from immediate dataset, get data from inputdata set as whole :inp, get data from previous results :res. 
 	 * @param updatequery [in] Not null it is returned after replacemeent of :xxxx with '?' as i prepared statement
 	 * @param panelname [in] can be null, then all parameters will be treated as Ognl expression  
 	 * @param jsonObject [in] containing key/value pair of properties to be filled in query :xxxx can be null is there is no :xxx
@@ -55,7 +57,7 @@ public class QueryParser{
 	public static String parseQuery(String updatequery,String panelname,JSONObject jsonObject, PrepstmtDTOArray  arparam, HashMap<String, DataType> hmfielddbtype) throws Exception{
 		//Where
 //		String updatewhere = crudnode.selectSingleNode("sqlwhere").getText();
-		String PATTERN = "\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
+		String PATTERN = "\\:(inp|res|vs)?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";//"\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
 		
 		Pattern   pattern = Pattern.compile(PATTERN,Pattern.DOTALL|Pattern.MULTILINE);
 		
@@ -69,18 +71,21 @@ public class QueryParser{
 		while(m1.find()) {
 	          
 	          String prop =  m1.group();
-	          logger.debug("Start preparing "+prop +" "+ m1.start() + " "+m1.end()+" "+m1.group(1)+" "+m1.group(2)+" "+m1.group(3)+" "+m1.group(4));
-	          if(! "".equals(m1.group(2))){
-	        	  if(panelname!=null && m1.group(1).equals(panelname)){ //:form[0].param === :param use jsonObject and get group(3) val 
-	        		  //fill with present panel row object
-	        		  String propname = m1.group(3);
-	        		  String propval = "";
-	        		  if(jsonObject.has(propname)){
-	        			  propval = jsonObject.getString(propname);
+	          logger.debug("Start preparing '"+prop +"' start="+ m1.start() + " end="+m1.end()+" grp1="+m1.group(1)+" grp2="+m1.group(2)+" grp3="+m1.group(3)+" ");
+	          if(! "".equals(m1.group(1))){//do ognl because (inp|res|vs) is not ""
+	        	  if( m1.group(1).equals("inp")){ //:form[0].param === :param use jsonObject and get group(3) val 
+	        		  logger.debug(" Processing with #inputDTO");
+	        		  String expr = m1.group(2);
+	        		  String propval = ActionContext.getContext().getValueStack().findString("#inputDTO.data."+expr);
+	        		  logger.debug("Ognl Expression result="+propval);
+	        		  String propname;
+	        		  propname = expr.substring(expr.lastIndexOf('.')+1, expr.length());
+	        		  logger.debug("property name="+propname);
+
 	        			  parsedquery += updatequery.substring(end,m1.start());//
 	        			  
-	        			  if(!"".equals(m1.group(4)) ){
-	        				  arparam.add(PrepstmtDTO.getDataTypeFrmStr(m1.group(4)),propval);
+	        			  if(!"".equals(m1.group(3)) ){
+	        				  arparam.add(PrepstmtDTO.getDataTypeFrmStr(m1.group(3)),propval);
 	        			  }else{
 	        				  arparam.add(hmfielddbtype.get(propname),propval);
 	        			  }
@@ -88,22 +93,22 @@ public class QueryParser{
 	        			  
 	        			 
 	        			  parsedquery += "?";
-	        		  }
+	        		   
 	        		  end = m1.end(); 
 	        		  logger.debug("This is not prefered Mode with dot"+m1.group(2)+". "+propname);
-	        	  }else{ //:formXX[0].param
-	        		  logger.debug("TODO:does it come here"+  m1.group(1)+" need to process Ognl with "+m1.group());
+	        	  }else  if( m1.group(1).equals("res")){ //:formXX[0].param
+	        		  logger.debug(" Processing with #resultDTO");
 	        		  //TODO: implement for object filling from related panels.
-	        		  String expr = m1.group();
-	        		  expr = expr.substring(1); //remove ':' in :xxe[].xp
+	        		  String expr = m1.group(2);
+	        		  //expr = expr.substring(4); //remove ':vs' in :vs.xxe[].xp
 	        		  String propval = ActionContext.getContext().getValueStack().findString("#resultDTO.data."+expr);
 	        		  logger.debug("Ognl Expression result="+propval);
 	        		  String propname;
 	        		  propname = expr.substring(expr.lastIndexOf('.')+1, expr.length());
 	        		  logger.debug("property name="+propname);
 
-	        		  if(!"".equals(m1.group(4)) ){
-        				  arparam.add(PrepstmtDTO.getDataTypeFrmStr(m1.group(4)),propval);
+	        		  if(!"".equals(m1.group(3)) ){
+        				  arparam.add(PrepstmtDTO.getDataTypeFrmStr(m1.group(3)),propval);
         			  }else{
         				  arparam.add(hmfielddbtype.get(propname),propval);
         			  }
@@ -111,6 +116,26 @@ public class QueryParser{
 	        		  parsedquery += updatequery.substring(end,m1.start());//
 	        		  parsedquery += "?";
 	        		  end = m1.end(); 
+	        	  }else if( m1.group(1).equals("vs")){
+	        		  logger.debug(" Processing with ValueStack");
+	        		  //TODO: implement for object filling from related panels.
+	        		  String expr = m1.group(2);
+	        		  //expr = expr.substring(4); //remove ':vs' in :vs.xxe[].xp
+	        		  String propval = ActionContext.getContext().getValueStack().findString(expr);
+	        		  logger.debug("Ognl Expression result="+propval);
+	        		  String propname;
+	        		  propname = expr.substring(expr.lastIndexOf('.')+1, expr.length());
+	        		  logger.debug("property name="+propname);
+
+	        		  if(!"".equals(m1.group(3)) ){
+        				  arparam.add(PrepstmtDTO.getDataTypeFrmStr(m1.group(3)),propval);
+        			  }else{
+        				  arparam.add(hmfielddbtype.get(propname),propval);
+        			  }
+	        		  
+	        		  parsedquery += updatequery.substring(end,m1.start());//
+	        		  parsedquery += "?";
+	        		  end = m1.end();  
 	        	  }
 	          }else{ //fill with present panel row object :formxparam
 	        	  String propval;
@@ -119,8 +144,8 @@ public class QueryParser{
 	        		  propval = jsonObject.getString(m1.group(1));
 	        		  parsedquery += updatequery.substring(end,m1.start());//
 					 
-	        		  if(!"".equals(m1.group(4)) ){
-        				  arparam.add(PrepstmtDTO.getDataTypeFrmStr(m1.group(4)),propval);
+	        		  if(!"".equals(m1.group(3)) ){
+        				  arparam.add(PrepstmtDTO.getDataTypeFrmStr(m1.group(3)),propval);
         			  }else{
         				  arparam.add(hmfielddbtype.get(propname),propval);
         			  }
