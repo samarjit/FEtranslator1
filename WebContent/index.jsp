@@ -20,7 +20,7 @@
 <a href="<%=ctxstr%>/config-browser/actionNames.action?namespace=%2Fconfig-browser" >config browser</a>|
 <a href="<%=ctxstr%>/engine.action?debug=browser" >debug browser</a>	<br/>
 <a href="http://localhost:8082/FEtranslator1/html/programsetupview.action">Program Setup</a> <br/>
-<a href="http://192.168.8.5:8181/">H2 testing database Console</a>
+<a href="http://localhost:8181/">H2 testing database Console</a>
 <form method="post" action="testxsl.action">
 	<table>
 		<tr><td>Enter FirstName :</td>
