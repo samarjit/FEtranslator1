@@ -48,7 +48,7 @@ public class QueryParser{
 	/**
 	 * Hash dependency on Action context for accessing ValueStack. Three conditions might come get data from immediate dataset, get data from inputdata set as whole :inp, get data from previous results :res. 
 	 * @param updatequery [in] Not null it is returned after replacemeent of :xxxx with '?' as i prepared statement
-	 * @param panelname [in] can be null, then all parameters will be treated as Ognl expression  
+	 * @param panelname [not used] will be inputstackid if it is used later 
 	 * @param jsonObject [in] containing key/value pair of properties to be filled in query :xxxx can be null is there is no :xxx
 	 * @param arparam [out]
 	 * @param hmfielddbtype [in]

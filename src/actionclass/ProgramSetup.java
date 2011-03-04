@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.ycs.fe.crud.CommandProcessor;
 import com.ycs.fe.crud.InsertData;
 import com.ycs.fe.crud.UpdateData;
 import com.ycs.fe.dto.ResultDTO;
@@ -59,10 +60,18 @@ private Logger logger = Logger.getLogger(getClass());
 		String resultHtml = "";
 		String formname = "";
 		ResultDTO result = new ResultDTO();
-		logger.debug(submitdata);
+		logger.debug("submitdata:"+submitdata);
 		JSONObject jobj1 =   JSONObject.fromObject(submitdata);
 		
-		for (Iterator itr = jobj1.keys();itr.hasNext();) {
+		try{
+			CommandProcessor cmdpr = new CommandProcessor();
+			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName); 
+			JSONObject resObj = JSONObject.fromObject(resDTO);
+			resultHtml = resObj.toString();
+		}catch(Exception e){
+			logger.debug("ActionClass Exception occured",e);
+		}
+		/*for (Iterator itr = jobj1.keys();itr.hasNext();) {
 			String name = (String) itr.next();
 			formname = name; 
 			logger.debug(name);
@@ -104,7 +113,7 @@ private Logger logger = Logger.getLogger(getClass());
 				
 			}
 			
-		}
+		}*/
 		
 		 
 //		resultHtml = result;

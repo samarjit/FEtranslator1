@@ -2,12 +2,9 @@ package com.ycs.fe.actions;
 
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
-import java.util.Iterator;
-import java.util.Set;
 
 import map.ScreenMapRepo;
 import net.sf.json.JSON;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
@@ -19,15 +16,13 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import android.database.DataSetObserver;
-
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.ycs.fe.businesslogic.BaseBL;
 import com.ycs.fe.cache.BusinessLogicFactory;
-import com.ycs.fe.crud.JsrpcPojo;
+import com.ycs.fe.crud.CommandProcessor;
 import com.ycs.fe.dto.ResultDTO;
 
 
@@ -49,46 +44,7 @@ public class JavascriptRpc extends ActionSupport {
 		command="selectonload";
 	}
 	
-	/**
-	 * command="jrpcCmd1" should be present in each record see in submitdata data structure
-	 * 
-	 * submitdata={"form1":[{"row":0,"programname":"LOYCARD","txtnewprogname":"LOYCARD","txtprogramdesc":"Loyalty Card Program",
-	 * "issuername":"HSBC Bank","countryofissue":"SINGAPORE","txtstatus":"Modify",command:"jrpcCmd1"},{"row":1,"programname":"TRACARD",
-	 * "txtnewprogname":"TRACARD","txtprogramdesc":"Travel Card Program","issuername":"HSBC Bank","countryofissue":"SINGAPORE",
-	 * "txtstatus":"Modify",command:"jrpcCmd1"}],“txnrec”:{single:””,multiple:[{aaa:’’},{aaa:’’}]}}
-	 * 
-	 * @param command
-	 * @param submitdataObj
-	 * @return
-	 */
-	public ResultDTO commandProcessor( JSON submitdataObj){
-		JsrpcPojo rpc = new JsrpcPojo();
-		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
-		
-		ResultDTO resDTO = null;
-		
-			
-		    @SuppressWarnings("unchecked")
-			Set<String>  itr =  ( (JSONObject) submitdataObj).keySet();
-		    for (String dataSetkey : itr) {
-		    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
-		    	for (Object jsonPart : dataSetJobj) {
-		    		String cmd = ((JSONObject) jsonPart).getString("command");
-		    		Element elmCmd = (Element) rootXml.selectSingleNode("//commands/cmd[@name='"+command+"' and @instack='"+dataSetkey+"'] ");
-		    		System.out.println("//commands/cmd[@name='"+command+"' and @instack='"+cmd+"'] ");
-		    		String instack = elmCmd.attributeValue("instack");
-		    		String operation = elmCmd.attributeValue("opt");
-		    		String[] opts = operation.split("\\|");
-		    		for (String opt : opts) {
-		    			String[] sqlcmd = opt.split("\\:");
-		    			String querynode =  sqlcmd[0]+"[@id='"+sqlcmd[1]+"']";
-		    		resDTO = rpc.selectData(  screenName,   panelName, querynode ,   (JSONObject)jsonPart);
-		    		}
-		    	}
-			}
-		 
-		return resDTO;
-	}
+	
 	
 	@Action(value="jsrpc",params={"configxml","ProductSetup.xml"},
 			results={@Result(name="success",type="stream",params={"contentType","text/html","inputName","inputStream","resultxml","ProductSetup.xml"})}
@@ -112,8 +68,8 @@ public class JavascriptRpc extends ActionSupport {
 				logger.debug("JsonRPC with submitdata="+submitdata);
 				JSON submitdataObj = JSONObject.fromObject(submitdata);
 				
-				
-				resDTO = commandProcessor (  submitdataObj);  
+				CommandProcessor cmdpr = new CommandProcessor();
+				resDTO = cmdpr.commandProcessor(submitdataObj, parsedquery);  
 					
 					
 				 

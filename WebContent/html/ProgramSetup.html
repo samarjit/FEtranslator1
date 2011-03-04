@@ -211,7 +211,7 @@ function onSearch(){
 	//Dummy data$('#multiplerows .trlightgrey').parent().append($('#searchtemp').find('tr').parent().html());
 	var submitdata = {whereval:"NewCard"};
 	var submitstring = JSONstring.make(submitdata);
-	jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{whereval:'LOYCARD'}]}&command=jrpcCmd1",function (data){
+	jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{whereval:'LOYCARD',command:'jrpcCmd1'}]}",function (data){
 		alert(data);
 	var json = jQuery.parseJSON(data);
 		if(json != null){
@@ -235,6 +235,7 @@ function onSearch(){
 }
 
 function onSubmit (args) {
+var cmds = {New: 'New', Modify: 'Update', Close: 'Update', Delete:'Delete'};
 	//document.getElementById("form1").submit();
 	var formdata = {form1:[]};
 	
@@ -244,11 +245,12 @@ function onSubmit (args) {
  
 		$("input:gt(0)", this).each(function(i,v){
 			 rowobj[v.name] = v.value;
+			 rowobj.command = cmds[v.value];
 			 }); 
 		formdata["form1"].push(rowobj);	 
 	});
 
-	
+	debugger;
 	var submitdata = "screenName=ProgramSetup&submitdata="+JSONstring.make(formdata);
 	$('#form2')[0].action = "programsetupsave.action";
 //	$('#form2').append("<input type='hidden' id='submitdata' name='submitdata' />");

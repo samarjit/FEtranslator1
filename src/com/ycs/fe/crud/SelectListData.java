@@ -23,15 +23,20 @@ import com.ycs.fe.dto.PrepstmtDTOArray;
 public class SelectListData {
 private Logger logger = Logger.getLogger(getClass()); 
 	public String selectList(String screenName, String panelname, JSONObject jsonObject) {
-		 
+		 return selectList(screenName, panelname,"sqlselect", jsonObject);
+	}
+	public String selectList(String screenName, String panelname,String querynode, JSONObject jsonObject) {
 		 	String xmlconfigfile =  ScreenMapRepo.findMapXML(screenName);
 			String parsedquery = "";
 			try {
 				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);
 				org.dom4j.Element root = document1.getRootElement();
 				Node crudnode = root.selectSingleNode("//crud");
-				Node node = crudnode.selectSingleNode("sqlinsert");
-				if(node == null)throw new Exception("<sqlselect> node not defined");
+				Node node = crudnode.selectSingleNode(querynode);
+				if(node == null)throw new Exception("<"+querynode+"> node not defined");
+				
+				String outstack = ((Element) node).attributeValue("outstack"); 
+				panelname = outstack;
 				
 				String updatequery = "";
 				updatequery += node.getText();

@@ -40,6 +40,9 @@ private Logger logger = Logger.getLogger(getClass());
 				Node node = crudnode.selectSingleNode(querynode);
 				if(node == null)throw new Exception("<"+querynode+"> node not defined");
 				
+				String outstack = ((Element) node).attributeValue("outstack"); 
+				panelname = outstack;
+				
 				String updatequery = "";
 				updatequery += node.getText();
 				

@@ -25,7 +25,10 @@ import com.ycs.fe.dto.ResultDTO;
 public class UpdateData {
 private Logger logger = Logger.getLogger(getClass()); 
 	public ResultDTO update(String screenName, String panelname, JSONObject jsonObject) {
-		 
+		logger.debug("calling first default(first) sqlupdate query");
+	    return update(screenName, panelname,"sqlupdate", jsonObject);
+	}
+	public ResultDTO update(String screenName, String panelname,String querynode, JSONObject jsonObject) {
 		    String pageconfigxml =  ScreenMapRepo.findMapXML(screenName);
 			String parsedquery = "";
 			ResultDTO queryres = new ResultDTO();
@@ -33,8 +36,11 @@ private Logger logger = Logger.getLogger(getClass());
 				org.dom4j.Document document1 = new SAXReader().read( pageconfigxml);
 				org.dom4j.Element root = document1.getRootElement();
 				Node crudnode = root.selectSingleNode("//crud");
-				Node node = crudnode.selectSingleNode("sqlupdate");
-				if(node == null)throw new Exception("<sqlupdate> node not defined");
+				Node node = crudnode.selectSingleNode(querynode);
+				if(node == null)throw new Exception("<"+querynode+"> node not defined");
+				
+				String outstack = ((Element) node).attributeValue("outstack"); 
+				panelname = outstack;
 				
 				String updatequery = "";
 				updatequery += node.getText();

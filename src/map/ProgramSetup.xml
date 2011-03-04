@@ -47,12 +47,13 @@
 				</sqlselect>
 				<sqlinsert id="ins1" outstack="frmIns1">insert into PROGRAMDETAILS (PROGNAME,PROGDESC,COUNTRY_ISSUE)values(:txtnewprogname,:txtprogramdesc,:countryofissue )</sqlinsert>
 				<sqldelete id="del1" outstack="frmDel1">delete from PROGRAMDETAILS where PROGNAME=:form1[0].txtnewprogname AND COUNTRY_ISSUE=:form1[0].countryofissue</sqldelete>
-				<sqlupdate id="del1" outstack="frmUpd1">update PROGRAMDETAILS set PROGDESC=:txtprogramdesc,COUNTRY_ISSUE=:countryofissue, ISSUERNAME=:issuername|STRING 	
+				<sqlupdate id="Upd1" outstack="frmUpd1">update PROGRAMDETAILS set PROGDESC=:txtprogramdesc,COUNTRY_ISSUE=:countryofissue, ISSUERNAME=:issuername|STRING 	
 						 where PROGNAME=:form1[0].txtnewprogname</sqlupdate>
 			</crud>
 			<commands>
 			   <cmd name="TXNPROC1" opt="TXNPROC:TRANSCODE" instack="form1" result="ajax" processor="DM/BL/CRUD" ></cmd>
 			   <cmd name="jrpcCmd1" opt="jsonrpc:rpc1" instack="form1" result="ajax"  ></cmd>
+			   <cmd name="Update" opt="sqlupdate:Upd1" instack="form1" result="ajax"  ></cmd>
 			   <cmd name="merge" opt="jsrpc:1|selectonload:1" instack="form1" result="ajax|{screenName}"  ></cmd>
 			   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  ></cmd>
 			</commands>

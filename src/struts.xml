@@ -19,9 +19,9 @@
 				<interceptor-ref name="decorator" />
 			</interceptor-stack>
 		</interceptors>
-		<global-results>
-	        <result name="exception">pages/globalerror.jsp</result>
-	    </global-results>
+		<!-- global-results>
+	        <result name="exception">/pages/globalerror.jsp</result>
+	    </global-results-->
 	
 	    <global-exception-mappings>
 	        <exception-mapping exception="java.lang.Exception"

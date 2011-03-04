@@ -23,6 +23,7 @@ import com.ycs.fe.dto.ResultDTO;
 public class JsrpcPojo {
 private Logger logger = Logger.getLogger(getClass()); 
 	public ResultDTO selectData(String screenName, String panelname,  JSONObject jsonObject) {
+		logger.debug("calling first default(first) sqlselect query");
 		return selectData(screenName, panelname,"sqlselect", jsonObject);
 	}
 	
@@ -39,6 +40,9 @@ private Logger logger = Logger.getLogger(getClass());
 				Node crudnode = root.selectSingleNode("//crud");
 				Node node = crudnode.selectSingleNode(querynode);
 				if(node == null)throw new Exception("<"+querynode+"> node not defined");
+				
+				String outstack = ((Element) node).attributeValue("outstack"); 
+				panelname = outstack;
 				
 				String updatequery = "";
 				updatequery += node.getText();

@@ -23,17 +23,22 @@ import com.ycs.fe.dto.PrepstmtDTOArray;
 
 public class DeleteData {
 private Logger logger = Logger.getLogger(getClass()); 
-	public String update(String screenName, String panelname, JSONObject jsonObject) {
-		 
-		 
+	public String delete(String screenName, String panelname, JSONObject jsonObject) {
+		logger.debug("calling first default(first) sqldelete query");
+		return delete(screenName, panelname,"sqldelete", jsonObject);
+	}
+	public String delete(String screenName, String panelname,String querynode, JSONObject jsonObject) {	 
 		String xmlconfigfile =  ScreenMapRepo.findMapXML(screenName);
 		String parsedquery = "";
 			try {
 				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);
 				org.dom4j.Element root = document1.getRootElement();
 				Node crudnode = root.selectSingleNode("//crud");
-				Node node = crudnode.selectSingleNode("sqlinsert");
-				if(node == null)throw new Exception("<sqldelete> node not defined");
+				Node node = crudnode.selectSingleNode(querynode);
+				if(node == null)throw new Exception("<"+querynode+"> node not defined");
+				
+				String outstack = ((Element) node).attributeValue("outstack"); 
+				panelname = outstack;
 				
 				String updatequery = "";
 				updatequery += node.getText();
