@@ -13,6 +13,7 @@ import org.dom4j.Element;
  
 
 import com.opensymphony.xwork2.ActionContext;
+import com.ycs.fe.DataTypeException;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTOArray;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
@@ -52,9 +53,10 @@ public class QueryParser{
 	 * @param arparam [out]
 	 * @param hmfielddbtype [in]
 	 * @return updatequery is returned after replacemeent of :xxxx with '?' as i prepared statement
+	 * @throws DataTypeException 
 	 * @throws Exception
 	 */
-	public static String parseQuery(String updatequery,String panelname,JSONObject jsonObject, PrepstmtDTOArray  arparam, HashMap<String, DataType> hmfielddbtype) throws Exception{
+	public static String parseQuery(String updatequery,String panelname,JSONObject jsonObject, PrepstmtDTOArray  arparam, HashMap<String, DataType> hmfielddbtype) throws DataTypeException {
 		//Where
 //		String updatewhere = crudnode.selectSingleNode("sqlwhere").getText();
 		String PATTERN = "\\:(inp|res|vs)?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";//"\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
@@ -72,8 +74,8 @@ public class QueryParser{
 	          
 	          String prop =  m1.group();
 	          logger.debug("Start preparing '"+prop +"' start="+ m1.start() + " end="+m1.end()+" grp1="+m1.group(1)+" grp2="+m1.group(2)+" grp3="+m1.group(3)+" ");
-	          if(! "".equals(m1.group(1))){//do ognl because (inp|res|vs) is not ""
-	        	  if( m1.group(1).equals("inp")){ //:form[0].param === :param use jsonObject and get group(3) val 
+	          if(m1.group(1)!=null && ! "".equals(m1.group(1))){//do ognl because (inp|res|vs) is not ""
+	        	  if("inp".equals( m1.group(1))){ //:form[0].param === :param use jsonObject and get group(3) val 
 	        		  logger.debug(" Processing with #inputDTO");
 	        		  String expr = m1.group(2);
 	        		  String propval = ActionContext.getContext().getValueStack().findString("#inputDTO.data."+expr);
@@ -96,7 +98,7 @@ public class QueryParser{
 	        		   
 	        		  end = m1.end(); 
 	        		  logger.debug("This is not prefered Mode with dot"+m1.group(2)+". "+propname);
-	        	  }else  if( m1.group(1).equals("res")){ //:formXX[0].param
+	        	  }else  if("res".equals( m1.group(1))){ //:formXX[0].param
 	        		  logger.debug(" Processing with #resultDTO");
 	        		  //TODO: implement for object filling from related panels.
 	        		  String expr = m1.group(2);
@@ -116,7 +118,7 @@ public class QueryParser{
 	        		  parsedquery += updatequery.substring(end,m1.start());//
 	        		  parsedquery += "?";
 	        		  end = m1.end(); 
-	        	  }else if( m1.group(1).equals("vs")){
+	        	  }else if("vs".equals( m1.group(1))){
 	        		  logger.debug(" Processing with ValueStack");
 	        		  //TODO: implement for object filling from related panels.
 	        		  String expr = m1.group(2);
@@ -136,12 +138,15 @@ public class QueryParser{
 	        		  parsedquery += updatequery.substring(end,m1.start());//
 	        		  parsedquery += "?";
 	        		  end = m1.end();  
+	        	  }else{
+	        		 logger.fatal("Unsupported Ognl expression in SQL"+m1.group());
 	        	  }
 	          }else{ //fill with present panel row object :formxparam
+	        	  logger.debug(" Processing without ValueStack property="+m1.group(2));
 	        	  String propval;
-	        	  if(jsonObject!=null && jsonObject.has(m1.group(1)) ){
-	        		  String propname = m1.group(1);
-	        		  propval = jsonObject.getString(m1.group(1));
+	        	  if(jsonObject!=null && jsonObject.has(m1.group(2)) ){
+	        		  String propname = m1.group(2);
+	        		  propval = jsonObject.getString(m1.group(2));
 	        		  parsedquery += updatequery.substring(end,m1.start());//
 					 
 	        		  if(!"".equals(m1.group(3)) ){
@@ -151,10 +156,12 @@ public class QueryParser{
         			  }
         			   
 	        		  parsedquery += "?";
+	        	  }else{
+	        		  logger.debug("Property="+m1.group(2)+" not found in input JSON record JSON="+jsonObject);
 	        	  }
 	        	  
         		  end = m1.end(); 
-        		  logger.debug("else no dot "+m1.group(1));
+        		  logger.debug("else no dot "+m1.group(2));
 	          }
 	          count++;
 	       }

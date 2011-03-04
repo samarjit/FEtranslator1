@@ -2,12 +2,14 @@ package com.ycs.fe.actions;
 
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
+import java.util.Iterator;
+import java.util.Set;
 
 import map.ScreenMapRepo;
 import net.sf.json.JSON;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
@@ -16,12 +18,10 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
- 
+
+import android.database.DataSetObserver;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -50,29 +50,43 @@ public class JavascriptRpc extends ActionSupport {
 	}
 	
 	/**
-	 * command="jrpcCmd1"&
+	 * command="jrpcCmd1" should be present in each record see in submitdata data structure
+	 * 
 	 * submitdata={"form1":[{"row":0,"programname":"LOYCARD","txtnewprogname":"LOYCARD","txtprogramdesc":"Loyalty Card Program",
-	 * "issuername":"HSBC Bank","countryofissue":"SINGAPORE","txtstatus":"Modify"},{"row":1,"programname":"TRACARD",
+	 * "issuername":"HSBC Bank","countryofissue":"SINGAPORE","txtstatus":"Modify",command:"jrpcCmd1"},{"row":1,"programname":"TRACARD",
 	 * "txtnewprogname":"TRACARD","txtprogramdesc":"Travel Card Program","issuername":"HSBC Bank","countryofissue":"SINGAPORE",
-	 * "txtstatus":"Modify"}],“txnrec”:{single:””,multiple:[{aaa:’’},{aaa:’’}]}}
+	 * "txtstatus":"Modify",command:"jrpcCmd1"}],“txnrec”:{single:””,multiple:[{aaa:’’},{aaa:’’}]}}
 	 * 
 	 * @param command
 	 * @param submitdataObj
 	 * @return
 	 */
-	public ResultDTO commandProcessor(String command, JSON submitdataObj){
+	public ResultDTO commandProcessor( JSON submitdataObj){
 		JsrpcPojo rpc = new JsrpcPojo();
 		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
-		Element elmCmd = (Element) rootXml.selectSingleNode("//command/cmd[@name='"+command+"']");
-		String stackid = elmCmd.attributeValue("stack");
-		String operation = elmCmd.attributeValue("opt");
-		String[] opts = operation.split("|");
+		
 		ResultDTO resDTO = null;
-		for (String opt : opts) {
-			String[] sqlcmd = opt.split(":");
-			String querynode = sqlcmd[0]+"/[@id='"+sqlcmd[1]+"']";
-			  resDTO = rpc.selectData(  screenName,   panelName, querynode ,   (JSONObject)submitdataObj);
-		}
+		
+			
+		    @SuppressWarnings("unchecked")
+			Set<String>  itr =  ( (JSONObject) submitdataObj).keySet();
+		    for (String dataSetkey : itr) {
+		    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
+		    	for (Object jsonPart : dataSetJobj) {
+		    		String cmd = ((JSONObject) jsonPart).getString("command");
+		    		Element elmCmd = (Element) rootXml.selectSingleNode("//commands/cmd[@name='"+command+"' and @instack='"+dataSetkey+"'] ");
+		    		System.out.println("//commands/cmd[@name='"+command+"' and @instack='"+cmd+"'] ");
+		    		String instack = elmCmd.attributeValue("instack");
+		    		String operation = elmCmd.attributeValue("opt");
+		    		String[] opts = operation.split("\\|");
+		    		for (String opt : opts) {
+		    			String[] sqlcmd = opt.split("\\:");
+		    			String querynode =  sqlcmd[0]+"[@id='"+sqlcmd[1]+"']";
+		    		resDTO = rpc.selectData(  screenName,   panelName, querynode ,   (JSONObject)jsonPart);
+		    		}
+		    	}
+			}
+		 
 		return resDTO;
 	}
 	
@@ -99,7 +113,7 @@ public class JavascriptRpc extends ActionSupport {
 				JSON submitdataObj = JSONObject.fromObject(submitdata);
 				
 				
-				resDTO = commandProcessor ( command ,   submitdataObj);  
+				resDTO = commandProcessor (  submitdataObj);  
 					
 					
 				 

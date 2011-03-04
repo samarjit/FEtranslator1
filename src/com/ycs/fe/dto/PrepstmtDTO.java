@@ -1,4 +1,6 @@
 package com.ycs.fe.dto; 
+
+import com.ycs.fe.DataTypeException;
   
  public class PrepstmtDTO { 
  //public static String STRING="STRING"; 
@@ -39,7 +41,7 @@ package com.ycs.fe.dto;
      else
     	 return "INVALID_TYPE";
  }
- public static DataType getDataTypeFrmStr(String type) throws Exception{
+ public static DataType getDataTypeFrmStr(String type) throws DataTypeException{
 	 if(type.equals("STRING") )
     	 return DataType.STRING; 
 	 if(type.equals("INT") )
@@ -51,7 +53,7 @@ package com.ycs.fe.dto;
 	 if(type.equals("DOUBLE") )
     	 return DataType.DOUBLE; 
      else
-    	 throw new Exception("DataType undefined");
+    	 throw new DataTypeException("DataType undefined");
  }
  
  public void setType(DataType type) { 

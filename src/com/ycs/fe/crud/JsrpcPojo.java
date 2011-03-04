@@ -1,21 +1,19 @@
 package com.ycs.fe.crud;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import map.ScreenMapRepo;
-
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-import org.dom4j.Element;
-import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
-import com.opensymphony.xwork2.ActionContext;
+import org.apache.log4j.Logger;
+import org.dom4j.Element;
+import org.dom4j.InvalidXPathException;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
+
+import com.ycs.fe.DataTypeException;
 import com.ycs.fe.dao.FETranslatorDAO;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
@@ -71,9 +69,17 @@ private Logger logger = Logger.getLogger(getClass());
 			       FETranslatorDAO fetranslatorDAO = new FETranslatorDAO();
 			       resultDTO = fetranslatorDAO.executecrud(screenName, parsedquery, panelname, arparam);
 			       
-			}catch(Exception e){
+			}catch(InvalidXPathException e){
 				logger.debug("Exception caught in InsertData",e);
-			}
+			} catch (DataTypeException e) {
+				logger.debug("Exception caught in InsertData",e);
+			} catch (JSONException e) {
+				logger.debug("Exception caught in InsertData",e);
+				e.printStackTrace();
+			} catch (Exception e) {
+				logger.debug("Exception caught in InsertData",e);
+				e.printStackTrace();
+			}  
 		return resultDTO;
 	}
 

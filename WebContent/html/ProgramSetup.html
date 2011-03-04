@@ -143,32 +143,7 @@ function onCancel() {
 	clearall();
 }
 
-function onSearch(){
-	//Dummy data$('#multiplerows .trlightgrey').parent().append($('#searchtemp').find('tr').parent().html());
-	var submitdata = {whereval:"NewCard"};
-	var submitstring = JSONstring.make(submitdata);
-	jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata=[{command='jsonrpc',data={whereval:'LOYCARD'}}]",function (data){
-		alert(data);
-	var json = jQuery.parseJSON(data);
-		if(json != null){
-			json = json.data.form1;
-			 var templateResult = {};
-			var tablehtml = '<table width="100%" class="table1" ><tr>';
-			$.each(json,function (i,v){
-				var templatedata = $(iadt.options.listtemplate).html();
-				v.rowcount = i;
-				   templateResult = 	$.tmpl(templatedata,v);
-				tablehtml+=templateResult.find("tr").parent().html();
-			});
-			tablehtml +="</table>";		
-			 
-			$('body').append(tablehtml);
-		}
-	
-	});
 
-	
-}
 function onViewDetails(){
 if(	$('#multiplerows .trlightgrey').siblings().find('input[type=radio]:checked').length > 0)
 	location.href = 'ProgramSetupViewDetails.html';
@@ -230,6 +205,33 @@ function radClickCallback (obj) {
 	}else{
 		$('#newprog').hide();
 	}
+}
+
+function onSearch(){
+	//Dummy data$('#multiplerows .trlightgrey').parent().append($('#searchtemp').find('tr').parent().html());
+	var submitdata = {whereval:"NewCard"};
+	var submitstring = JSONstring.make(submitdata);
+	jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{whereval:'LOYCARD'}]}&command=jrpcCmd1",function (data){
+		alert(data);
+	var json = jQuery.parseJSON(data);
+		if(json != null){
+			json = json.data.form1;
+			 var templateResult = {};
+			var tablehtml = '<table width="100%" class="table1" ><tr>';
+			$.each(json,function (i,v){
+				var templatedata = $(iadt.options.listtemplate).html();
+				v.rowcount = i;
+				   templateResult = 	$.tmpl(templatedata,v);
+				tablehtml+=templateResult.find("tr").parent().html();
+			});
+			tablehtml +="</table>";		
+			 
+			$('body').append(tablehtml);
+		}
+	
+	});
+
+	
 }
 
 function onSubmit (args) {

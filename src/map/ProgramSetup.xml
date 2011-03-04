@@ -33,27 +33,28 @@
 	<panels>
 		<panel id="form1">
 			<crud>
-				<jsonrpc id="rpc1"  stackid="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS 
+				<jsonrpc id="rpc1"  outstack="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS 
 					where PROGNAME=:whereval|STRING order by 1</jsonrpc>			
-			    <selectonload stackid="form2" id="selqry1">SELECT 'LOYCARD' "txtnewprogname" from DUAL </selectonload>
-			    <selectonload stackid="form1" id="selqry2">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS
+			    <selectonload outstack="form2" id="selqry1">SELECT 'LOYCARD' "txtnewprogname" from DUAL </selectonload>
+			    <selectonload outstack="form1" id="selqry2">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS
 			       where PROGNAME=:form2[0].txtnewprogname order by 1
 			      <countquery pagesize="10" >SELECT count('x') from PROGRAMDETAILS where  PROGNAME=:form2[0].txtnewprogname </countquery>
 			    </selectonload>
 			       
 				 
-				<sqlselect id="selSpl1" type="DM" stackid="list1">select USER_ID userid, PASSWD password from USER_MASTER 
+				<sqlselect id="selSpl1" type="DM" outstack="list1">select USER_ID userid, PASSWD password from USER_MASTER 
 					<error message="Select Failed {userid} "></error>
 				</sqlselect>
-				<sqlinsert id="ins1" stackid="frmIns1">insert into PROGRAMDETAILS (PROGNAME,PROGDESC,COUNTRY_ISSUE)values(:txtnewprogname,:txtprogramdesc,:countryofissue )</sqlinsert>
-				<sqldelete id="del1" stackid="frmDel1">delete from PROGRAMDETAILS where PROGNAME=:form1[0].txtnewprogname AND COUNTRY_ISSUE=:form1[0].countryofissue</sqldelete>
-				<sqlupdate id="del1" stackid="frmUpd1">update PROGRAMDETAILS set PROGDESC=:txtprogramdesc,COUNTRY_ISSUE=:countryofissue, ISSUERNAME=:issuername|STRING 	
+				<sqlinsert id="ins1" outstack="frmIns1">insert into PROGRAMDETAILS (PROGNAME,PROGDESC,COUNTRY_ISSUE)values(:txtnewprogname,:txtprogramdesc,:countryofissue )</sqlinsert>
+				<sqldelete id="del1" outstack="frmDel1">delete from PROGRAMDETAILS where PROGNAME=:form1[0].txtnewprogname AND COUNTRY_ISSUE=:form1[0].countryofissue</sqldelete>
+				<sqlupdate id="del1" outstack="frmUpd1">update PROGRAMDETAILS set PROGDESC=:txtprogramdesc,COUNTRY_ISSUE=:countryofissue, ISSUERNAME=:issuername|STRING 	
 						 where PROGNAME=:form1[0].txtnewprogname</sqlupdate>
 			</crud>
 			<commands>
-			   <cmd name="jrpcCmd1" opt="jsrpc:rpc1" stack="form1" result="ajax"  ></cmd>
-			   <cmd name="merge" opt="jsrpc:1|selectonload:1" stack="form1" result="ajax|{screenName}"  ></cmd>
-			   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  stack="formChild"  result="ajax|{screenName}"  ></cmd>
+			   <cmd name="TXNPROC1" opt="TXNPROC:TRANSCODE" instack="form1" result="ajax" processor="DM/BL/CRUD" ></cmd>
+			   <cmd name="jrpcCmd1" opt="jsonrpc:rpc1" instack="form1" result="ajax"  ></cmd>
+			   <cmd name="merge" opt="jsrpc:1|selectonload:1" instack="form1" result="ajax|{screenName}"  ></cmd>
+			   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  ></cmd>
 			</commands>
 			
 			<fields>
