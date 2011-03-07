@@ -23,19 +23,24 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.ycs.fe.businesslogic.BaseBL;
 import com.ycs.fe.cache.BusinessLogicFactory;
 import com.ycs.fe.crud.CommandProcessor;
+import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 
 
 public class JavascriptRpc extends ActionSupport {
+	 
+	private static final long serialVersionUID = -623830420192157346L;
+
+
 	private Logger logger = Logger.getLogger(JavascriptRpc.class);
 	
-	private static final long serialVersionUID = 1L;
+	
 	private String command;
 	private String screenName;
 	private InputStream inputStream;
 	private String panelName;
 	private String submitdata = "{}";
- 
+    private String data;
 	
 	public JavascriptRpc() {
 		super();
@@ -67,9 +72,12 @@ public class JavascriptRpc extends ActionSupport {
 				 
 				logger.debug("JsonRPC with submitdata="+submitdata);
 				JSON submitdataObj = JSONObject.fromObject(submitdata);
+				InputDTO inputDTO = new InputDTO();
+				inputDTO.setData((JSONObject) submitdataObj);
+				ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
 				
 				CommandProcessor cmdpr = new CommandProcessor();
-				resDTO = cmdpr.commandProcessor(submitdataObj, parsedquery);  
+				resDTO = cmdpr.commandProcessor(submitdataObj, screenName);  
 					
 					
 				 
@@ -148,6 +156,12 @@ public class JavascriptRpc extends ActionSupport {
 	}
 	public String getSubmitdata() {
 		return submitdata;
+	}
+	public void setData(String data) {
+		this.data = data;
+	}
+	public String getData() {
+		return data;
 	}
  
 	

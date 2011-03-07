@@ -91,7 +91,7 @@ public abstract class HTMLProcessor {
 				for (Iterator queryList = selonloadnl.iterator(); queryList.hasNext();) {
 					org.dom4j.Node node = (org.dom4j.Node) queryList.next();
 					logger.debug("Query Node:"+node.getText());
-					String stackid = ((org.dom4j.Element) node).attributeValue("stackid");
+					String stackid = ((org.dom4j.Element) node).attributeValue("outstack");
 					String type = ((org.dom4j.Element) node).attributeValue("type");
 					String sqlquery = node.getText();
 					

@@ -250,7 +250,7 @@ var cmds = {New: 'New', Modify: 'Update', Close: 'Update', Delete:'Delete'};
 		formdata["form1"].push(rowobj);	 
 	});
 
-	debugger;
+	
 	var submitdata = "screenName=ProgramSetup&submitdata="+JSONstring.make(formdata);
 	$('#form2')[0].action = "programsetupsave.action";
 //	$('#form2').append("<input type='hidden' id='submitdata' name='submitdata' />");

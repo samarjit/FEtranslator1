@@ -26,6 +26,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.ycs.fe.crud.CommandProcessor;
 import com.ycs.fe.crud.InsertData;
 import com.ycs.fe.crud.UpdateData;
+import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 
 public class ProgramSetup extends ActionSupport {
@@ -62,6 +63,10 @@ private Logger logger = Logger.getLogger(getClass());
 		ResultDTO result = new ResultDTO();
 		logger.debug("submitdata:"+submitdata);
 		JSONObject jobj1 =   JSONObject.fromObject(submitdata);
+		InputDTO inputDTO = new InputDTO();
+		inputDTO.setData((JSONObject) jobj1);
+		ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
+		
 		
 		try{
 			CommandProcessor cmdpr = new CommandProcessor();

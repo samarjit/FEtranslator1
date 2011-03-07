@@ -54,9 +54,10 @@ public class QueryParser{
 	 * @param hmfielddbtype [in]
 	 * @return updatequery is returned after replacemeent of :xxxx with '?' as i prepared statement
 	 * @throws DataTypeException 
+	 * @throws QueryParseException 
 	 * @throws Exception
 	 */
-	public static String parseQuery(String updatequery,String panelname,JSONObject jsonObject, PrepstmtDTOArray  arparam, HashMap<String, DataType> hmfielddbtype) throws DataTypeException {
+	public static String parseQuery(String updatequery,String panelname,JSONObject jsonObject, PrepstmtDTOArray  arparam, HashMap<String, DataType> hmfielddbtype) throws DataTypeException, QueryParseException {
 		//Where
 //		String updatewhere = crudnode.selectSingleNode("sqlwhere").getText();
 		String PATTERN = "\\:(inp|res|vs)?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";//"\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
@@ -70,7 +71,8 @@ public class QueryParser{
 	       int count = 0;
 	       int end = 0;
 	       String parsedquery = "";
-		while(m1.find()) {
+	       
+	       while(m1.find()) {
 	          
 	          String prop =  m1.group();
 	          logger.debug("Start preparing '"+prop +"' start="+ m1.start() + " end="+m1.end()+" grp1="+m1.group(1)+" grp2="+m1.group(2)+" grp3="+m1.group(3)+" ");
@@ -139,7 +141,10 @@ public class QueryParser{
 	        		  parsedquery += "?";
 	        		  end = m1.end();  
 	        	  }else{
-	        		 logger.fatal("Unsupported Ognl expression in SQL"+m1.group());
+	        		  parsedquery += updatequery.substring(end,m1.start());//adding expression for easy error debuggin
+	        		  parsedquery += m1.group()+"[ERROR]";
+	        		 logger.fatal("BUG BUG Unsupported Ognl expression in SQL"+m1.group());
+	        		 throw new QueryParseException(parsedquery);
 	        	  }
 	          }else{ //fill with present panel row object :formxparam
 	        	  logger.debug(" Processing without ValueStack property="+m1.group(2));
@@ -157,15 +162,20 @@ public class QueryParser{
         			   
 	        		  parsedquery += "?";
 	        	  }else{
-	        		  logger.debug("Property="+m1.group(2)+" not found in input JSON record JSON="+jsonObject);
+	        		  parsedquery += updatequery.substring(end,m1.start());//adding expression for easy error debuggin
+	        		  parsedquery += m1.group()+"[ERROR]";
+	        		  logger.error("BUG BUG Property="+m1.group(2)+" not found in input JSON record JSON="+jsonObject);
+	        		  throw new QueryParseException(parsedquery);
 	        	  }
 	        	  
         		  end = m1.end(); 
         		  logger.debug("else no dot "+m1.group(2));
 	          }
+	          
+	         
 	          count++;
 	       }
-		   logger.debug("Last part end="+end);
+		   logger.debug("Last part end="+end+ " Query part to append:"+updatequery.substring(end));
 	       parsedquery += updatequery.substring(end);
 	       updatequery = parsedquery;
 	       logger.debug("Parsed Query:"+ parsedquery);

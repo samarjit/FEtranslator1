@@ -1,0 +1,26 @@
+Datatype 
+--------
+Prepared statement is used in all queries so it is important in all queries. 
+Datatypes are searched based on any field definition on a certain page in which the query 
+is defined.
+Logic:
+1. `select NAME txtmyname from USERS where EMPID=:txtempid|STRING`. 
+In this the datatype is appended inline in the expression. This overrides the **dbdatatype** 
+attribute shown below. 
+2. `select NAME txtmyname from USERS where EMPID=:txtempid`.
+In this **:txtempid** is searched in all fields in a page with **forid=txtempid**. If found the 
+dbdatatype attribute is used to get its data type.
+3. The last word in the expression is used to search in **forid=<last segment in expression>**
+eg. In expression :vs.form1[0].txtempid, txtempid will be used to search **forid=txtempid**.
+The txtmyname's datatype is ignored and no conversion is performed.
+and pushed on result map like **txtyname=<value>**. 
+
+Query Parameter evaluation
+--------------------------
+There are 4 types of evaluating query paramters.
+1. :inp.form1[0].txtempid - Ognl expression is evaluated agaist input data in inputDTO
+2. :res.form1[0].txtempid - Ognl expression is evaluated agaist result evaluated previously in 
+current request scope.
+3. :vs.form1[0].txtempid - vs means value stack. Ognl expression is evaluated against
+ `ValueStack`. 
+4. :txtempid - Is evaluated from current record json object.

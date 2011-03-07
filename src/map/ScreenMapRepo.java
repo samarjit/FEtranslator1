@@ -60,7 +60,7 @@ public class ScreenMapRepo {
 			Document doc = new SAXReader().read(path);
 			root = doc.getRootElement();
 		} catch (DocumentException e) {
-			logger.debug("XML Load Exception"+path);
+			logger.debug("XML Load Exception path="+path+" ScreenName="+scrName);
 		}
 		return root;
 	}

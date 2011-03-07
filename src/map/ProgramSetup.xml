@@ -37,7 +37,7 @@
 					where PROGNAME=:whereval|STRING order by 1</jsonrpc>			
 			    <selectonload outstack="form2" id="selqry1">SELECT 'LOYCARD' "txtnewprogname" from DUAL </selectonload>
 			    <selectonload outstack="form1" id="selqry2">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS
-			       where PROGNAME=:form2[0].txtnewprogname order by 1
+			       where PROGNAME=:inp.form2[0].txtnewprogname order by 1
 			      <countquery pagesize="10" >SELECT count('x') from PROGRAMDETAILS where  PROGNAME=:form2[0].txtnewprogname </countquery>
 			    </selectonload>
 			       
@@ -48,7 +48,7 @@
 				<sqlinsert id="ins1" outstack="frmIns1">insert into PROGRAMDETAILS (PROGNAME,PROGDESC,COUNTRY_ISSUE)values(:txtnewprogname,:txtprogramdesc,:countryofissue )</sqlinsert>
 				<sqldelete id="del1" outstack="frmDel1">delete from PROGRAMDETAILS where PROGNAME=:form1[0].txtnewprogname AND COUNTRY_ISSUE=:form1[0].countryofissue</sqldelete>
 				<sqlupdate id="Upd1" outstack="frmUpd1">update PROGRAMDETAILS set PROGDESC=:txtprogramdesc,COUNTRY_ISSUE=:countryofissue, ISSUERNAME=:issuername|STRING 	
-						 where PROGNAME=:form1[0].txtnewprogname</sqlupdate>
+						 where PROGNAME=:inp.form1[0].txtnewprogname </sqlupdate>
 			</crud>
 			<commands>
 			   <cmd name="TXNPROC1" opt="TXNPROC:TRANSCODE" instack="form1" result="ajax" processor="DM/BL/CRUD" ></cmd>

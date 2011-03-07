@@ -21,6 +21,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 @Action(value="jaxbtest",results={@Result(name="success",location="/pages/screenmap.jsp")})
 public class JaxbTestAC extends ActionSupport{
+ private String data;
  
 private static final long serialVersionUID = -3779974905508711588L;
 private Root screenroot; 
@@ -105,6 +106,12 @@ private Root screenroot;
 	}
 	public Root getScreenroot() {
 		return screenroot;
+	}
+	public void setData(String data) {
+		this.data = data;
+	}
+	public String getData() {
+		return data;
 	}
 	  
 
