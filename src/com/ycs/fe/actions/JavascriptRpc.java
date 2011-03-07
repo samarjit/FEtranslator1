@@ -77,7 +77,7 @@ public class JavascriptRpc extends ActionSupport {
 				ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
 				
 				CommandProcessor cmdpr = new CommandProcessor();
-				resDTO = cmdpr.commandProcessor(submitdataObj, screenName);  
+				resDTO = cmdpr.commandProcessor(submitdataObj, screenName, inputDTO);  
 					
 					
 				 

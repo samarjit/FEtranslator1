@@ -70,7 +70,7 @@ private Logger logger = Logger.getLogger(getClass());
 		
 		try{
 			CommandProcessor cmdpr = new CommandProcessor();
-			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName); 
+			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName, inputDTO); 
 			JSONObject resObj = JSONObject.fromObject(resDTO);
 			resultHtml = resObj.toString();
 		}catch(Exception e){
