@@ -44,7 +44,7 @@ public class CommandProcessor {
 			Set<String>  itr =  ( (JSONObject) submitdataObj).keySet(); 
 		    for (String dataSetkey : itr) { //form1, form2 ...
 		    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
-		    	for (Object jsonRecord : dataSetJobj) { //rows in dataset
+		    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction
 		    		String cmd = ((JSONObject) jsonRecord).getString("command");
 		    		Element elmCmd = (Element) rootXml.selectSingleNode("//commands/cmd[@name='"+cmd+"' ] ");
 		    		System.out.println("//commands/cmd[@name='"+cmd+"' ] ");

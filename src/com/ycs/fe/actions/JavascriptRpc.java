@@ -111,12 +111,12 @@ public class JavascriptRpc extends ActionSupport {
 //		}
 		
 		JSONObject jobj = JSONObject.fromObject(resDTO);
-		try {
-			jobj.put("data",resDTO.getData());
-			jobj.put("pagination",resDTO.getPagination());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			jobj.put("data",resDTO.getData());
+//			jobj.put("pagination",resDTO.getPagination());
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
 		String json = jobj.toString();
 		logger.debug("Sent back to client:"+json);
 		inputStream = new StringBufferInputStream(json);

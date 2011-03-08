@@ -38,14 +38,22 @@ private Logger logger = Logger.getLogger(getClass());
 				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);
 				org.dom4j.Element root = document1.getRootElement();
 				Node crudnode = root.selectSingleNode("//crud");
-				Node node = crudnode.selectSingleNode(querynode);
-				if(node == null)throw new Exception("<"+querynode+"> node not defined");
+				Node queryNode = crudnode.selectSingleNode(querynode);
+				if(queryNode == null)throw new Exception("<"+querynode+"> node not defined");
 				
-				String outstack = ((Element) node).attributeValue("outstack"); 
+				String outstack = ((Element) queryNode).attributeValue("outstack"); 
 				panelname = outstack;
 				
 				String updatequery = "";
-				updatequery += node.getText();
+				updatequery += queryNode.getText();
+				
+				Element errorNode = (Element) queryNode.selectSingleNode("error");
+				String errorTemplate = "";
+				if(errorNode !=null)errorTemplate=errorNode.attributeValue("message");
+				
+				Element messageNode = (Element) queryNode.selectSingleNode("message");
+				String messageTemplate = "";
+				if(messageNode !=null)messageTemplate=messageNode.attributeValue("message");
 				
 				List<Element> nodeList = crudnode.selectNodes("../fields/field/*");
 				logger.debug("fields size:"+nodeList.size());
@@ -70,7 +78,7 @@ private Logger logger = Logger.getLogger(getClass());
 			       
 			       logger.debug("INSERT query:"+parsedquery+"\n Expanded prep:"+arparam.toString(updatequery));
 			       FETranslatorDAO fetranslatorDAO = new FETranslatorDAO();
-			       resultDTO = fetranslatorDAO.executecrud(screenName, parsedquery, panelname, arparam);
+			       resultDTO = fetranslatorDAO.executecrud(screenName, parsedquery, panelname,jsonObject, arparam, errorTemplate, messageTemplate);
 			}catch(Exception e){
 				logger.debug("Exception caught in InsertData",e);
 			}

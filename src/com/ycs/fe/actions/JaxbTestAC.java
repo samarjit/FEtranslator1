@@ -1,7 +1,9 @@
 package com.ycs.fe.actions;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
@@ -64,6 +66,8 @@ private Root screenroot;
 	public static void main(String[] args) {
 		try {
 			final JAXBContext jaxbContext = JAXBContext.newInstance(Root.class);
+			InputStream f =  JaxbTestAC.class.getResourceAsStream("F:/eclipse/workspace/charts/FEtranslator1/src/map/ProgramSetup.xml");
+			System.out.println(f);
 			final Root root =
 	            (Root) jaxbContext.createUnmarshaller().unmarshal(JaxbTestAC.class.getResourceAsStream("map/ProgramSetup.xml")
 	            //    new File("F:/eclipse/workspace/charts/FEtranslator1/src/map/ProgramSetup.xml")

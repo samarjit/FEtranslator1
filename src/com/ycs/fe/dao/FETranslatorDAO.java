@@ -9,16 +9,17 @@ import java.util.Map;
 
 import javax.sql.rowset.CachedRowSet;
 
+import net.sf.json.JSONObject;
+
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.ParseSentenceOgnl;
+import com.ycs.fe.util.SentenceParseException;
 
 public class FETranslatorDAO {
 	private Logger logger = Logger.getLogger(this.getClass());
@@ -111,7 +112,7 @@ public class FETranslatorDAO {
 	}
 	
 	
-	public ResultDTO executecrud(String screenName, String sqlquery, String stackid, PrepstmtDTOArray prepar) {
+	public ResultDTO executecrud(String screenName, String sqlquery, String stackid,  JSONObject jsonObject, PrepstmtDTOArray prepar, String errorTemplate, String messageTemplate) {
 		ValueStack stack = ActionContext.getContext().getValueStack();
 		DBConnector dbconn = new DBConnector();
 		String retval = "";
@@ -123,6 +124,7 @@ public class FETranslatorDAO {
 			
 			CachedRowSet crs = null;
 			int countrec = 0;
+			String text = "";
 			try {
 				//case i insensitive m multiline s doall  
 				if(sqlquery.matches("(?ims:select)[\\S\\s]*(?ims:from)[\\S\\s]*")){
@@ -143,13 +145,19 @@ public class FETranslatorDAO {
 						}
 						retval = String.valueOf(countrec) ;
 					
-					resultDTO.addMessage("SUCCESS:"+String.valueOf(countrec));
+						if(jsonObject !=null) 
+							text = ParseSentenceOgnl.parse(messageTemplate, jsonObject);
+					resultDTO.addMessage("SUCCESS:"+String.valueOf(countrec)+"|"+text);
 				}else if(sqlquery.matches("[\\S\\s]*(?ims:insert)[\\S\\s]*(?ims:into)[\\S\\s]*")){
 					countrec = dbconn.executePreparedUpdate(sqlquery, prepar);
-					resultDTO.addMessage("SUCCESS:"+String.valueOf(countrec));
+					if(jsonObject !=null) 
+						text = ParseSentenceOgnl.parse(messageTemplate, jsonObject);
+					resultDTO.addMessage("SUCCESS:"+String.valueOf(countrec)+"|"+text);
 				}else if(sqlquery.matches("[\\S\\s]*(?ims:update|delete)[\\S\\s]*(?ims:where)[\\S\\s]*")){
 					countrec = dbconn.executePreparedUpdate(sqlquery, prepar);
-					resultDTO.addMessage("SUCCESS:"+String.valueOf(countrec));
+					if(jsonObject !=null) 
+						text = ParseSentenceOgnl.parse(messageTemplate, jsonObject);
+					resultDTO.addMessage("SUCCESS:"+String.valueOf(countrec)+"|"+text);
 				
 				}else{
 					logger.debug("invalid query skipping..."+sqlquery);
@@ -160,7 +168,13 @@ public class FETranslatorDAO {
 				
 			} catch (Exception e) {
 				logger.debug("DAO Exception:"+e);
-				retval = "ERROR:"+e.getLocalizedMessage();
+				if(jsonObject !=null)
+					try {
+						text = ParseSentenceOgnl.parse(errorTemplate, jsonObject);
+					} catch (SentenceParseException e1) {
+						e1.printStackTrace();
+					}
+				retval = "ERROR:"+e.getLocalizedMessage()+"|"+text;
 			} finally {
 				if (crs != null) {
 					try {

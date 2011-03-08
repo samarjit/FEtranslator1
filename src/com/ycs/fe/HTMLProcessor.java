@@ -89,11 +89,19 @@ public abstract class HTMLProcessor {
 				String screenName = elm.attributeValue("name");
 				logger.debug("query selectonload list size:"+selonloadnl.size());
 				for (Iterator queryList = selonloadnl.iterator(); queryList.hasNext();) {
-					org.dom4j.Node node = (org.dom4j.Node) queryList.next();
-					logger.debug("Query Node:"+node.getText());
-					String stackid = ((org.dom4j.Element) node).attributeValue("outstack");
-					String type = ((org.dom4j.Element) node).attributeValue("type");
-					String sqlquery = node.getText();
+					org.dom4j.Node queryNode = (org.dom4j.Node) queryList.next();
+					logger.debug("Query Node:"+queryNode.getText());
+					String stackid = ((org.dom4j.Element) queryNode).attributeValue("outstack");
+					String type = ((org.dom4j.Element) queryNode).attributeValue("type");
+					String sqlquery = queryNode.getText();
+					
+					Element errorNode = (Element) queryNode.selectSingleNode("error");
+					String errorTemplate = "";
+					if(errorNode !=null)errorTemplate=errorNode.attributeValue("message");
+					
+					Element messageNode = (Element) queryNode.selectSingleNode("message");
+					String messageTemplate = "";
+					if(messageNode !=null)messageTemplate=messageNode.attributeValue("message");
 					
 					List<Element> nl = root.selectNodes("//fields/field/*");
 					HashMap<String, DataType> hmfielddbtype= new HashMap<String, DataType>();
@@ -103,13 +111,13 @@ public abstract class HTMLProcessor {
 					String parsedquery = QueryParser.parseQuery(sqlquery, null, jsonsubmitdata, arparam, hmfielddbtype);
 					logger.debug("selonload Query query:"+parsedquery+"\n Expanded prep:"+arparam.toString(parsedquery));
 					FETranslatorDAO feDAO = new FETranslatorDAO();
-					ResultDTO resDTO = feDAO.executecrud(screenName,parsedquery,stackid, arparam );
+					ResultDTO resDTO = feDAO.executecrud(screenName,parsedquery,stackid,jsonsubmitdata, arparam, errorTemplate, messageTemplate );
 					
 					logger.debug("resDTO= "+new Gson().toJson(resDTO).toString());
 					ActionContext.getContext().getValueStack().set("resDTO",new Gson().toJson(resDTO).toString());
 					ActionContext.getContext().getValueStack().getContext().put("ZHello", "World");
 					ActionContext.getContext().getValueStack().set("ZHello2", "World2");
-					org.dom4j.Element e = (org.dom4j.Element) node;
+					org.dom4j.Element e = (org.dom4j.Element) queryNode;
 					System.out.println("HTMLProcessor **************** populating value stack");
 				}
 				

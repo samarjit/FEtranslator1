@@ -65,6 +65,7 @@ public class QueryParser{
 		Pattern   pattern = Pattern.compile(PATTERN,Pattern.DOTALL|Pattern.MULTILINE);
 		
 		logger.debug("Input Query:"+updatequery+" \nlength:"+updatequery.length());
+		logger.debug("JSON ="+jsonObject);
 		logger.debug("PATTERN="+PATTERN);
 		
 		Matcher m1 = pattern.matcher(updatequery); // get a matcher object
