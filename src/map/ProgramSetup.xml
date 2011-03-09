@@ -61,6 +61,9 @@
 			<bl>
 				<buslogic id="ArbritrarySelect" > </buslogic>
 			</bl>
+			<anyprocs >
+				<proc id="upd2">{WS_TEST_PROC:{PARAM1: txtdata1, PARAM2 :txtdata2, OUTPARAM:''}}</proc>
+			</anyprocs>
 			<commands>
 			   <cmd name="BusLogic1" opt="buslogic:ArbritrarySelect" instack="form1" result="ajax" processor="bl" ></cmd>
 			   <cmd name="TXNPROC1" opt="txnproc:TRANSCODE" instack="form1" result="ajax" processor="dm" ></cmd>
@@ -68,6 +71,7 @@
 			   <cmd name="Update" opt="sqlupdate:Upd1" instack="form1" result="ajax"  processor="crud"></cmd>
 			   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud"></cmd>
 			   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud"></cmd>
+			   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc"></cmd>
 			</commands>
 			
 			<fields>

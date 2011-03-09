@@ -14,6 +14,7 @@ public class CommandProcessorResolver {
 		if(strProcessor.equals("crud"))return new CrudCommandProcessor();
 		else if(strProcessor.equals("dm"))return new DmCommandProcessor();
 		else if(strProcessor.equals("bl"))return new BlCommandProcessor();
+		else if(strProcessor.equals("anyproc"))return new AnyProcCommandProcessor();
 		else {
 			logger.error("Command Processor Not found for processor type:"+strProcessor);
 			return null; //not implemented
