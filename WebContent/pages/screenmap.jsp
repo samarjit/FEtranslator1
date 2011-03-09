@@ -29,7 +29,7 @@ Callback Class:<s:textfield name="screenroot.screen.callbackclass"/><br/>
 Scripts:<s:textfield name="screenroot.screen.scripts.content[1].name"  maxlength="200"/><br/>
 Scriptinclude: <s:textfield name="screenroot.screen.scripts" maxlength="200"/><br/>
 <s:iterator value="screenroot.screen.scripts.content"><br/>
- <s:if test="name != null && name == 'scriptinclude' ">  scriptinclude is:<s:textarea rows="2" cols="80"  name="value"/> <s:property value ="name"  /> 
+ <s:if test="value != null  ">  scriptinclude is:<s:div rows="2" cols="80"  name="value"  ><pre><s:property value ="value"  /></pre> <s:property value ="name"  /> </s:div>
   </s:if>
 </s:iterator><br/>
 <s:iterator value="screenroot.screen.stylesheets.content"><br/>

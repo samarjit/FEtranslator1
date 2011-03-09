@@ -6,10 +6,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -27,8 +24,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *         &lt;element ref="{}callbackclass"/>
  *         &lt;element ref="{}scripts"/>
  *         &lt;element ref="{}stylesheets"/>
+ *         &lt;element ref="{}crud"/>
+ *         &lt;element ref="{}dm"/>
+ *         &lt;element ref="{}bl"/>
+ *         &lt;element ref="{}commands"/>
  *       &lt;/sequence>
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -42,7 +43,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "includedjsp",
     "callbackclass",
     "scripts",
-    "stylesheets"
+    "stylesheets",
+    "crud",
+    "dm",
+    "bl",
+    "commands"
 })
 @XmlRootElement(name = "screen")
 public class Screen {
@@ -57,9 +62,15 @@ public class Screen {
     protected Scripts scripts;
     @XmlElement(required = true)
     protected Stylesheets stylesheets;
+    @XmlElement(required = true)
+    protected Crud crud;
+    @XmlElement(required = true)
+    protected Dm dm;
+    @XmlElement(required = true)
+    protected Bl bl;
+    @XmlElement(required = true)
+    protected Commands commands;
     @XmlAttribute(required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String name;
 
     /**
@@ -180,6 +191,102 @@ public class Screen {
      */
     public void setStylesheets(Stylesheets value) {
         this.stylesheets = value;
+    }
+
+    /**
+     * Gets the value of the crud property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Crud }
+     *     
+     */
+    public Crud getCrud() {
+        return crud;
+    }
+
+    /**
+     * Sets the value of the crud property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Crud }
+     *     
+     */
+    public void setCrud(Crud value) {
+        this.crud = value;
+    }
+
+    /**
+     * Gets the value of the dm property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Dm }
+     *     
+     */
+    public Dm getDm() {
+        return dm;
+    }
+
+    /**
+     * Sets the value of the dm property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Dm }
+     *     
+     */
+    public void setDm(Dm value) {
+        this.dm = value;
+    }
+
+    /**
+     * Gets the value of the bl property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Bl }
+     *     
+     */
+    public Bl getBl() {
+        return bl;
+    }
+
+    /**
+     * Sets the value of the bl property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Bl }
+     *     
+     */
+    public void setBl(Bl value) {
+        this.bl = value;
+    }
+
+    /**
+     * Gets the value of the commands property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Commands }
+     *     
+     */
+    public Commands getCommands() {
+        return commands;
+    }
+
+    /**
+     * Sets the value of the commands property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Commands }
+     *     
+     */
+    public void setCommands(Commands value) {
+        this.commands = value;
     }
 
     /**

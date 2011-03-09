@@ -34,7 +34,7 @@ public class CommandProcessor {
 	 * @return
 	 */
 	public ResultDTO commandProcessor( JSON submitdataObj, String screenName, InputDTO inputDTO){
-		JsrpcPojo rpc = new JsrpcPojo();
+//		JsrpcPojo rpc = new JsrpcPojo();
 		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 		
 		ResultDTO resDTO = null;
@@ -48,7 +48,7 @@ public class CommandProcessor {
 		    		String cmd = ((JSONObject) jsonRecord).getString("command");
 		    		Element elmCmd = (Element) rootXml.selectSingleNode("//commands/cmd[@name='"+cmd+"' ] ");
 		    		System.out.println("//commands/cmd[@name='"+cmd+"' ] ");
-		    		String instack = elmCmd.attributeValue("instack");
+//		    		String instack = elmCmd.attributeValue("instack");
 		    		String operation = elmCmd.attributeValue("opt");
 		    		String strProcessor = elmCmd.attributeValue("processor");
 		    		logger  .debug("Command Processor:"+strProcessor+" operation:"+operation);

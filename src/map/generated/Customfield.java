@@ -7,8 +7,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -29,12 +27,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *         &lt;/sequence>
  *       &lt;/sequence>
  *       &lt;attribute name="class" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="column" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="column" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="dbcolsize" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="forid" use="required" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="forid" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="mask" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="replace" type="{http://www.w3.org/2001/XMLSchema}NCName" />
- *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="replace" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="validationattr" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -61,26 +59,18 @@ public class Customfield {
     @XmlSchemaType(name = "anySimpleType")
     protected String clazz;
     @XmlAttribute
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String column;
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String dbcolsize;
     @XmlAttribute(required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String forid;
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String mask;
     @XmlAttribute
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String replace;
     @XmlAttribute
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String type;
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")

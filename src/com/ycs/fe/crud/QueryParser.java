@@ -43,6 +43,7 @@ public class QueryParser{
 				}
 			}
 		}
+		logger.debug("populateFieldDBType():"+hmfielddbtype);
 	}
 	
 	/**
