@@ -7,12 +7,10 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -26,9 +24,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element ref="{}countquery" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element ref="{}error" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element ref="{}message" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
- *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}NCName" />
- *       &lt;attribute name="stackid" use="required" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="id" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="outstack" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -43,17 +43,17 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "selectonload")
 public class Selectonload {
 
-    @XmlElementRef(name = "countquery", type = Countquery.class)
+    @XmlElementRefs({
+        @XmlElementRef(name = "error", type = Error.class),
+        @XmlElementRef(name = "message", type = Message.class),
+        @XmlElementRef(name = "countquery", type = Countquery.class)
+    })
     @XmlMixed
     protected List<Object> content;
     @XmlAttribute
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String id;
     @XmlAttribute(required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
-    protected String stackid;
+    protected String outstack;
 
     /**
      * Gets the value of the content property.
@@ -73,8 +73,10 @@ public class Selectonload {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Countquery }
+     * {@link Error }
+     * {@link Message }
      * {@link String }
+     * {@link Countquery }
      * 
      * 
      */
@@ -110,27 +112,27 @@ public class Selectonload {
     }
 
     /**
-     * Gets the value of the stackid property.
+     * Gets the value of the outstack property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getStackid() {
-        return stackid;
+    public String getOutstack() {
+        return outstack;
     }
 
     /**
-     * Sets the value of the stackid property.
+     * Sets the value of the outstack property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setStackid(String value) {
-        this.stackid = value;
+    public void setOutstack(String value) {
+        this.outstack = value;
     }
 
 }

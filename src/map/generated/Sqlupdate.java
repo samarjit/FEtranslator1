@@ -39,8 +39,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "content"
 })
-@XmlRootElement(name = "sqlselect")
-public class Sqlselect {
+@XmlRootElement(name = "sqlupdate")
+public class Sqlupdate {
 
     @XmlElementRefs({
         @XmlElementRef(name = "error", type = Error.class),

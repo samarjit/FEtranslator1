@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <?xml-stylesheet type="text/xsl" href="config.xsl" ?>
-<root >
+<root xsi:noNamespaceSchemaLocation="config.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<screen name="ProgramSetup">
 		<htmltemplate>
 			html/ProgramSetup.html
@@ -22,57 +22,59 @@
 			<scriptinclude>hello.js</scriptinclude>
 		</scripts>
 		<stylesheets>
-			<styleinclude></styleinclude>
+			<styleinclude>some.css</styleinclude>
 			<text><![CDATA[
 				 jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&command=selectonload",function (data){alert(data);});
 			]]>
 			</text>
+			<styleinclude>some2.css</styleinclude>
 		</stylesheets>
+		<crud>
+			<jsonrpc id="rpc1" outstack="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM
+				PROGRAMDETAILS
+				where PROGNAME=:whereval|STRING order by 1</jsonrpc>
+			<jsonrpc id="rpc3" outstack="form1">
+				SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM PROGRAMDETAILS
+				where PROGNAME=:whereval|STRING order by 1
+				<error message="The select failed for :whereval"></error>
+				<message message="The record,:whereval was selected successfully"></message>
+			</jsonrpc>
+			<selectonload outstack="form2" id="selqry1">SELECT 'LOYCARD' "txtnewprogname" from DUAL </selectonload>
+			<selectonload outstack="form1" id="selqry2">
+				SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername" ,COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM PROGRAMDETAILS
+				where PROGNAME=:inp.form2[0].txtnewprogname order by 1
+				<countquery pagesize="10">SELECT count('x') from PROGRAMDETAILS where PROGNAME=:form2[0].txtnewprogname </countquery>
+			</selectonload>
+	
+	
+			<sqlselect id="selSpl1" outstack="list1">
+				select USER_ID userid, PASSWD password from USER_MASTER
+				<error message="Select Failed {userid} "></error>
+			</sqlselect>
+			<sqlinsert id="ins1" outstack="frmIns1">insert into PROGRAMDETAILS (PROGNAME,PROGDESC,COUNTRY_ISSUE,STATUS)values(:txtnewprogname,:txtprogramdesc,:countryofissue, :txtstatus )</sqlinsert>
+			<sqldelete id="del1" outstack="frmDel1">delete from PROGRAMDETAILS where PROGNAME=:form1[0].txtnewprogname AND COUNTRY_ISSUE=:form1[0].countryofissue</sqldelete>
+			<sqlupdate id="Upd1" outstack="frmUpd1">update PROGRAMDETAILS set PROGDESC=:txtprogramdesc,COUNTRY_ISSUE=:countryofissue, ISSUERNAME=:issuername|STRING, STATUS=:txtstatus|STRING 	
+							 where PROGNAME=:inp.form1[0].txtnewprogname </sqlupdate>
+		</crud>
+		<dm>
+			<txnproc id="TRANSCODE"></txnproc>
+		</dm>
+		<bl>
+			<buslogic id="ArbritrarySelect" > </buslogic>
+		</bl>
+		<commands>
+		   <cmd name="BusLogic1" opt="buslogic:ArbritrarySelect" instack="form1" result="ajax" processor="bl" ></cmd>
+		   <cmd name="TXNPROC1" opt="txnproc:TRANSCODE" instack="form1" result="ajax" processor="dm" ></cmd>
+		   <cmd name="jrpcCmd1" opt="jsonrpc:rpc3" instack="form1" result="ajax"  processor="crud"></cmd>
+		   <cmd name="Update" opt="sqlupdate:Upd1" instack="form1" result="ajax"  processor="crud"></cmd>
+		   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud"></cmd>
+		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud"></cmd>
+		</commands>
 	</screen>
 
 	<panels>
 		<panel id="form1">
-			<crud>
-				<jsonrpc id="rpc1"  outstack="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS 
-					where PROGNAME=:whereval|STRING order by 1</jsonrpc>			
-			    <jsonrpc id="rpc3"  outstack="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS 
-					where PROGNAME=:whereval|STRING order by 1
-					<error message="The select failed for :whereval"></error>
-					<message message="The record,:whereval was selected successfully"></message>
-				</jsonrpc>
-			    <selectonload outstack="form2" id="selqry1">SELECT 'LOYCARD' "txtnewprogname" from DUAL </selectonload>
-			    <selectonload outstack="form1" id="selqry2">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",COUNTRY_ISSUE "countryofissue" FROM PROGRAMDETAILS
-			       where PROGNAME=:inp.form2[0].txtnewprogname order by 1
-			      <countquery pagesize="10" >SELECT count('x') from PROGRAMDETAILS where  PROGNAME=:form2[0].txtnewprogname </countquery>
-			    </selectonload>
-			       
-				 
-				<sqlselect id="selSpl1" type="DM" outstack="list1">select USER_ID userid, PASSWD password from USER_MASTER 
-					<error message="Select Failed {userid} "></error>
-				</sqlselect>
-				<sqlinsert id="ins1" outstack="frmIns1">insert into PROGRAMDETAILS (PROGNAME,PROGDESC,COUNTRY_ISSUE)values(:txtnewprogname,:txtprogramdesc,:countryofissue )</sqlinsert>
-				<sqldelete id="del1" outstack="frmDel1">delete from PROGRAMDETAILS where PROGNAME=:form1[0].txtnewprogname AND COUNTRY_ISSUE=:form1[0].countryofissue</sqldelete>
-				<sqlupdate id="Upd1" outstack="frmUpd1">update PROGRAMDETAILS set PROGDESC=:txtprogramdesc,COUNTRY_ISSUE=:countryofissue, ISSUERNAME=:issuername|STRING 	
-						 where PROGNAME=:inp.form1[0].txtnewprogname </sqlupdate>
-			</crud>
-			<dm>
-				<txnproc id="TRANSCODE"></txnproc>
-			</dm>
-			<bl>
-				<buslogic id="ArbritrarySelect" > </buslogic>
-			</bl>
-			<anyprocs >
-				<proc id="upd2">{WS_TEST_PROC:{PARAM1: txtdata1, PARAM2 :txtdata2, OUTPARAM:''}}</proc>
-			</anyprocs>
-			<commands>
-			   <cmd name="BusLogic1" opt="buslogic:ArbritrarySelect" instack="form1" result="ajax" processor="bl" ></cmd>
-			   <cmd name="TXNPROC1" opt="txnproc:TRANSCODE" instack="form1" result="ajax" processor="dm" ></cmd>
-			   <cmd name="jrpcCmd1" opt="jsonrpc:rpc3" instack="form1" result="ajax"  processor="crud"></cmd>
-			   <cmd name="Update" opt="sqlupdate:Upd1" instack="form1" result="ajax"  processor="crud"></cmd>
-			   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud"></cmd>
-			   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud"></cmd>
-			   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc"></cmd>
-			</commands>
+			
 			
 			<fields>
 				<field>
@@ -118,12 +120,11 @@
 			<button forid="loginbutton" onclick="" replace="append"  ></button>
 			<button forid="reset" onclick="" replace="append"  ></button>
 			 
-			property <![CDATA[<@s.property value="selectmonthl"/> ]]>
+			<testscriptlet><![CDATA[<@s.property value="selectmonthl"/> ]]></testscriptlet> 
 
 		</panel>
 		<panel id="userpanellist">
-			<crud>
-			</crud>
+			
 			<fields>
 				<field>
 					<customfield forid="displayuserlist">

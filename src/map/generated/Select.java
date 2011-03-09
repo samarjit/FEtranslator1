@@ -8,8 +8,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -28,18 +26,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *         &lt;element ref="{}query"/>
  *       &lt;/sequence>
  *       &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="column" use="required" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="column" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="dbcolsize" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="dbdatatype" type="{http://www.w3.org/2001/XMLSchema}NCName" />
- *       &lt;attribute name="forid" use="required" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="dbdatatype" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="forid" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="hidden" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="label" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="mandatory" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="mask" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}NCName" />
- *       &lt;attribute name="replace" use="required" type="{http://www.w3.org/2001/XMLSchema}NCName" />
- *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}NCName" />
+ *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="replace" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="validationattr" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *     &lt;/restriction>
@@ -70,26 +68,18 @@ public class Select {
     @XmlSchemaType(name = "anySimpleType")
     protected String clazz;
     @XmlAttribute(required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String column;
     @XmlAttribute(required = true)
     @XmlSchemaType(name = "anySimpleType")
     protected String dbcolsize;
     @XmlAttribute
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String dbdatatype;
     @XmlAttribute(required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String forid;
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String hidden;
     @XmlAttribute(required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String id;
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
@@ -101,16 +91,10 @@ public class Select {
     @XmlSchemaType(name = "anySimpleType")
     protected String mask;
     @XmlAttribute
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String name;
     @XmlAttribute(required = true)
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String replace;
     @XmlAttribute
-    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
-    @XmlSchemaType(name = "NCName")
     protected String type;
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")

@@ -55,7 +55,7 @@ private Logger logger = Logger.getLogger(getClass());
 				String messageTemplate = "";
 				if(messageNode !=null)messageTemplate=messageNode.attributeValue("message");
 				
-				List<Element> nodeList = crudnode.selectNodes("../fields/field/*");
+				List<Element> nodeList = crudnode.selectNodes("//fields/field/*");
 				logger.debug("fields size:"+nodeList.size());
 				HashMap<String, DataType> hmfielddbtype = new HashMap<String, PrepstmtDTO.DataType>();
 				QueryParser.populateFieldDBType(nodeList, hmfielddbtype);
@@ -71,7 +71,7 @@ private Logger logger = Logger.getLogger(getClass());
 					}
 				}*/
 				//SET
-				List<Element> primarykeys = crudnode.selectNodes("../fields/field/*[@primarykey]");
+				List<Element> primarykeys = crudnode.selectNodes("//fields/field/*[@primarykey]");
 				
 				
 				PrepstmtDTOArray  arparam = new PrepstmtDTOArray();

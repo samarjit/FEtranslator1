@@ -1,6 +1,6 @@
 package repo.txnmap;
 
-import java.io.File;
+import java.util.HashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -29,7 +29,7 @@ public class MainTest {
 			final JAXBContext jc = JAXBContext.newInstance(Root.class);
 			final Root root =
 	            (Root) jc.createUnmarshaller().unmarshal(
-	                new File("C:/Eclipse/workspace/FEtranslator1/src/repo/txnmap/nrow_txnmap.xml"));
+	            		MainTest.class.getResourceAsStream("/nrow_txnmap.xml"));
 		
 			
 			jc.createMarshaller().marshal(root,System.out);
@@ -39,6 +39,15 @@ public class MainTest {
 			logger.debug("Logger Test");
 		} catch (JAXBException e) {
 			e.printStackTrace();
+		}
+	}
+	static class p{
+		private HashMap<String, String> s;
+		public void proc(){
+			s = new HashMap<String, String>();
+		}
+		public void fn2(){
+			s.put("Sdf","sdf");
 		}
 	}
 

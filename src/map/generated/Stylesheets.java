@@ -1,7 +1,6 @@
 
 package map.generated;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBElement;
@@ -9,7 +8,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementRefs;
-import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -36,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "content"
+    "styleincludeOrText"
 })
 @XmlRootElement(name = "stylesheets")
 public class Stylesheets {
@@ -45,38 +43,36 @@ public class Stylesheets {
         @XmlElementRef(name = "text", type = JAXBElement.class),
         @XmlElementRef(name = "styleinclude", type = JAXBElement.class)
     })
-    @XmlMixed
-    protected List<Serializable> content;
+    protected List<JAXBElement<String>> styleincludeOrText;
 
     /**
-     * Gets the value of the content property.
+     * Gets the value of the styleincludeOrText property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
+     * This is why there is not a <CODE>set</CODE> method for the styleincludeOrText property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getContent().add(newItem);
+     *    getStyleincludeOrText().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link String }
      * {@link JAXBElement }{@code <}{@link String }{@code >}
      * {@link JAXBElement }{@code <}{@link String }{@code >}
      * 
      * 
      */
-    public List<Serializable> getContent() {
-        if (content == null) {
-            content = new ArrayList<Serializable>();
+    public List<JAXBElement<String>> getStyleincludeOrText() {
+        if (styleincludeOrText == null) {
+            styleincludeOrText = new ArrayList<JAXBElement<String>>();
         }
-        return this.content;
+        return this.styleincludeOrText;
     }
 
 }
