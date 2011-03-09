@@ -676,7 +676,7 @@ private boolean templateprocessed = false;
 	}
 public static void main(String args[]) {
 	   HTMLProcessorJsoupImpl htmp = new HTMLProcessorJsoupImpl();
-	   String processedhtml =  htmp.process(htmp.fileReadAll("C:/Eclipse/workspace1/FEtranslator1/src/actionclass/sampleoutput.xml"), null);
+	   String processedhtml =  htmp.process(htmp.fileReadAll("C:/Eclipse/workspace/FEtranslator1/src/actionclass/sampleoutput.xml"), null);
 	   System.out.println(processedhtml);
 }
 }
