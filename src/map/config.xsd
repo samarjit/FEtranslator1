@@ -19,6 +19,7 @@
 			<xs:element ref="crud" />
 			<xs:element ref="dm" />
 			<xs:element ref="bl" />
+			<xs:element ref="anyprocs" />
 			<xs:element ref="commands" />
 		</xs:sequence>
 		<xs:attribute name="name" use="required" type="xs:string" />
@@ -179,7 +180,7 @@
     </xs:complexType> 
   </xs:element>
   <xs:element name="bl">
-    <xs:complexType mixed="true">
+    <xs:complexType >
        <xs:sequence>
        	<xs:element name="buslogic"  >
        		<xs:complexType mixed="true">
@@ -190,7 +191,18 @@
        <xs:attribute name="id" type="xs:string"></xs:attribute>
     </xs:complexType> 
   </xs:element>
-  
+  <xs:element name="anyprocs">
+  	 <xs:complexType>
+  	 	<xs:sequence >
+  	 	<xs:element name="proc" maxOccurs="unbounded" >     		 
+	        <xs:complexType mixed="true">
+	          <xs:attribute name="id" type="xs:string"></xs:attribute>
+	          <xs:attribute name="xml" type="xs:string"></xs:attribute>
+	        </xs:complexType>	
+       	</xs:element>
+       	</xs:sequence>
+  	  </xs:complexType>
+  </xs:element>
   <xs:element name="fields">
     <xs:complexType>
       <xs:sequence>

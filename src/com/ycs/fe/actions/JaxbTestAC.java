@@ -70,7 +70,7 @@ private Root screenroot;
 	            (Root) jaxbContext.createUnmarshaller().unmarshal(JaxbTestAC.class.getResourceAsStream("/map/ProgramSetup.xml")
 	            //    new File("F:/eclipse/workspace/charts/FEtranslator1/src/map/ProgramSetup.xml")
 	            );
-			System.out.println(root.getPanels().getPanel().get(0).getContent());
+			//System.out.println(root.getPanels().getPanel().get(0).getContent());
 			jaxbContext.createMarshaller().marshal(root, System.out);
 		} catch (JAXBException e) {
 			e.printStackTrace();
