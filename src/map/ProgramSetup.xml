@@ -51,7 +51,7 @@
 				select USER_ID userid, PASSWD password from USER_MASTER
 				<error message="Select Failed {userid} "></error>
 			</sqlselect>
-			<sqlinsert id="ins1" outstack="frmIns1">insert into PROGRAMDETAILS (PROGNAME,PROGDESC,COUNTRY_ISSUE,STATUS)values(:txtnewprogname,:txtprogramdesc,:countryofissue, :txtstatus )</sqlinsert>
+			<sqlinsert id="ins1" outstack="frmIns1">insert into PROGRAMDETAILS (PROGNAME,PROGDESC,COUNTRY_ISSUE,STATUS)values(:txtnewprogname,:txtprogramdesc,:countryofissue, :txtstatus|STRING )</sqlinsert>
 			<sqldelete id="del1" outstack="frmDel1">delete from PROGRAMDETAILS where PROGNAME=:form1[0].txtnewprogname AND COUNTRY_ISSUE=:form1[0].countryofissue</sqldelete>
 			<sqlupdate id="Upd1" outstack="frmUpd1">update PROGRAMDETAILS set PROGDESC=:txtprogramdesc,COUNTRY_ISSUE=:countryofissue, ISSUERNAME=:issuername|STRING, STATUS=:txtstatus|STRING 	
 							 where PROGNAME=:inp.form1[0].txtnewprogname </sqlupdate>
@@ -72,6 +72,7 @@
 		   <cmd name="TXNPROC1" opt="txnproc:TRANSCODE" instack="form1" result="ajax" processor="dm" ></cmd>
 		   <cmd name="jrpcCmd1" opt="jsonrpc:rpc3" instack="form1" result="ajax"  processor="crud"></cmd>
 		   <cmd name="Update" opt="sqlupdate:Upd1" instack="form1" result="ajax"  processor="crud"></cmd>
+		   <cmd name="Create" opt="sqlinsert:ins1" instack="form1" result="ajax"  processor="crud"></cmd>
 		   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud"></cmd>
 		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud"></cmd>
 		   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc"></cmd>
