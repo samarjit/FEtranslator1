@@ -64,7 +64,7 @@ public class QueryParser{
 		String PATTERN = "\\:(inp|res|vs)?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";//"\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
 		
 		Pattern   pattern = Pattern.compile(PATTERN,Pattern.DOTALL|Pattern.MULTILINE);
-		
+		updatequery = updatequery.trim();
 		logger.debug("Input Query:"+updatequery+" \nlength:"+updatequery.length());
 		logger.debug("JSON ="+jsonObject);
 		logger.debug("PATTERN="+PATTERN);
