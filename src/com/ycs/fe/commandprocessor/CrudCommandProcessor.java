@@ -9,7 +9,7 @@ import com.ycs.fe.dto.ResultDTO;
 public class CrudCommandProcessor implements BaseCommandProcessor {
 
 	@Override
-	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO jsonInput, ResultDTO jsonResult) {
+	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO jsonInput, ResultDTO resultDTO) {
 		JsrpcPojo rpc = new JsrpcPojo();
 		return rpc.selectData(  screenName,   null, querynodeXpath ,   (JSONObject)jsonRecord);
 	}

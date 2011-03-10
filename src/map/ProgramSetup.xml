@@ -33,17 +33,18 @@
 			<jsonrpc id="rpc1" outstack="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM
 				PROGRAMDETAILS
 				where PROGNAME=:whereval|STRING order by 1</jsonrpc>
-			<jsonrpc id="rpc3" outstack="form1">
+			<jsonrpc id="rpc3" outstack="form1"><![CDATA[
 				SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM PROGRAMDETAILS
-				where PROGNAME=:whereval|STRING order by 1
+				where PROGNAME <> :whereval|STRING order by 1]]>
+				<countquery pagesize="3">SELECT count('x') from PROGRAMDETAILS </countquery>
 				<error message="The select failed for :whereval"></error>
 				<message message="The record,:whereval was selected successfully"></message>
 			</jsonrpc>
 			<selectonload outstack="form2" id="selqry1">SELECT 'LOYCARD' "txtnewprogname" from DUAL </selectonload>
 			<selectonload outstack="form1" id="selqry2">
 				SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername" ,COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM PROGRAMDETAILS
-				where PROGNAME=:inp.form2[0].txtnewprogname order by 1
-				<countquery pagesize="10">SELECT count('x') from PROGRAMDETAILS where PROGNAME=:form2[0].txtnewprogname </countquery>
+				where PROGNAME is not :inp.form2[0].txtnewprogname order by 1
+				<countquery pagesize="3">SELECT count('x') from PROGRAMDETAILS where PROGNAME=:form2[0].txtnewprogname </countquery>
 			</selectonload>
 	
 	
@@ -68,14 +69,14 @@
 				]]></proc>
 		</anyprocs>
 		<commands>
-		   <cmd name="BusLogic1" opt="buslogic:ArbritrarySelect" instack="form1" result="ajax" processor="bl" ></cmd>
-		   <cmd name="TXNPROC1" opt="txnproc:TRANSCODE" instack="form1" result="ajax" processor="dm" ></cmd>
-		   <cmd name="jrpcCmd1" opt="jsonrpc:rpc3" instack="form1" result="ajax"  processor="crud"></cmd>
-		   <cmd name="Update" opt="sqlupdate:Upd1" instack="form1" result="ajax"  processor="crud"></cmd>
-		   <cmd name="Create" opt="sqlinsert:ins1" instack="form1" result="ajax"  processor="crud"></cmd>
-		   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud"></cmd>
-		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud"></cmd>
-		   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc"></cmd>
+		   <cmd name="BusLogic1" opt="buslogic:ArbritrarySelect" instack="form1" result="ajax" processor="bl" />
+		   <cmd name="TXNPROC1" opt="txnproc:TRANSCODE" instack="form1" result="ajax" processor="dm" />
+		   <cmd name="jrpcCmd1" opt="jsonrpc:rpc3" instack="form1" result="ajax"  processor="crud" />
+		   <cmd name="Update" opt="sqlupdate:Upd1" instack="form1" result="ajax"  processor="crud" />
+		   <cmd name="Create" opt="sqlinsert:ins1" instack="form1" result="ajax"  processor="crud" />
+		   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud" />
+		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud" />
+		   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc" />
 		</commands>
 	</screen>
 

@@ -1,19 +1,20 @@
 package com.ycs.fe.crud;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import map.ScreenMapRepo;
+import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.ycs.fe.dao.FETranslatorDAO;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
@@ -41,7 +42,7 @@ private Logger logger = Logger.getLogger(getClass());
 				if(queryNode == null)throw new Exception("<"+querynode+"> node not defined");
 				
 				String outstack = ((Element) queryNode).attributeValue("outstack"); 
-				panelname = outstack;
+				 
 				
 				String updatequery = "";
 				updatequery += queryNode.getText();
@@ -73,7 +74,7 @@ private Logger logger = Logger.getLogger(getClass());
 				List<Element> primarykeys = crudnode.selectNodes("../fields/field/*[@primarykey]");
 				
 				FETranslatorDAO fetranslatorDAO = new FETranslatorDAO();
-				
+				//pagination
 				Element countqrynode = (Element)crudnode.selectSingleNode("countquery");
 				if(countqrynode != null){
 					String strpagesize = countqrynode.attributeValue("pagesize");
@@ -84,35 +85,41 @@ private Logger logger = Logger.getLogger(getClass());
 					String countquery = countqrynode.getText();
 					if(countquery != null){
 						PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
-						parsedquery = QueryParser.parseQuery(updatequery, panelname, jsonObject, arparam, hmfielddbtype);
-						int reccount = fetranslatorDAO.executeCountQry(screenName, parsedquery, panelname, arparam);
+						parsedquery = QueryParser.parseQuery(updatequery, outstack, jsonObject, arparam, hmfielddbtype);
+						int reccount = fetranslatorDAO.executeCountQry(screenName, parsedquery, outstack, arparam);
 						
 						if(reccount > pagesize){
 							JSONObject jsonobject = jsonObject.getJSONObject("pagination");
 							int pageno = 0;
-							JSONObject	panel = jsonobject.getJSONObject(panelname);
+							JSONObject	panel = jsonobject.getJSONObject(outstack);
 							pageno =  panel.getInt("currentpage");
 							int pagecount = (int) Math.ceil((double)reccount / pagesize); 
 							 
 							//pagination:{form1:{currentpage:1,pagecount:200}} 
-							 
+							ValueStack stack = ActionContext.getContext().getValueStack();
+							ResultDTO tempresDTO = (ResultDTO) stack.getContext().get("resultDTO");
+							if(tempresDTO == null){
+								tempresDTO = new ResultDTO();
+							}
+							tempresDTO.setPageDetails(outstack, pageno, pagecount, pagesize);
+							stack.getContext().put("resultDTO",tempresDTO);
 							
 							int recfrom = pageno * pagesize;
 							int recto = recfrom + pagesize;
-							jsonObject.put("recto", recto);
+							jsonObject.put("recto", recto); //put into current row value the recfrom and recto so that it can be used in count query
 							jsonObject.put("recfrom", recfrom);
 							hmfielddbtype.put("recto",PrepstmtDTO.getDataTypeFrmStr("INT") );
 							hmfielddbtype.put("recfrom",PrepstmtDTO.getDataTypeFrmStr("INT"));
 						}
 					}
 				}
-				
+				//pagination end
 				PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
-				parsedquery = QueryParser.parseQuery(updatequery, panelname, jsonObject, arparam, hmfielddbtype);
+				parsedquery = QueryParser.parseQuery(updatequery, outstack, jsonObject, arparam, hmfielddbtype);
 			       
 			       logger.debug("INSERT query:"+parsedquery+"\n Expanded prep:"+arparam.toString(parsedquery));
 			       
-			       resultDTO = fetranslatorDAO.executecrud(screenName, parsedquery, panelname,jsonObject, arparam, errorTemplate, messageTemplate);
+			       resultDTO = fetranslatorDAO.executecrud(screenName, parsedquery, outstack,jsonObject, arparam, errorTemplate, messageTemplate);
 			       
 			}catch(Exception e){
 				logger.debug("Exception caught in InsertData",e);

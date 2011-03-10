@@ -6,6 +6,7 @@ import java.util.List;
 import map.ScreenMapRepo;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
@@ -13,6 +14,8 @@ import org.dom4j.InvalidXPathException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.util.ValueStack;
 import com.ycs.fe.DataTypeException;
 import com.ycs.fe.dao.FETranslatorDAO;
 import com.ycs.fe.dto.PrepstmtDTO;
@@ -27,7 +30,7 @@ private Logger logger = Logger.getLogger(getClass());
 		return selectData(screenName, panelname,"sqlselect", jsonObject);
 	}
 	
-	public ResultDTO selectData(String screenName, String panelname,String querynode, JSONObject jsonObject) {
+	public ResultDTO selectData(String screenName, String panelname,String querynode, JSONObject jsonRecord) {
 		 
 		 
 		    String pageconfigxml =  ScreenMapRepo.findMapXML(screenName);
@@ -72,14 +75,65 @@ private Logger logger = Logger.getLogger(getClass());
 				}*/
 				//SET
 				List<Element> primarykeys = crudnode.selectNodes("//fields/field/*[@primarykey]");
-				
+				FETranslatorDAO fetranslatorDAO = new FETranslatorDAO();
+				//pagination
+				Element countqrynode = (Element)queryNode.selectSingleNode("countquery");
+				if(countqrynode != null){
+					
+					String strpagesize = countqrynode.attributeValue("pagesize");
+					int pagesize = 0;
+					if(strpagesize != null ){
+						pagesize = Integer.parseInt(strpagesize);
+					}
+					String countquery = countqrynode.getText();
+					
+					
+					if(countquery != null){
+						PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
+						parsedquery = QueryParser.parseQuery(countquery, outstack, jsonRecord, arparam, hmfielddbtype);
+						int reccount = fetranslatorDAO.executeCountQry(screenName, parsedquery, outstack, arparam);
+						logger.debug("Processing count query"+countquery);
+						if(reccount > pagesize){
+							JSONObject jobject = jsonRecord.getJSONObject("pagination");
+							int pageno = 0;
+							 
+							if(jobject.size()>0 ){
+								JSONObject	panel =  jobject.getJSONObject(outstack);
+								pageno =  panel.getInt("currentpage");
+							}else{
+								pageno = 1;
+								logger.debug("Pagination assuming first page as no page data is given" );
+							}
+								int pagecount = (int) Math.ceil((double)reccount / pagesize); 
+								 
+								//pagination:{form1:{currentpage:1,pagecount:200}} 
+								ValueStack stack = ActionContext.getContext().getValueStack();
+								ResultDTO tempresDTO = (ResultDTO) stack.getContext().get("resultDTO");
+								if(tempresDTO == null){
+									tempresDTO = new ResultDTO();
+								}
+								tempresDTO.setPageDetails(outstack, pageno, pagecount, pagesize);
+								logger.debug("Now setetting resultDTO in JsonRPC pojo="+JSONSerializer.toJSON(tempresDTO));
+								stack.getContext().put("resultDTO",tempresDTO); 
+								logger.debug("Pagination set with pageno:"+pageno+" pagecount:"+pagecount+" pagesize:"+pagesize);
+								int recfrom = pageno * pagesize;
+								int recto = recfrom + pagesize;
+								jsonRecord.put("recto", recto); //put into current row value the recfrom and recto so that it can be used in count query
+								jsonRecord.put("recfrom", recfrom);
+								hmfielddbtype.put("recto",PrepstmtDTO.getDataTypeFrmStr("INT") );
+								hmfielddbtype.put("recfrom",PrepstmtDTO.getDataTypeFrmStr("INT"));
+							
+						}
+					}
+				}
+				//pagination end
 				
 				PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
-				parsedquery = QueryParser.parseQuery(updatequery, panelname, jsonObject, arparam, hmfielddbtype);
+				parsedquery = QueryParser.parseQuery(updatequery, panelname, jsonRecord, arparam, hmfielddbtype);
 				
 			       logger.debug("JsonRPC query:"+parsedquery+"\n Expanded prep:"+arparam.toString(parsedquery));
-			       FETranslatorDAO fetranslatorDAO = new FETranslatorDAO();
-			       resultDTO = fetranslatorDAO.executecrud(screenName, parsedquery, panelname, jsonObject, arparam, errorTemplate,messageTemplate);
+			       fetranslatorDAO = new FETranslatorDAO();
+			       resultDTO = fetranslatorDAO.executecrud(screenName, parsedquery, panelname, jsonRecord, arparam, errorTemplate,messageTemplate);
 			       
 			}catch(InvalidXPathException e){
 				logger.debug("Exception caught in InsertData",e);

@@ -18,6 +18,8 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.json.JSONException;
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -113,7 +115,8 @@ public abstract class HTMLProcessor {
 					FETranslatorDAO feDAO = new FETranslatorDAO();
 					ResultDTO resDTO = feDAO.executecrud(screenName,parsedquery,stackid,jsonsubmitdata, arparam, errorTemplate, messageTemplate );
 					
-					logger.debug("resDTO= "+new Gson().toJson(resDTO).toString());
+					logger.debug("resDTO (gson converter)= "+new Gson().toJson(resDTO).toString());
+					logger.debug("resDTO (JSONSerializer converter)= "+JSONSerializer.toJSON(resDTO).toString());
 					ActionContext.getContext().getValueStack().set("resDTO",new Gson().toJson(resDTO).toString());
 					ActionContext.getContext().getValueStack().getContext().put("ZHello", "World");
 					ActionContext.getContext().getValueStack().set("ZHello2", "World2");

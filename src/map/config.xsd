@@ -92,6 +92,7 @@
   <xs:element name="jsonrpc">
     <xs:complexType mixed="true">
       <xs:sequence>
+      	 <xs:element minOccurs="0" maxOccurs="unbounded" ref="countquery"/>
          <xs:element minOccurs="0" maxOccurs="1" ref="error"/>
          <xs:element minOccurs="0" maxOccurs="1" ref="message"/>
       </xs:sequence>
@@ -121,6 +122,7 @@
   <xs:element name="sqlselect">
     <xs:complexType mixed="true">
       <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="countquery"/>
       	<xs:element minOccurs="0" maxOccurs="unbounded" ref="error"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="message"/>
       </xs:sequence>

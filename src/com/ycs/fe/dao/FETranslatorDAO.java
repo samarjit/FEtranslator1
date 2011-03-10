@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.sql.rowset.CachedRowSet;
 
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
 import org.apache.log4j.Logger;
 
@@ -118,7 +119,7 @@ public class FETranslatorDAO {
 		String retval = "";
 		ResultDTO resultDTO = new ResultDTO();
 		if(sqlquery!= null && sqlquery.trim().length() >0 ){
-	    	List<Map> values = new ArrayList<Map>();
+	    	List<Map<String, String>> values = new ArrayList<Map<String, String>>();
 	    	Map<String, String> row ; 
 	    	HashMap<String, ResultDTO> context = new HashMap<String, ResultDTO>();
 			
@@ -163,7 +164,7 @@ public class FETranslatorDAO {
 					logger.debug("invalid query skipping..."+sqlquery);
 					 
 					 resultDTO.addError("ERROR:Invalid Query");
-					 return resultDTO;
+					 //return resultDTO; ? how it worked before , coz' even then Invalid query came!
 				}
 				
 			} catch (Exception e) {
@@ -186,22 +187,19 @@ public class FETranslatorDAO {
 				}
 			}
 			
-			HashMap hm = new HashMap();
-			ArrayList ar = new ArrayList(values);
+			HashMap<String, Object> hm = new HashMap<String, Object>();
+			ArrayList<Map<String, String>> ar = new ArrayList<Map<String, String>>(values);
 			hm.put(stackid, ar);
+			resultDTO.setData(hm);
 			
 			ResultDTO tempresDTO = (ResultDTO) stack.getContext().get("resultDTO");
+			logger.debug("previously set resultDTO in FEtranaltorDAO="+JSONSerializer.toJSON(tempresDTO));
 			if(tempresDTO != null){
-				HashMap tmphm = tempresDTO.getData();
-				if(tmphm != null ){ //create object pool for back reference in queries
-					tmphm.putAll(hm);
-				}else{
-					tmphm = hm;
-				}
-				resultDTO.setData(tmphm);
-			}else{//All first time queries will come here
-				resultDTO.setData(hm);
-			}
+			  tempresDTO.merge(resultDTO);
+			  resultDTO = null;
+			  resultDTO = tempresDTO;
+			} 
+			
 			
 			logger.debug(screenName+stackid+"="+resultDTO.getData().toString());
 			//context.put("resultDTO", resultDTO);
