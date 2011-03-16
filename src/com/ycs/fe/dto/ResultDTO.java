@@ -75,7 +75,7 @@ public void setData(HashMap<String, Object>  jobj) {
 	this.data = jobj;
 }
 
-public void setPagination(HashMap<String, HashMap<String, Integer>> pagination) {
+private void setPagination(HashMap<String, HashMap<String, Integer>> pagination) {
 	this.pagination = pagination;
 }
 public HashMap<String, HashMap<String, Integer>> getPagination() {

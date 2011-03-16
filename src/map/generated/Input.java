@@ -4,7 +4,6 @@ package map.generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -20,11 +19,9 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}rule"/>
- *         &lt;sequence minOccurs="0">
- *           &lt;element ref="{}validation"/>
- *           &lt;element ref="{}query"/>
- *         &lt;/sequence>
+ *         &lt;element ref="{}rule" minOccurs="0"/>
+ *         &lt;element ref="{}query" minOccurs="0"/>
+ *         &lt;element ref="{}validation" minOccurs="0"/>
  *       &lt;/sequence>
  *       &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="column" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -38,7 +35,14 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="mask" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="primarykey" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="replace" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="replace" use="required">
+ *         &lt;simpleType>
+ *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *             &lt;enumeration value="modify"/>
+ *             &lt;enumeration value="append"/>
+ *           &lt;/restriction>
+ *         &lt;/simpleType>
+ *       &lt;/attribute>
  *       &lt;attribute name="type" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="validationattr" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
@@ -52,16 +56,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "rule",
-    "validation",
-    "query"
+    "query",
+    "validation"
 })
 @XmlRootElement(name = "input")
 public class Input {
 
-    @XmlElement(required = true)
     protected String rule;
-    protected Validation validation;
     protected Query query;
+    protected Validation validation;
     @XmlAttribute(name = "class", required = true)
     @XmlSchemaType(name = "anySimpleType")
     protected String clazz;
@@ -128,30 +131,6 @@ public class Input {
     }
 
     /**
-     * Gets the value of the validation property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Validation }
-     *     
-     */
-    public Validation getValidation() {
-        return validation;
-    }
-
-    /**
-     * Sets the value of the validation property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Validation }
-     *     
-     */
-    public void setValidation(Validation value) {
-        this.validation = value;
-    }
-
-    /**
      * Gets the value of the query property.
      * 
      * @return
@@ -173,6 +152,30 @@ public class Input {
      */
     public void setQuery(Query value) {
         this.query = value;
+    }
+
+    /**
+     * Gets the value of the validation property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Validation }
+     *     
+     */
+    public Validation getValidation() {
+        return validation;
+    }
+
+    /**
+     * Sets the value of the validation property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Validation }
+     *     
+     */
+    public void setValidation(Validation value) {
+        this.validation = value;
     }
 
     /**

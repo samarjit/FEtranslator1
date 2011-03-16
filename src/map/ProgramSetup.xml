@@ -65,7 +65,7 @@
 		</bl>
 		<anyprocs >
 				<proc id="upd2" xml="input.xml" ><![CDATA[
-				 
+				 dfgdfgdfg
 				]]></proc>
 		</anyprocs>
 		<commands>

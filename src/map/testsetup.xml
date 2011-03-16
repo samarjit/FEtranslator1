@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="config.xsl" ?>
+<root xsi:noNamespaceSchemaLocation="config.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<screen name="TestPage">
+		<htmltemplate>html/TestScreen.html</htmltemplate>
+		<includedjsp>
+ </includedjsp>
+		<callbackclass></callbackclass>
+		<scripts></scripts>
+		<stylesheets></stylesheets>
+		<crud></crud>
+		<dm>
+			<txnproc></txnproc>
+		</dm>
+		<bl>
+			<buslogic></buslogic>
+		</bl>
+		<anyprocs>
+			<proc></proc>
+		</anyprocs>
+		<commands>
+			 
+		</commands>
+
+	</screen>
+	<panels>
+		<panel>
+			<fields>
+				<field>
+					<input name="userid" forid="userid" id="userid" replace="modify" class="" column=""
+						type="type" value="sss" dbcolsize="" mask="">
+						 <rule></rule>
+						 <query></query>
+						 <validation/>
+					</input>
+				</field>
+			</fields>
+			<button onclick="alert('submit')" replace="append" forid="loginbutton"/>
+		</panel>
+	</panels>
+</root>

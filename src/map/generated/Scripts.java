@@ -40,8 +40,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Scripts {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "scriptinclude", type = JAXBElement.class),
-        @XmlElementRef(name = "text", type = JAXBElement.class)
+        @XmlElementRef(name = "text", type = JAXBElement.class),
+        @XmlElementRef(name = "scriptinclude", type = JAXBElement.class)
     })
     protected List<JAXBElement<String>> scriptincludeOrText;
 

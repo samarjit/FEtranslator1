@@ -44,9 +44,9 @@ import javax.xml.bind.annotation.XmlType;
 public class Selectonload {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "error", type = Error.class),
         @XmlElementRef(name = "message", type = Message.class),
-        @XmlElementRef(name = "countquery", type = Countquery.class)
+        @XmlElementRef(name = "countquery", type = Countquery.class),
+        @XmlElementRef(name = "error", type = Error.class)
     })
     @XmlMixed
     protected List<Object> content;
@@ -73,10 +73,10 @@ public class Selectonload {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Error }
      * {@link Message }
      * {@link String }
      * {@link Countquery }
+     * {@link Error }
      * 
      * 
      */

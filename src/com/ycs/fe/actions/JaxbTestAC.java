@@ -21,7 +21,7 @@ import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 
-@Action(value="jaxbtest",results={@Result(name="success",location="/pages/screenmap.jsp")})
+//@Action(value="jaxbtest",results={@Result(name="success",location="/pages/screenmap.jsp")})
 public class JaxbTestAC extends ActionSupport{
  private String data;
  
@@ -29,7 +29,7 @@ private static final long serialVersionUID = -3779974905508711588L;
 private Root screenroot; 
 
 	public String execute(){
-		System.out.println("JaxB Test screenMap ");
+		System.out.println("JaxB Test screenMap data="+data);
 		if(screenroot != null){
 			JSONObject json1 = new JSONObject(screenroot);
 			System.out.println("json1="+json1);

@@ -43,8 +43,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Sqlupdate {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "error", type = Error.class),
-        @XmlElementRef(name = "message", type = Message.class)
+        @XmlElementRef(name = "message", type = Message.class),
+        @XmlElementRef(name = "error", type = Error.class)
     })
     @XmlMixed
     protected List<Object> content;
@@ -71,9 +71,9 @@ public class Sqlupdate {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Error }
-     * {@link Message }
      * {@link String }
+     * {@link Message }
+     * {@link Error }
      * 
      * 
      */

@@ -640,7 +640,7 @@ private boolean templateprocessed = false;
 //			 writer.setEscapeText(false); 
 //			 writer.write(dochtml);
 			 xmlString = dochtml.html();
-//			 logger.debug("To  Remove result HTML:"+xmlString);
+			 logger.debug("To  Remove result HTML:"+xmlString);
 //			xmlString = result.getWriter().toString(); 
 //			xmlString = xmlString.replaceFirst("(\\<\\?xml[\\d\\D]*\\?\\>)","");
 			templateprocessed = true;

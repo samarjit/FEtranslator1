@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element ref="{}crud"/>
  *         &lt;element ref="{}dm"/>
  *         &lt;element ref="{}bl"/>
+ *         &lt;element ref="{}anyprocs"/>
  *         &lt;element ref="{}commands"/>
  *       &lt;/sequence>
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -47,6 +48,7 @@ import javax.xml.bind.annotation.XmlType;
     "crud",
     "dm",
     "bl",
+    "anyprocs",
     "commands"
 })
 @XmlRootElement(name = "screen")
@@ -68,6 +70,8 @@ public class Screen {
     protected Dm dm;
     @XmlElement(required = true)
     protected Bl bl;
+    @XmlElement(required = true)
+    protected Anyprocs anyprocs;
     @XmlElement(required = true)
     protected Commands commands;
     @XmlAttribute(required = true)
@@ -263,6 +267,30 @@ public class Screen {
      */
     public void setBl(Bl value) {
         this.bl = value;
+    }
+
+    /**
+     * Gets the value of the anyprocs property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Anyprocs }
+     *     
+     */
+    public Anyprocs getAnyprocs() {
+        return anyprocs;
+    }
+
+    /**
+     * Sets the value of the anyprocs property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Anyprocs }
+     *     
+     */
+    public void setAnyprocs(Anyprocs value) {
+        this.anyprocs = value;
     }
 
     /**

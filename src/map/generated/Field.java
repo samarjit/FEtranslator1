@@ -1,8 +1,12 @@
 
 package map.generated;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -16,7 +20,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;choice>
+ *       &lt;choice maxOccurs="2" minOccurs="0">
  *         &lt;element ref="{}compositefield"/>
  *         &lt;element ref="{}customfield"/>
  *         &lt;element ref="{}div"/>
@@ -33,165 +37,53 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "compositefield",
-    "customfield",
-    "div",
-    "input",
-    "select",
-    "sometype"
+    "compositefieldOrCustomfieldOrDiv"
 })
 @XmlRootElement(name = "field")
 public class Field {
 
-    protected Compositefield compositefield;
-    protected Customfield customfield;
-    protected Div div;
-    protected Input input;
-    protected Select select;
-    protected Sometype sometype;
+    @XmlElements({
+        @XmlElement(name = "sometype", type = Sometype.class),
+        @XmlElement(name = "customfield", type = Customfield.class),
+        @XmlElement(name = "input", type = Input.class),
+        @XmlElement(name = "compositefield", type = Compositefield.class),
+        @XmlElement(name = "select", type = Select.class),
+        @XmlElement(name = "div", type = Div.class)
+    })
+    protected List<Object> compositefieldOrCustomfieldOrDiv;
 
     /**
-     * Gets the value of the compositefield property.
+     * Gets the value of the compositefieldOrCustomfieldOrDiv property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Compositefield }
-     *     
-     */
-    public Compositefield getCompositefield() {
-        return compositefield;
-    }
-
-    /**
-     * Sets the value of the compositefield property.
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the compositefieldOrCustomfieldOrDiv property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Compositefield }
-     *     
-     */
-    public void setCompositefield(Compositefield value) {
-        this.compositefield = value;
-    }
-
-    /**
-     * Gets the value of the customfield property.
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getCompositefieldOrCustomfieldOrDiv().add(newItem);
+     * </pre>
      * 
-     * @return
-     *     possible object is
-     *     {@link Customfield }
-     *     
-     */
-    public Customfield getCustomfield() {
-        return customfield;
-    }
-
-    /**
-     * Sets the value of the customfield property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Customfield }
-     *     
-     */
-    public void setCustomfield(Customfield value) {
-        this.customfield = value;
-    }
-
-    /**
-     * Gets the value of the div property.
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Sometype }
+     * {@link Customfield }
+     * {@link Input }
+     * {@link Compositefield }
+     * {@link Select }
+     * {@link Div }
      * 
-     * @return
-     *     possible object is
-     *     {@link Div }
-     *     
-     */
-    public Div getDiv() {
-        return div;
-    }
-
-    /**
-     * Sets the value of the div property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Div }
-     *     
      */
-    public void setDiv(Div value) {
-        this.div = value;
-    }
-
-    /**
-     * Gets the value of the input property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Input }
-     *     
-     */
-    public Input getInput() {
-        return input;
-    }
-
-    /**
-     * Sets the value of the input property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Input }
-     *     
-     */
-    public void setInput(Input value) {
-        this.input = value;
-    }
-
-    /**
-     * Gets the value of the select property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Select }
-     *     
-     */
-    public Select getSelect() {
-        return select;
-    }
-
-    /**
-     * Sets the value of the select property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Select }
-     *     
-     */
-    public void setSelect(Select value) {
-        this.select = value;
-    }
-
-    /**
-     * Gets the value of the sometype property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Sometype }
-     *     
-     */
-    public Sometype getSometype() {
-        return sometype;
-    }
-
-    /**
-     * Sets the value of the sometype property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Sometype }
-     *     
-     */
-    public void setSometype(Sometype value) {
-        this.sometype = value;
+    public List<Object> getCompositefieldOrCustomfieldOrDiv() {
+        if (compositefieldOrCustomfieldOrDiv == null) {
+            compositefieldOrCustomfieldOrDiv = new ArrayList<Object>();
+        }
+        return this.compositefieldOrCustomfieldOrDiv;
     }
 
 }

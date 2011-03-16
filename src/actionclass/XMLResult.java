@@ -16,6 +16,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import map.ScreenMapRepo;
+
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.StrutsResultSupport;
@@ -110,6 +112,12 @@ public class XMLResult extends StrutsResultSupport {
 	                	System.out.println("Result paramEntry:"+paramEntry);
 	                }
 	            }
+         String screenName1 = (String) invocation.getInvocationContext().getValueStack().findValue("screenName",String.class);
+         xmlFileName =  ScreenMapRepo.findMapXML(screenName1);
+		       File f = new File(xmlFileName);
+		       xmlFileName = f.getName();
+		       
+		       logger.debug("XMl map file:"+xmlFileName);
 		 /////////////////////////////////////////////  
          
          if (exposedValue != null) {

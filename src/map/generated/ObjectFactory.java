@@ -31,117 +31,12 @@ public class ObjectFactory {
     private final static QName _Includedjsp_QNAME = new QName("", "includedjsp");
     private final static QName _Rule_QNAME = new QName("", "rule");
     private final static QName _Scriptinclude_QNAME = new QName("", "scriptinclude");
-    private final static QName _BlBuslogic_QNAME = new QName("", "buslogic");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: map.generated
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link Fields }
-     * 
-     */
-    public Fields createFields() {
-        return new Fields();
-    }
-
-    /**
-     * Create an instance of {@link Scripts }
-     * 
-     */
-    public Scripts createScripts() {
-        return new Scripts();
-    }
-
-    /**
-     * Create an instance of {@link Bl.Buslogic }
-     * 
-     */
-    public Bl.Buslogic createBlBuslogic() {
-        return new Bl.Buslogic();
-    }
-
-    /**
-     * Create an instance of {@link Sometype }
-     * 
-     */
-    public Sometype createSometype() {
-        return new Sometype();
-    }
-
-    /**
-     * Create an instance of {@link Validation }
-     * 
-     */
-    public Validation createValidation() {
-        return new Validation();
-    }
-
-    /**
-     * Create an instance of {@link Datafield }
-     * 
-     */
-    public Datafield createDatafield() {
-        return new Datafield();
-    }
-
-    /**
-     * Create an instance of {@link Selectonload }
-     * 
-     */
-    public Selectonload createSelectonload() {
-        return new Selectonload();
-    }
-
-    /**
-     * Create an instance of {@link Compositefield }
-     * 
-     */
-    public Compositefield createCompositefield() {
-        return new Compositefield();
-    }
-
-    /**
-     * Create an instance of {@link Button }
-     * 
-     */
-    public Button createButton() {
-        return new Button();
-    }
-
-    /**
-     * Create an instance of {@link Sqlselectcount }
-     * 
-     */
-    public Sqlselectcount createSqlselectcount() {
-        return new Sqlselectcount();
-    }
-
-    /**
-     * Create an instance of {@link Query }
-     * 
-     */
-    public Query createQuery() {
-        return new Query();
-    }
-
-    /**
-     * Create an instance of {@link Input }
-     * 
-     */
-    public Input createInput() {
-        return new Input();
-    }
-
-    /**
-     * Create an instance of {@link Panels }
-     * 
-     */
-    public Panels createPanels() {
-        return new Panels();
     }
 
     /**
@@ -153,27 +48,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Dm }
+     * Create an instance of {@link Div }
      * 
      */
-    public Dm createDm() {
-        return new Dm();
-    }
-
-    /**
-     * Create an instance of {@link Select }
-     * 
-     */
-    public Select createSelect() {
-        return new Select();
-    }
-
-    /**
-     * Create an instance of {@link Stylesheets }
-     * 
-     */
-    public Stylesheets createStylesheets() {
-        return new Stylesheets();
+    public Div createDiv() {
+        return new Div();
     }
 
     /**
@@ -185,35 +64,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Displayfield }
+     * Create an instance of {@link Fields }
      * 
      */
-    public Displayfield createDisplayfield() {
-        return new Displayfield();
-    }
-
-    /**
-     * Create an instance of {@link Field }
-     * 
-     */
-    public Field createField() {
-        return new Field();
-    }
-
-    /**
-     * Create an instance of {@link Dm.Txnproc }
-     * 
-     */
-    public Dm.Txnproc createDmTxnproc() {
-        return new Dm.Txnproc();
-    }
-
-    /**
-     * Create an instance of {@link Commands }
-     * 
-     */
-    public Commands createCommands() {
-        return new Commands();
+    public Fields createFields() {
+        return new Fields();
     }
 
     /**
@@ -222,6 +77,14 @@ public class ObjectFactory {
      */
     public Error createError() {
         return new Error();
+    }
+
+    /**
+     * Create an instance of {@link Selectonload }
+     * 
+     */
+    public Selectonload createSelectonload() {
+        return new Selectonload();
     }
 
     /**
@@ -241,27 +104,51 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Crud }
+     * Create an instance of {@link Anyprocs.Proc }
      * 
      */
-    public Crud createCrud() {
-        return new Crud();
+    public Anyprocs.Proc createAnyprocsProc() {
+        return new Anyprocs.Proc();
     }
 
     /**
-     * Create an instance of {@link Savefieldids }
+     * Create an instance of {@link Compositefield }
      * 
      */
-    public Savefieldids createSavefieldids() {
-        return new Savefieldids();
+    public Compositefield createCompositefield() {
+        return new Compositefield();
     }
 
     /**
-     * Create an instance of {@link Customfield }
+     * Create an instance of {@link Button }
      * 
      */
-    public Customfield createCustomfield() {
-        return new Customfield();
+    public Button createButton() {
+        return new Button();
+    }
+
+    /**
+     * Create an instance of {@link Commands }
+     * 
+     */
+    public Commands createCommands() {
+        return new Commands();
+    }
+
+    /**
+     * Create an instance of {@link Panels }
+     * 
+     */
+    public Panels createPanels() {
+        return new Panels();
+    }
+
+    /**
+     * Create an instance of {@link Sqlselectcount }
+     * 
+     */
+    public Sqlselectcount createSqlselectcount() {
+        return new Sqlselectcount();
     }
 
     /**
@@ -273,6 +160,54 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Validation }
+     * 
+     */
+    public Validation createValidation() {
+        return new Validation();
+    }
+
+    /**
+     * Create an instance of {@link Bl }
+     * 
+     */
+    public Bl createBl() {
+        return new Bl();
+    }
+
+    /**
+     * Create an instance of {@link Dm.Txnproc }
+     * 
+     */
+    public Dm.Txnproc createDmTxnproc() {
+        return new Dm.Txnproc();
+    }
+
+    /**
+     * Create an instance of {@link Sometype }
+     * 
+     */
+    public Sometype createSometype() {
+        return new Sometype();
+    }
+
+    /**
+     * Create an instance of {@link Savefieldids }
+     * 
+     */
+    public Savefieldids createSavefieldids() {
+        return new Savefieldids();
+    }
+
+    /**
+     * Create an instance of {@link Anyprocs }
+     * 
+     */
+    public Anyprocs createAnyprocs() {
+        return new Anyprocs();
+    }
+
+    /**
      * Create an instance of {@link Screen }
      * 
      */
@@ -281,43 +216,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Div }
+     * Create an instance of {@link Stylesheets }
      * 
      */
-    public Div createDiv() {
-        return new Div();
-    }
-
-    /**
-     * Create an instance of {@link Jsonrpc }
-     * 
-     */
-    public Jsonrpc createJsonrpc() {
-        return new Jsonrpc();
-    }
-
-    /**
-     * Create an instance of {@link Sqlselect }
-     * 
-     */
-    public Sqlselect createSqlselect() {
-        return new Sqlselect();
-    }
-
-    /**
-     * Create an instance of {@link Sqlinsert }
-     * 
-     */
-    public Sqlinsert createSqlinsert() {
-        return new Sqlinsert();
-    }
-
-    /**
-     * Create an instance of {@link Sqlupdate }
-     * 
-     */
-    public Sqlupdate createSqlupdate() {
-        return new Sqlupdate();
+    public Stylesheets createStylesheets() {
+        return new Stylesheets();
     }
 
     /**
@@ -329,11 +232,123 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Bl }
+     * Create an instance of {@link Sqlinsert }
      * 
      */
-    public Bl createBl() {
-        return new Bl();
+    public Sqlinsert createSqlinsert() {
+        return new Sqlinsert();
+    }
+
+    /**
+     * Create an instance of {@link Sqlselect }
+     * 
+     */
+    public Sqlselect createSqlselect() {
+        return new Sqlselect();
+    }
+
+    /**
+     * Create an instance of {@link Field }
+     * 
+     */
+    public Field createField() {
+        return new Field();
+    }
+
+    /**
+     * Create an instance of {@link Dm }
+     * 
+     */
+    public Dm createDm() {
+        return new Dm();
+    }
+
+    /**
+     * Create an instance of {@link Bl.Buslogic }
+     * 
+     */
+    public Bl.Buslogic createBlBuslogic() {
+        return new Bl.Buslogic();
+    }
+
+    /**
+     * Create an instance of {@link Displayfield }
+     * 
+     */
+    public Displayfield createDisplayfield() {
+        return new Displayfield();
+    }
+
+    /**
+     * Create an instance of {@link Sqlupdate }
+     * 
+     */
+    public Sqlupdate createSqlupdate() {
+        return new Sqlupdate();
+    }
+
+    /**
+     * Create an instance of {@link Customfield }
+     * 
+     */
+    public Customfield createCustomfield() {
+        return new Customfield();
+    }
+
+    /**
+     * Create an instance of {@link Datafield }
+     * 
+     */
+    public Datafield createDatafield() {
+        return new Datafield();
+    }
+
+    /**
+     * Create an instance of {@link Query }
+     * 
+     */
+    public Query createQuery() {
+        return new Query();
+    }
+
+    /**
+     * Create an instance of {@link Jsonrpc }
+     * 
+     */
+    public Jsonrpc createJsonrpc() {
+        return new Jsonrpc();
+    }
+
+    /**
+     * Create an instance of {@link Input }
+     * 
+     */
+    public Input createInput() {
+        return new Input();
+    }
+
+    /**
+     * Create an instance of {@link Crud }
+     * 
+     */
+    public Crud createCrud() {
+        return new Crud();
+    }
+
+    /**
+     * Create an instance of {@link Scripts }
+     * 
+     */
+    public Scripts createScripts() {
+        return new Scripts();
+    }
+
+    /**
+     * Create an instance of {@link Select }
+     * 
+     */
+    public Select createSelect() {
+        return new Select();
     }
 
     /**
@@ -405,15 +420,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "", name = "scriptinclude")
     public JAXBElement<String> createScriptinclude(String value) {
         return new JAXBElement<String>(_Scriptinclude_QNAME, String.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Bl.Buslogic }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "buslogic", scope = Bl.class)
-    public JAXBElement<Bl.Buslogic> createBlBuslogic(Bl.Buslogic value) {
-        return new JAXBElement<Bl.Buslogic>(_BlBuslogic_QNAME, Bl.Buslogic.class, Bl.class, value);
     }
 
 }

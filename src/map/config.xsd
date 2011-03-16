@@ -10,7 +10,7 @@
   </xs:element>
   <xs:element name="screen">
 	<xs:complexType>
-		<xs:sequence>
+		<xs:sequence >
 			<xs:element ref="htmltemplate" />
 			<xs:element ref="includedjsp" />
 			<xs:element ref="callbackclass" />
@@ -69,7 +69,14 @@
     <xs:complexType>
     	<xs:attribute name="forid" use="required" type="xs:string" />
     	<xs:attribute name="onclick" use="required" />
-    	<xs:attribute name="replace" type="xs:string" use="required"/>
+    	<xs:attribute name="replace"  use="required">
+         <xs:simpleType>
+         	<xs:restriction  base="xs:string">
+         		<xs:enumeration value="modify" />
+         		<xs:enumeration value="append" />
+         	</xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="crud">
@@ -92,7 +99,7 @@
   <xs:element name="jsonrpc">
     <xs:complexType mixed="true">
       <xs:sequence>
-      	 <xs:element minOccurs="0" maxOccurs="unbounded" ref="countquery"/>
+      	 <xs:element minOccurs="0" maxOccurs="1" ref="countquery"/>
          <xs:element minOccurs="0" maxOccurs="1" ref="error"/>
          <xs:element minOccurs="0" maxOccurs="1" ref="message"/>
       </xs:sequence>
@@ -225,7 +232,7 @@
   <xs:element name="commands">
   	<xs:complexType>
   		<xs:sequence>
-  			<xs:element name="cmd" maxOccurs="unbounded">
+  			<xs:element name="cmd" minOccurs="0" maxOccurs="unbounded">
 		    <xs:complexType>
 		      <xs:attribute name="instack" use="required" type="xs:string"/>
 		      <xs:attribute name="name" use="required" type="xs:string"/>
@@ -241,7 +248,7 @@
   
   <xs:element name="field">
     <xs:complexType>
-      <xs:choice>
+      <xs:choice minOccurs="0" maxOccurs="2"> 
         <xs:element ref="compositefield"/>
         <xs:element ref="customfield"/>
         <xs:element ref="div"/>
@@ -329,11 +336,9 @@
   <xs:element name="input">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="rule"/>
-        <xs:sequence minOccurs="0">
-          <xs:element ref="validation"/>
-          <xs:element ref="query"/>
-        </xs:sequence>
+          <xs:element ref="rule" minOccurs="0"/>
+          <xs:element ref="query" minOccurs="0"/>
+          <xs:element ref="validation" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="class" use="required"/>
       <xs:attribute name="column" use="required" type="xs:string"/>
@@ -347,8 +352,22 @@
       <xs:attribute name="mask" use="required"/>
       <xs:attribute name="name" use="required" type="xs:string"/>
       <xs:attribute name="primarykey" type="xs:string"/>
-      <xs:attribute name="replace" use="required" type="xs:string"/>
-      <xs:attribute name="type" use="required" type="xs:string"/>
+      <xs:attribute name="replace"  use="required">
+         <xs:simpleType>
+         	<xs:restriction  base="xs:string">
+         		<xs:enumeration value="modify" />
+         		<xs:enumeration value="append" />
+         	</xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="type" use="required"  >
+          <xs:simpleType>
+         	<xs:restriction  base="xs:string" >
+         		 <xs:minLength value="2"></xs:minLength>
+         	</xs:restriction>
+         </xs:simpleType>
+       </xs:attribute>  
+      
       <xs:attribute name="validationattr"/>
       <xs:attribute name="value" use="required"/>
     </xs:complexType>

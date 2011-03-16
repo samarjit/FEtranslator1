@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element ref="{}countquery" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element ref="{}error" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element ref="{}message" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
@@ -43,8 +44,9 @@ import javax.xml.bind.annotation.XmlType;
 public class Sqlselect {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "error", type = Error.class),
-        @XmlElementRef(name = "message", type = Message.class)
+        @XmlElementRef(name = "message", type = Message.class),
+        @XmlElementRef(name = "countquery", type = Countquery.class),
+        @XmlElementRef(name = "error", type = Error.class)
     })
     @XmlMixed
     protected List<Object> content;
@@ -71,9 +73,10 @@ public class Sqlselect {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Error }
      * {@link Message }
      * {@link String }
+     * {@link Countquery }
+     * {@link Error }
      * 
      * 
      */

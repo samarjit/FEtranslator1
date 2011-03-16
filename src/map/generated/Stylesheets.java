@@ -40,8 +40,8 @@ import javax.xml.bind.annotation.XmlType;
 public class Stylesheets {
 
     @XmlElementRefs({
-        @XmlElementRef(name = "text", type = JAXBElement.class),
-        @XmlElementRef(name = "styleinclude", type = JAXBElement.class)
+        @XmlElementRef(name = "styleinclude", type = JAXBElement.class),
+        @XmlElementRef(name = "text", type = JAXBElement.class)
     })
     protected List<JAXBElement<String>> styleincludeOrText;
 

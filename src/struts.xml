@@ -38,8 +38,14 @@
         </interceptors> 
         <default-interceptor-ref name="debug-stack"/> 
     </package> 
-	
-	<package name="yidefaultPackage" extends="struts-default">
+	<package name="jaxbtest" extends="debug-default" namespace="">
+	    <action name="jaxbtest" class="com.ycs.fe.actions.JaxbTestAC"
+			method="execute"> 
+			<result name="success"  >/pages/screenmap.jsp</result>
+			<result name="input">/xslinterceptorinp.jsp</result>
+		</action>
+	</package>
+	<package name="yidefaultPackage" extends="debug-default">
 		<result-types>
 			<result-type name="customXMLRes" class="actionclass.XMLResult">
 			</result-type>

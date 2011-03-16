@@ -50,6 +50,7 @@ private Logger logger = Logger.getLogger(getClass());
 
 	public String view() throws Exception {
 		System.out.println("Program Setup view ****************"); 
+		if(screenName == null || "".equals(screenName))
 		screenName = "ProgramSetup";
 //		ActionContext.getContext().getValueStack().getContext().put("ZHello", "World");
 //		ActionContext.getContext().getValueStack().set("ZHello2", "World2");
