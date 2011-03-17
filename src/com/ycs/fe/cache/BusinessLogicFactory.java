@@ -60,7 +60,11 @@ public class BusinessLogicFactory {
 		Cache blcache =  AppCacheManager.getFromCache(BLCACHE);
 		BaseBL bl = null;
 		try {
+			//Try to reload cache to get the value
 			if(blcache.get(screenName) == null )refreshCache(blcache,screenName);
+			
+			//In case the refresh Cache does not find the Business Logic return null
+			if(blcache.get(screenName) != null ) 
 			bl = (BaseBL) blcache.get(screenName).getValue();
 		} catch (IllegalStateException e) {
 			e.printStackTrace();

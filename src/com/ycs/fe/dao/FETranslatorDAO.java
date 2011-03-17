@@ -68,7 +68,7 @@ public class FETranslatorDAO {
 			}	
 		}
 		if(sqlquery!= null && sqlquery.trim().length() >0 ){
-	    	Map<String, Object> values = new HashMap<String, Object>();
+	    	Map<String, String> values = new HashMap<String, String>();
 	    	Map<String, Object> context = new HashMap<String, Object>();
 			
 			CachedRowSet crs = null;

@@ -125,9 +125,7 @@
 					</select>
 				</field>
 			</fields>
-			<button forid="loginbutton" onclick="" replace="append"  ></button>
-			<button forid="reset" onclick="" replace="append"  ></button>
-			 
+			  
 			<testscriptlet><![CDATA[<@s.property value="selectmonthl"/> ]]></testscriptlet> 
 
 		</panel>

@@ -179,7 +179,7 @@ public class XMLResult extends StrutsResultSupport {
 		this.adapterFactory = adapterFactory;
 	}
 
-	 protected TemplateModel createModel() throws TemplateModelException {
+	protected TemplateModel createModel() throws TemplateModelException {
 	        ServletContext servletContext = ServletActionContext.getServletContext();
 	        HttpServletRequest request = ServletActionContext.getRequest();
 	        HttpServletResponse response = ServletActionContext.getResponse();
@@ -188,7 +188,7 @@ public class XMLResult extends StrutsResultSupport {
 	        Object action = null;
 	        if(invocation!= null ) action = invocation.getAction(); //Added for NullPointException
 	        return freemarkerManager.buildTemplateModel(stack, action, servletContext, request, response, wrapper);
-	    }
+	}
 	 
 	@Override
 	protected void doExecute(String finalLocation, ActionInvocation invocation) throws Exception {

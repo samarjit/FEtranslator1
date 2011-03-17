@@ -36,7 +36,7 @@ function submitcallback(form){
  * Extra initialization options are provided through var options; variable inside this function
  * @returns ruleobj which is used to initilalize validator
  */
-function initRule_Callback(ruleobj) {
+function initRule_Callback(rule) {
 	var options = {
 			errorElement:"label",
 			errorLabelContainer:"#alertmessage", 

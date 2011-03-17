@@ -192,6 +192,13 @@ private boolean templateprocessed = false;
 			
 		}
 	}
+	
+	/**
+	 * Processes &lt;select/>. 
+	 * @param xmlelmNode
+	 * @param dochtml
+	 * @param headNode
+	 */
 	public void processSelectElm(Node xmlelmNode, org.jsoup.nodes.Document dochtml, org.jsoup.nodes.Element headNode){
 		 
 		@SuppressWarnings("unchecked")
@@ -213,7 +220,7 @@ private boolean templateprocessed = false;
 //				CDATASection cdata = dochtml.createCDATASection(textelement.getText());
 //				element.appendContent(cdata);
 //				logger.debug("To remove:"+textelement.getText());
-				if(n.tagName().equalsIgnoreCase("select")){
+				if(n.tagName().equalsIgnoreCase("select")  && textelement !=null){
 					//do nothing as this is the select element, but remove the option tags and append options of template <text>
 					n.empty();
 //1. Fill from <Text>
@@ -221,20 +228,26 @@ private boolean templateprocessed = false;
 					 
 					n.append(selecttext.select("option").outerHtml());
 					
-				}else{
-					n.append(textelement.getText());
+//				}else{
+//					n.append(textelement.getText());
 					
 				}
-			}else{
-				//TODO: We need to insert in custom fields
-				n.append("<select />").attr("id", id);
+			}else{ //replace="append"
+				Element textelement = inputElm.element("text");
+				if(textelement == null){
+					n.append("<select />").child(0).attr("id", id); //append but text is empty
+				}else{
+					org.jsoup.nodes.Document selecttext = Jsoup.parse("<fakeroot>"+textelement.getText()+"</fakeroot>");
+					n.append(selecttext.outerHtml());  //append with data from <text>
+				}
 			}
 				//appendXmlFragment(dbuild,n,textelement.getText());
-
+			logger.debug("To Remove:"+n.outerHtml());
 				
 //2. Fill from list 
 				String listValue = inputElm.attributeValue("value");
 //				if(listValue != null && "".equals(listValue)){
+				if(listValue != null) { 
 				    listValue = listValue.replace("{", " ");
 					listValue = listValue.replace("}", " ");
 					String[] list = listValue.split(",");
@@ -254,12 +267,14 @@ private boolean templateprocessed = false;
 //						Element nodelm = (Element) node;
 						//nodelm.appendContent(element);
 					}
+		        }
 //				}else{ //if hard coded values are not there then look for filling up from action context
 //3. Fill from ValueStack
 					ValueStack stack = ActionContext.getContext().getValueStack();
 					@SuppressWarnings("unchecked")
-					Map<String,String>opts = (Map<String, String>) stack.findValue(htmlid);
+					Map<String,String>opts = (Map<String, String>) stack.findValue(id);
 					if(opts != null){
+						logger.debug("Populating <select/> from ValueStack");
 //						List list = dochtml.selectNodes("select");
 //						Node node = list.get(0);
 						org.jsoup.nodes.Node node2 = dochtml.getElementById(id);//.selectSingleNode("//select[@id=\""+htmlid+"\"]");
@@ -285,7 +300,7 @@ private boolean templateprocessed = false;
 		for (int i = 0;  scriptsnl.hasNext(); i++) {
 			Node scriptnode = (Node) scriptsnl.next();
 			if(scriptnode.getNodeType() == Node.ELEMENT_NODE && "text".equals(scriptnode.getName())){
-				logger.debug("To Remove:script:"+scriptnode.getText());
+//				logger.debug("To Remove:script:"+scriptnode.getText());
 				headNode.append(scriptnode.getText());
 				//appendXmlFragment(dbuild,headNode,scriptnode.getText());
 			}
@@ -294,7 +309,7 @@ private boolean templateprocessed = false;
 				String[] includeScripts = scriptnode.getText().split(",");
 				for (String val : includeScripts) {
 					org.jsoup.nodes.Element e = headNode.appendElement("script");
-					e.attr("src", val);
+					e.attr("src", "../js/"+val);
 					e.attr("language", "JavaScript");
 					e.attr("type", "text/javascript");
 					 // headNode.appendContent(e);
@@ -339,7 +354,7 @@ private boolean templateprocessed = false;
 				String[] includeScripts = scriptnode.getText().split(",");
 				for (String val : includeScripts) {
 					org.jsoup.nodes.Element e = headNode.appendElement("link");
-					e.attr("href", val);
+					e.attr("href", "../css/"+ val);
 					e.attr("rel", "stylesheet");
 					e.attr("type", "text/css");
 					//headNode.appendContent(e);
@@ -442,11 +457,32 @@ private boolean templateprocessed = false;
 			String replace=inputElm.attributeValue("replace");
 			if(replace.equals("append")){
 				org.jsoup.nodes.Element button =   n.appendElement("button");
+			    if(inputElm.attributeValue("id") == null){
+			    	logger.info("Id is required");
+			    }else{
+			    	button.attr("id",inputElm.attributeValue("id"));
+			    }
+			    if(inputElm.attributeValue("type") == null){
+			    	logger.info("Type is required and it should be either (button or submit)");
+			    }else{
+			    	button.attr("type",inputElm.attributeValue("type"));
+			    }
 			    
-				button.attr("id",inputElm.attributeValue("id"));
-				button.attr("onclick", inputElm.attributeValue("onclick")); 
+			    if(inputElm.attributeValue("onclick") != null){
+			    	button.attr("onclick", inputElm.attributeValue("onclick")); 
+			    }
+			    if(inputElm.getText() == null){
+			    	logger.info("Button Text is required");
+			    }else{
+			    	button.append(inputElm.getText());
+			    }
 			}else{//replace=modify
-				n.html(inputElm.getText());
+				if(inputElm.getText() == null){
+			    	logger.info("Button Text is required");
+			    }else{
+			    	n.html(inputElm.getText());
+			    }
+				if(inputElm.attributeValue("onclick") != null)
 			    n.attr("onclick", inputElm.attributeValue("onclick")); 
 			}
 			
@@ -611,6 +647,7 @@ private boolean templateprocessed = false;
 			processStyles(xmlelmNode, dochtml, headNode);
 			processDivElm(xmlelmNode, dochtml, headNode);
 			processCompositeElm(xmlelmNode, dochtml, headNode);
+			processButtonElm(xmlelmNode, dochtml, headNode);
 			
 			//processing global nodes
 			processRules(xmlelmNode, dochtml, headNode, globaljs);

@@ -58,7 +58,9 @@ public class JavascriptRpc extends ActionSupport {
 	public String execute(){
 		System.out.println("js RPC called with command:"+command+" for screen:"+screenName);
 		BaseBL bl = BusinessLogicFactory.getBusinessLogic(screenName);
-		bl.preJsRPCListerner(ActionContext.getContext().getActionInvocation());
+		
+		if(bl != null)
+		  bl.preJsRPCListerner(ActionContext.getContext().getActionInvocation());
 		
 		String path = ScreenMapRepo.findMapXML(screenName);
 		String parsedquery = "";
@@ -94,7 +96,8 @@ public class JavascriptRpc extends ActionSupport {
 				
 		logger.debug(stack.getContext().get("resultDTO"));
 		
-		bl.postJsRPCListerner(ActionContext.getContext().getActionInvocation());
+		if(bl !=null)
+		 bl.postJsRPCListerner(ActionContext.getContext().getActionInvocation());
 		
 		Gson gson = new Gson();
 		String json1 = gson.toJson(stack.getContext().get("resultDTO"));

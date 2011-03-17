@@ -27,30 +27,9 @@
 		]]>
 		
 		</text>
-		<text>
-		<![CDATA[
-		<script>
-			 function jsrpctest(){
-			 	$.get("jsrpc.action?screenName=TestPage&panelName=form1&submitdata={form1:[{whereval:'LOYCARD',command:'testjsrpc'}]}",
-			 	function(data){
-			 		alert("Data received from JSRPC:"+data);
-			 	});
-			 }
-		</script>		
-		]]>
-		
-		</text>
 		</scripts>
-		<stylesheets>
-			<styleinclude>main.css</styleinclude>
-		</stylesheets>
-		<crud>
-			<jsonrpc id="rpc1" outstack="form1">
-			SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM PROGRAMDETAILS where PROGNAME=:whereval|STRING 
-			<error message="The select failed for :whereval"></error>
-			<message message="The record,:whereval was selected successfully"></message>
-			</jsonrpc>
-		</crud>
+		<stylesheets><styleinclude>main.css</styleinclude></stylesheets>
+		<crud></crud>
 		<dm>
 			<txnproc></txnproc>
 		</dm>
@@ -61,7 +40,7 @@
 			<proc></proc>
 		</anyprocs>
 		<commands>
-			<cmd result="ajax" instack="inst1" name="testjsrpc" opt="jsonrpc:rpc1" processor="crud"/>
+
 		</commands>
 
 	</screen>
@@ -106,7 +85,7 @@
 				</field>
 			</fields>
 			<button type="submit" replace="modify" forid="submitbutton" id="submitbutton">Submit Button</button>
-			<button type="button" replace="append" forid="submitcontainer" id="submitbutton2" onclick="jsrpctest();">JS RPC Test</button>	
+			<button type="button" replace="append" forid="submitcontainer" id="submitbutton2">A Button</button>	
 				
 		</panel>
 	</panels>

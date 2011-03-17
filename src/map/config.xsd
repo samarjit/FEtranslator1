@@ -65,19 +65,22 @@
       <xs:attribute name="id" type="xs:string"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="button">
-    <xs:complexType>
-    	<xs:attribute name="forid" use="required" type="xs:string" />
-    	<xs:attribute name="onclick" use="required" />
-    	<xs:attribute name="replace"  use="required">
-         <xs:simpleType>
-         	<xs:restriction  base="xs:string">
-         		<xs:enumeration value="modify" />
-         		<xs:enumeration value="append" />
-         	</xs:restriction>
-         </xs:simpleType>
-      </xs:attribute>
-    </xs:complexType>
+  <xs:element name="button" >
+	<xs:complexType mixed="true">
+	  
+	 			<xs:attribute name="forid" use="required" type="xs:string" />
+				<xs:attribute name="onclick"   />
+				<xs:attribute name="id" use="optional" />
+				<xs:attribute name="type" use="required" />
+				<xs:attribute name="replace" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="modify" />
+							<xs:enumeration value="append" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+	</xs:complexType>
   </xs:element>
   <xs:element name="crud">
     <xs:complexType>
@@ -269,10 +272,10 @@
         <xs:element ref="query"/>
       </xs:sequence>
       <xs:attribute name="class" use="required"/>
-      <xs:attribute name="column" use="required"/>
-      <xs:attribute name="dbcolsize" use="required"/>
+      <xs:attribute name="column"  />
+      <xs:attribute name="dbcolsize"  />
       <xs:attribute name="forid" use="required" type="xs:string"/>
-      <xs:attribute name="mask" use="required"/>
+      <xs:attribute name="mask"  />
       <xs:attribute name="replace" use="required" type="xs:string"/>
       <xs:attribute name="type" use="required"/>
       <xs:attribute name="validationattr" use="required"/>
@@ -280,7 +283,7 @@
   </xs:element>
   <xs:element name="datafield">
     <xs:complexType>
-      <xs:attribute name="column" use="required" type="xs:string"/>
+      <xs:attribute name="column"   type="xs:string"/>
       <xs:attribute name="forid" use="required" type="xs:string"/>
       <xs:attribute name="id" use="required" type="xs:string"/>
       <xs:attribute name="name" use="required" type="xs:string"/>
@@ -340,26 +343,19 @@
           <xs:element ref="query" minOccurs="0"/>
           <xs:element ref="validation" minOccurs="0"/>
       </xs:sequence>
-      <xs:attribute name="class" use="required"/>
-      <xs:attribute name="column" use="required" type="xs:string"/>
-      <xs:attribute name="dbcolsize" use="required"/>
+      <xs:attribute name="class"  />
+      <xs:attribute name="column"  type="xs:string"/>
+      <xs:attribute name="dbcolsize"  />
       <xs:attribute name="dbdatatype" type="xs:string"/>
       <xs:attribute name="forid" use="required" type="xs:string"/>
       <xs:attribute name="hidden"/>
       <xs:attribute name="id" use="required" type="xs:string"/>
       <xs:attribute name="label"/>
       <xs:attribute name="mandatory"/>
-      <xs:attribute name="mask" use="required"/>
+      <xs:attribute name="mask"  />
       <xs:attribute name="name" use="required" type="xs:string"/>
       <xs:attribute name="primarykey" type="xs:string"/>
-      <xs:attribute name="replace"  use="required">
-         <xs:simpleType>
-         	<xs:restriction  base="xs:string">
-         		<xs:enumeration value="modify" />
-         		<xs:enumeration value="append" />
-         	</xs:restriction>
-         </xs:simpleType>
-      </xs:attribute>
+      <xs:attribute ref="replace" use="required"  />
       <xs:attribute name="type" use="required"  >
           <xs:simpleType>
          	<xs:restriction  base="xs:string" >
@@ -372,34 +368,42 @@
       <xs:attribute name="value" use="required"/>
     </xs:complexType>
   </xs:element>
+  <xs:attribute name="replace">
+  <xs:simpleType >
+    <xs:restriction  base="xs:string">
+         		<xs:enumeration value="modify" />
+         		<xs:enumeration value="append" />
+    </xs:restriction>
+  </xs:simpleType>
+  </xs:attribute> 
   <xs:element name="select">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="text"/>
-        <xs:element ref="rule"/>
+        <xs:element minOccurs="0" ref="text"/>
+        <xs:element minOccurs="0" ref="rule"/>
         <xs:element minOccurs="0" ref="validation"/>
-        <xs:element ref="query"/>
+        <xs:element minOccurs="0" ref="query"/>
       </xs:sequence>
-      <xs:attribute name="class" use="required"/>
-      <xs:attribute name="column" use="required" type="xs:string"/>
-      <xs:attribute name="dbcolsize" use="required"/>
+      <xs:attribute name="class" use="optional"/>
+      <xs:attribute name="column" use="optional" type="xs:string"/>
+      <xs:attribute name="dbcolsize" use="optional"/>
       <xs:attribute name="dbdatatype" type="xs:string"/>
       <xs:attribute name="forid" use="required" type="xs:string"/>
       <xs:attribute name="hidden"/>
       <xs:attribute name="id" use="required" type="xs:string"/>
       <xs:attribute name="label"/>
       <xs:attribute name="mandatory"/>
-      <xs:attribute name="mask" use="required"/>
+      <xs:attribute name="mask" use="optional"/>
       <xs:attribute name="name" type="xs:string"/>
-      <xs:attribute name="replace" use="required" type="xs:string"/>
+      <xs:attribute use="required" ref="replace"/>
       <xs:attribute name="type" type="xs:string"/>
       <xs:attribute name="validationattr"/>
-      <xs:attribute name="value" use="required"/>
+      <xs:attribute name="value" use="optional"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="sometype">
     <xs:complexType>
-      <xs:attribute name="dbdatatype" use="required" type="xs:string"/>
+      <xs:attribute name="dbdatatype"   type="xs:string"/>
       <xs:attribute name="name" use="required" type="xs:string"/>
     </xs:complexType>
   </xs:element>
@@ -412,8 +416,15 @@
   </xs:element>
   <xs:element name="query">
     <xs:complexType mixed="true">
+      <xs:attribute name="type" >
+       <xs:simpleType>
+       	 <xs:restriction base="xs:string">
+       	 	  <xs:enumeration value="SQL" />
+              <xs:enumeration value="QUERYID" />
+       	 </xs:restriction>
+       </xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="stackid" type="xs:string"/>
-      <xs:attribute name="type" type="xs:string"/>
     </xs:complexType>
   </xs:element>
  
