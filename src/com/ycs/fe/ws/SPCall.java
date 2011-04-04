@@ -37,4 +37,21 @@ public interface SPCall {
         @WebParam(name = "arg0", targetNamespace = "")
         String arg0);
 
+    /**
+     * 
+     * @param arg0
+     * @return
+     *     returns java.lang.String
+     * @throws Exception_Exception
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "callPLSQL", targetNamespace = "http://ws.plsqlcall/", className = "com.ycs.fe.ws.CallPLSQL")
+    @ResponseWrapper(localName = "callPLSQLResponse", targetNamespace = "http://ws.plsqlcall/", className = "com.ycs.fe.ws.CallPLSQLResponse")
+    public String callPLSQL(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0)
+        throws Exception_Exception
+    ;
+
 }

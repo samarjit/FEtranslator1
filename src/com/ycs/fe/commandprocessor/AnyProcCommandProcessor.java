@@ -1,5 +1,6 @@
 package com.ycs.fe.commandprocessor;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -20,6 +21,8 @@ import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.util.ParseSentenceOgnl;
 import com.ycs.fe.util.SentenceParseException;
+import com.ycs.fe.ws.SPCall;
+import com.ycs.fe.ws.SPCallService;
 
 public class AnyProcCommandProcessor implements BaseCommandProcessor {
 
@@ -28,8 +31,9 @@ public class AnyProcCommandProcessor implements BaseCommandProcessor {
 	@Override
 	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO inputDTO, ResultDTO resultDTO) {
 		logger.debug("Processing AnyProc call");
-		// String json =
-		// "{'procname':'WS_TEST_PROC','inputparam':[[{'NAME':'sam','EMAIL':'sam@yl.com'},{'NAME':'samarjit','EMAIL':'samarjit@yl.com'}],{'data1':'param2'}],'outputparam':'param3'}";
+		HashMap<String, Object>  data = new HashMap<String, Object>();
+//		 String resultJsonConf =
+//		 "{'procname':'WS_TEST_PROC','inputparam':[[{'NAME':'sam','EMAIL':'sam@yl.com'},{'NAME':'samarjit','EMAIL':'samarjit@yl.com'}],{'data1':'param2'}],'outputparam':'param3'}";
 
 		try {
 			Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
@@ -62,21 +66,28 @@ public class AnyProcCommandProcessor implements BaseCommandProcessor {
 			outputParamParser(outputele, outputarr, outputString);
 
 			String xmlString = doc.asXML();
-			callProcedure(xmlString);
-
+			String resXML = callProcedure(xmlString);
+			data.put("anyProcResult", resXML);
+			resultDTO.setData(data);
+			
 		} catch (SentenceParseException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return resultDTO;
 	}
 
-	public void callProcedure(String xmlString) {
+	public String callProcedure(String xmlString) {
+		
 		System.out.println("InputData :" + xmlString);
-		MainWithoutType callproc = new MainWithoutType();
-		String htmlString = callproc.executeGenericProc(xmlString);
-		System.out.println("htmlString=" + htmlString);
+		SPCallService spcallsvc = new SPCallService();
+		SPCall spcallendpoint  = spcallsvc.getSPCallPort();
+		String resXML = spcallendpoint.callSP(xmlString);
+//		MainWithoutType callproc = new MainWithoutType();
+//		String htmlString = callproc.executeGenericProc(xmlString);
+//		System.out.println("htmlString=" + htmlString);
+		return resXML;
 	}
 
 	private void outputParamParser(Element outputele, JSONArray outputarr, String outputString) {

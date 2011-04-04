@@ -1,6 +1,7 @@
 package com.ycs.fe.commandprocessor;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -21,6 +22,9 @@ import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.util.ParseSentenceOgnl;
 import com.ycs.fe.util.SentenceParseException;
+import com.ycs.fe.ws.Exception_Exception;
+import com.ycs.fe.ws.SPCall;
+import com.ycs.fe.ws.SPCallService;
 
 /**
  * jsonRecord will be like
@@ -42,7 +46,9 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 
 	@Override
 	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO inputDTO, ResultDTO resultDTO) {
+		HashMap<String, Object>  data = new HashMap<String, Object>();
 		try {
+//			String resultJsonConf = "{'cmd':'STUCAP','single':{'FF0151':'aaa','FF0148':'bbb','FF01258':'eee'},'multiple':[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]}";
 			Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 			Node selectSingleNode = rootXml.selectSingleNode(querynodeXpath);
 			String jsonFromConf = selectSingleNode.getText();
@@ -163,7 +169,9 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 			xml += "</IDCT>";
 			logger.debug("Input Xml :  " + xml);
 			System.out.println(xml);
-			String outputxml = callPLSQL(xml);
+			String outputxml = callPLSQLLocal(xml);
+			data.put("DMResult", outputxml);
+			resultDTO.setData(data);
 			logger.debug("Output Xml :  " + outputxml);
 		} catch (JSONException e) {
 			logger.debug("submitdata parsing error", e);
@@ -177,12 +185,20 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 
 		// inputStream = new StringBufferInputStream(resultHtml );
 
-		return null;
+		return resultDTO;
 	}
 
-	public String callPLSQL(String xml) {
+	public String callPLSQLLocal(String xml) {
+		xml = String.format("%06d%s", xml.length(),xml);
 		System.out.println(xml);
-		return xml;
+		SPCallService spcallsvc = new SPCallService();
+		SPCall spcallendpoint  = spcallsvc.getSPCallPort();
+		String retStr ="";
+		try{
+			retStr = spcallendpoint.callPLSQL(xml);
+		}catch (Exception_Exception e) {
+		}
+		return retStr;
 	}
 
 	public static void main(String[] args) {
@@ -190,6 +206,6 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 		String submitdatatxncode = "{'cmd':'STUCAP','single':{'FF0151':'aaa','FF0148':'bbb','FF01258':'eee'},'multiple':[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]}";
 		submitdatatxncode = "{'transcode':'BNGPVW','multiple':[{'FF0143':'100001'},{'FF0143':'100002'}]}";
 		JSONObject jsonRecord = JSONObject.fromObject(submitdatatxncode);
-		test.processCommand(null, null, jsonRecord, null, null);
+		test.processCommand(null, null, null, null, null);
 	}
 }

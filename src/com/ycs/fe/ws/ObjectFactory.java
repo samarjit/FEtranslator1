@@ -24,6 +24,9 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
+    private final static QName _Exception_QNAME = new QName("http://ws.plsqlcall/", "Exception");
+    private final static QName _CallPLSQLResponse_QNAME = new QName("http://ws.plsqlcall/", "callPLSQLResponse");
+    private final static QName _CallPLSQL_QNAME = new QName("http://ws.plsqlcall/", "callPLSQL");
     private final static QName _CallSP_QNAME = new QName("http://ws.plsqlcall/", "callSP");
     private final static QName _CallSPResponse_QNAME = new QName("http://ws.plsqlcall/", "callSPResponse");
 
@@ -35,11 +38,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CallSPResponse }
+     * Create an instance of {@link CallPLSQLResponse }
      * 
      */
-    public CallSPResponse createCallSPResponse() {
-        return new CallSPResponse();
+    public CallPLSQLResponse createCallPLSQLResponse() {
+        return new CallPLSQLResponse();
     }
 
     /**
@@ -48,6 +51,57 @@ public class ObjectFactory {
      */
     public CallSP createCallSP() {
         return new CallSP();
+    }
+
+    /**
+     * Create an instance of {@link CallPLSQL }
+     * 
+     */
+    public CallPLSQL createCallPLSQL() {
+        return new CallPLSQL();
+    }
+
+    /**
+     * Create an instance of {@link CallSPResponse }
+     * 
+     */
+    public CallSPResponse createCallSPResponse() {
+        return new CallSPResponse();
+    }
+
+    /**
+     * Create an instance of {@link Exception }
+     * 
+     */
+    public Exception createException() {
+        return new Exception();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Exception }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.plsqlcall/", name = "Exception")
+    public JAXBElement<Exception> createException(Exception value) {
+        return new JAXBElement<Exception>(_Exception_QNAME, Exception.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link CallPLSQLResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.plsqlcall/", name = "callPLSQLResponse")
+    public JAXBElement<CallPLSQLResponse> createCallPLSQLResponse(CallPLSQLResponse value) {
+        return new JAXBElement<CallPLSQLResponse>(_CallPLSQLResponse_QNAME, CallPLSQLResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link CallPLSQL }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://ws.plsqlcall/", name = "callPLSQL")
+    public JAXBElement<CallPLSQL> createCallPLSQL(CallPLSQL value) {
+        return new JAXBElement<CallPLSQL>(_CallPLSQL_QNAME, CallPLSQL.class, null, value);
     }
 
     /**
