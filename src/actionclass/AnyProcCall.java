@@ -21,11 +21,12 @@ public class AnyProcCall {
 	private Logger logger = Logger.getLogger(getClass());
 	
 	public void callProcedure(){
-		String jsondata = "{ 'procedure':{ 'procname':'WS_TEST_PROC', " +
-				"'inputparam':{ 'parameter':[ { 'array':{ '@name':'TESTTYPE_ARRAY', 'struct':[ { '@name':'TESTTYPE', 'data1':[ { '@name':'NAME', '@type':'VARCHAR' }, " +
-				"{ '@name':'EMAIL', 'type':'VARCHAR' } ] }, { '@name':'TESTTYPE', 'data1':[ { '@name':'NAME', 'type':'VARCHAR' }, { '@name':'EMAIL', '@type':'VARCHAR' } ] } ] } }," +
-				" { 'data1':{ 'type':'VARCHAR2' } }, { 'array':{ '@name':'MULTI_ROW', 'data1':[ { '@type':'NUMBER' }, { '@type':'NUMBER' }, { '@type':'NUMBER' } ] } }]}, " +
-				"'outputparam':{ 'parameter':'param3' } } } ";
+		String jsondata = "{'procname':'WS_TEST_PROC','inputparam':[{'array':[{'struct':" +
+				"{'name':'AAA','email':'aaa@f'}},{'struct':{'name':'AAA','email':'aaa@f'}}]}," +
+				"{'data1':{'count':'2'}},{'array':[{'name':'AAA','email':'aaa@f'},{'name':'AAA','email':'aaa@f'}]}]," +
+				"'outputparam':{'parameter':'param3'}}";
+		
+		
 		String inputDTO = "{form1:[{'txtdata1':'val2',  command:'ANYPROC'}, {'txtdata1':'val1', command:'ANYPROC'}]}";
 		String json = "{'name':'TESTTYPE', 'data1':[{'name':'NAME', 'type':'VARCHAR' ,'value':'Jam'},{'name':'NAME', 'type':'VARCHAR' ,'value':'Jam'}]}";
 //		String json = "{ 'data1':'MULTI_ROW', 'data2':'trt' }  ";
@@ -53,6 +54,7 @@ public class AnyProcCall {
 		
 		Struct bean = gson.fromJson(json, Struct.class);
 		System.out.println("TestJsonFromObject "+bean.name);
+		System.out.println("TestJsonFromObject "+gson.toJsonTree(json));
 		
 		try {
 			JSONObject jobj = JSONObject.fromObject(jsondata);
@@ -79,7 +81,7 @@ public class AnyProcCall {
 		String jsondata = "{ 'procedure':{ 'procname':'WS_TEST_PROC', " +
 		"'inputparam':{ 'parameter':[ { 'array':{ 'name':'TESTTYPE_ARRAY', 'struct':[ { 'name':'TESTTYPE', 'data1':[ { 'name':'NAME', 'type':'VARCHAR' }, " +
 		"{ 'name':'EMAIL', 'type':'VARCHAR' } ] }, { 'name':'TESTTYPE', 'data1':[ { 'name':'NAME', 'type':'VARCHAR' }, { 'name':'EMAIL', 'type':'VARCHAR' } ] } ] } }," +
-		" { 'data1':{ 'type':'VARCHAR2' } }, { 'array':{ 'name':'MULTI_ROW', 'data1':[ { 'type':'NUMBER' }, { 'type':'NUMBER' }, { 'type':'NUMBER' } ] } }]}, " +
+		" { 'data1':[{ 'type':'VARCHAR2' }] }, { 'array':{ 'name':'MULTI_ROW', 'data1':[ { 'type':'NUMBER' }, { 'type':'NUMBER' }, { 'type':'NUMBER' } ] } }]}, " +
 		"'outputparam':{ 'parameter':'param3' } } } ";
 		
 		JSONObject jsonRecord = JSONObject.fromObject(jsondata);
@@ -101,14 +103,26 @@ public class AnyProcCall {
 				if(array.containsKey("struct")){
 					xml = structparser(array,xml);
 				}else if(array.containsKey("data1")){
-					
+					if(array.isArray()){
+						JSONArray dataarr = array.getJSONArray("data1");
+						xml = arrayDataParser((JSONArray) array.get("data1"),xml);
+						}else{
+							xml = dataParser(array, xml);
+						}
 				}
 				
 				xml+="</ARRAY>";
 			}else if(inparam.containsKey("data1")){
+				Object oo = inparam.get("data1");
+				
+				System.out.println("hello"+oo);
+		//		JSONObject jj = inparam.getJSONObject("data1");
+			//	System.out.println("hello"+jj);
+//				JSONArray dataarr = inparam.getJSONArray("data1");
+//				xml = arrayDataParser(dataarr,xml);
 				
 			}else if(inparam.containsKey("struct")){
-				
+				xml = structparser(inparam,xml);
 			}
 			
 			xml+= "</parameter>";	
@@ -121,12 +135,19 @@ public class AnyProcCall {
 
 	}
 	
-	public String data1parser(JSONObject jsonobj, String xml ){
+	public String arrayDataParser(JSONArray dataarr, String xml ){
 		
-		JSONArray dataarr = jsonobj.getJSONArray("data1");
+		//JSONArray dataarr = jsonobj.getJSONArray("data1");
 		for(int k=0;k<dataarr.size();k++){
-			xml += "<data1";
 			JSONObject dataele = dataarr.getJSONObject(k);
+			xml = dataParser(dataele,xml);
+		}
+		return xml;
+	}
+	
+	public String dataParser(JSONObject dataele, String xml ){
+		String value = "";
+			xml += "<data1";
 			if(dataele.containsKey("name")){
 				String dataname = dataele.getString("name");
 				xml += " name="+dataname;
@@ -136,13 +157,12 @@ public class AnyProcCall {
 				xml += " type="+dataname;
 			}	
 			if(dataele.containsKey("value")){
-				String dataname = dataele.getString("value");
-				xml += " value="+dataname;
+				 value = dataele.getString("value");
 			}	
-			xml += "></data1>";
-		}
+			xml += ">"+value+"</data1>";
 		return xml;
 	}
+	
 	
 	public String structparser(JSONObject json, String xml){
 		JSONArray structarr = json.getJSONArray("struct");
@@ -151,7 +171,8 @@ public class AnyProcCall {
 			String sname = structele.getString("name");
 			xml += "<STRUCT name=\""+sname+"\">";
 			if(structele.containsKey("data1")){
-				xml = data1parser(structele,xml);
+				JSONArray dataarr = structele.getJSONArray("data1");
+				xml = arrayDataParser(dataarr,xml);
 			}
 			xml += "</STRUCT>";
 		}
@@ -174,8 +195,17 @@ public class AnyProcCall {
 		System.out.println("xmlcod:"+xmldoc.toString());
 		
 	}
+	
+	public void anyprocCallXMl(){
+		String jsondata = "{'procname':'WS_TEST_PROC','inputparam':[{'array':[{'struct':" +
+		"{'name':'AAA','email':'aaa@f'}},{'struct':{'name':'AAA','email':'aaa@f'}}]}," +
+		"{'data1':{'count':'2'}},{'array':[{'name':'AAA','email':'aaa@f'},{'name':'AAA','email':'aaa@f'}]}]," +
+		"'outputparam':{'parameter':'param3'}}";
+	}
+	
 	public static void main(String[] args){
 		AnyProcCall test = new AnyProcCall();
 		test.callProcedure();
+//		test.generateXML();
 	}
 }

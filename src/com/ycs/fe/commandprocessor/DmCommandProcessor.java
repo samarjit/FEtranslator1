@@ -5,17 +5,22 @@ import java.util.Date;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import map.ScreenMapRepo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
+import org.dom4j.Element;
+import org.dom4j.Node;
 
 import repo.txnmap.generated.Root;
 import repo.txnmap.generated.Txn;
 
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.ParseSentenceOgnl;
+import com.ycs.fe.util.SentenceParseException;
 
 /**
  * jsonRecord will be like
@@ -29,36 +34,42 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 	private Logger logger = Logger.getLogger(getClass());
 
 	/**
-	 * jsonRecord will be like “txnrec”:[{single:"",multiple:[{aaa:’11’,bbb:’22’,ccc:’33’},{aaa:’1’,bbb:’2’,ccc:’3’}],
-	 *  command=”TXNPROC1”}]}
+	 * jsonRecord will be like
+	 * “txnrec”:[{single:"",multiple:[{aaa:’11’,bbb:’22’,
+	 * ccc:’33’},{aaa:’1’,bbb:’2’,ccc:’3’}], command=”TXNPROC1”}]}
 	 * 
 	 */
-	 
+
 	@Override
 	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO inputDTO, ResultDTO resultDTO) {
-				
-		String unique = new String();
-		String application_name = "ICICI_BRUSER3_1298884319363";
-		String transcode = ""; // will be coming form command
-		String netId = "BRUSER3";
-		JSONObject singleData = null;
-		JSONArray multipleData = null;
-		// creating a unique id.
-		// unique id = transaction code.
-		unique += "Henry";
-		unique += "_" + System.currentTimeMillis();
-		
-		logger.debug("calling DM command Processor");	
 		try {
+			Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
+			Node selectSingleNode = rootXml.selectSingleNode(querynodeXpath);
+			String jsonFromConf = selectSingleNode.getText();
+			String resultJsonConf = ParseSentenceOgnl.parse(jsonFromConf, jsonRecord);
+			JSONObject jsonObj = JSONObject.fromObject(resultJsonConf);
 
-			if (jsonRecord.containsKey("single"))
-				singleData = jsonRecord.getJSONObject("single");
+			String unique = new String();
+			String application_name = "ICICI_BRUSER3_1298884319363";
+			String transcode = ""; // will be coming form command
+			String netId = "BRUSER3";
+			JSONObject singleData = null;
+			JSONArray multipleData = null;
+			// creating a unique id.
+			// unique id = transaction code.
+			unique += "Henry";
+			unique += "_" + System.currentTimeMillis();
 
-			if (jsonRecord.containsKey("transcode"))
-				transcode = jsonRecord.getString("transcode");
+			logger.debug("calling DM command Processor");
 
-			if (jsonRecord.containsKey("multiple"))
-				multipleData = jsonRecord.getJSONArray("multiple");
+			if (jsonObj.containsKey("single"))
+				singleData = jsonObj.getJSONObject("single");
+
+			if (jsonObj.containsKey("transcode"))
+				transcode = jsonObj.getString("transcode");
+
+			if (jsonObj.containsKey("multiple"))
+				multipleData = jsonObj.getJSONArray("multiple");
 
 			String xml = "<?xml version='1.0'?>";
 			xml += "<IDCT>";
@@ -72,11 +83,10 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 			xml += "<IDCT_STATUS>NO_DATA</IDCT_STATUS>";
 			xml += "<IDCT_ERR_CODE>NO_DATA</IDCT_ERR_CODE>";
 			xml += "<IDCT_MESSAGE_TYPE>01</IDCT_MESSAGE_TYPE>";
-			
+
 			final JAXBContext jc = JAXBContext.newInstance(Root.class);
-			final Root root = (Root) jc
-					.createUnmarshaller()
-					.unmarshal(DmCommandProcessor.class.getClassLoader().getResourceAsStream("repo/txnmap/nrow_txnmap.xml"));//new File("C:/Eclipse/workspace/FEtranslator1/src/repo/txnmap/nrow_txnmap.xml"));
+			final Root root = (Root) jc.createUnmarshaller().unmarshal(DmCommandProcessor.class.getClassLoader().getResourceAsStream("repo/txnmap/nrow_txnmap.xml"));// new
+																																										// File("C:/Eclipse/workspace/FEtranslator1/src/repo/txnmap/nrow_txnmap.xml"));
 			String[] arSingle = null;
 			String[] arMultiple = null;
 			for (Txn txn : root.getTxn()) {
@@ -106,16 +116,12 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 						if (singleData.containsKey(columnName))
 							snglDtval = singleData.get(columnName);
 						if (snglDtval != null) {
-							xml += "<" + columnName + ">"
-									+ snglDtval.toString() + "</" + columnName
-									+ ">";
+							xml += "<" + columnName + ">" + snglDtval.toString() + "</" + columnName + ">";
 						} else {
-							xml += "<" + columnName + ">NO_DATA</" + columnName
-									+ ">";
+							xml += "<" + columnName + ">NO_DATA</" + columnName + ">";
 						}
 					} else {
-						xml += "<" + columnName + ">NO_DATA</" + columnName
-								+ ">";
+						xml += "<" + columnName + ">NO_DATA</" + columnName + ">";
 					}
 				}
 				xml += "</IDCT_DATA>";
@@ -131,17 +137,13 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 								columnName = columnName.substring(0, index);
 							String mltplDtValue = null;
 
-							if (multipleData.getJSONObject(i).containsKey(
-									columnName)) {
-								mltplDtValue = multipleData.getJSONObject(i)
-										.getString(columnName);
+							if (multipleData.getJSONObject(i).containsKey(columnName)) {
+								mltplDtValue = multipleData.getJSONObject(i).getString(columnName);
 							}
 							if (mltplDtValue != null) {
-								xml += "<" + columnName + ">" + mltplDtValue
-										+ "</" + columnName + ">";
+								xml += "<" + columnName + ">" + mltplDtValue + "</" + columnName + ">";
 							} else {
-								xml += "<" + columnName + ">NO_DATA</"
-										+ columnName + ">";
+								xml += "<" + columnName + ">NO_DATA</" + columnName + ">";
 							}
 
 						} // end for
@@ -153,8 +155,7 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 						int index = columnName.indexOf(":");
 						if (index != -1)
 							columnName = columnName.substring(0, index);
-						xml += "<" + columnName + ">NO_DATA</" + columnName
-								+ ">";
+						xml += "<" + columnName + ">NO_DATA</" + columnName + ">";
 					}
 					xml += "</IDCT_DATA>";
 				}
@@ -170,20 +171,21 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 		} catch (JAXBException e) {
 			logger.debug("submitdata parsing error", e);
 			e.printStackTrace();
+		} catch (SentenceParseException e1) {
+			e1.printStackTrace();
 		}
 
 		// inputStream = new StringBufferInputStream(resultHtml );
 
-
 		return null;
 	}
 
-	public String callPLSQL(String xml){
+	public String callPLSQL(String xml) {
 		System.out.println(xml);
 		return xml;
 	}
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args) {
 		DmCommandProcessor test = new DmCommandProcessor();
 		String submitdatatxncode = "{'cmd':'STUCAP','single':{'FF0151':'aaa','FF0148':'bbb','FF01258':'eee'},'multiple':[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]}";
 		submitdatatxncode = "{'transcode':'BNGPVW','multiple':[{'FF0143':'100001'},{'FF0143':'100002'}]}";

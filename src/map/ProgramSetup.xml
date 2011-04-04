@@ -64,9 +64,7 @@
 			<buslogic id="ArbritrarySelect" > </buslogic>
 		</bl>
 		<anyprocs >
-				<proc id="upd2" xml="input.xml" ><![CDATA[
-				 dfgdfgdfg
-				]]></proc>
+				<proc id="upd2" >{'procname':'WS_TEST_PROC','inputparam':[[{'NAME':'sam','EMAIL':'sam@yl.com'},{'NAME':'samarjit','EMAIL':'samarjit@yl.com'}],{'data1':'param2'}],'outputparam':'param3'}</proc>
 		</anyprocs>
 		<commands>
 		   <cmd name="BusLogic1" opt="buslogic:ArbritrarySelect" instack="form1" result="ajax" processor="bl" />
