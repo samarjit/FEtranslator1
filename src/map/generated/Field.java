@@ -44,11 +44,11 @@ public class Field {
 
     @XmlElements({
         @XmlElement(name = "sometype", type = Sometype.class),
-        @XmlElement(name = "customfield", type = Customfield.class),
-        @XmlElement(name = "input", type = Input.class),
+        @XmlElement(name = "div", type = Div.class),
         @XmlElement(name = "compositefield", type = Compositefield.class),
+        @XmlElement(name = "input", type = Input.class),
         @XmlElement(name = "select", type = Select.class),
-        @XmlElement(name = "div", type = Div.class)
+        @XmlElement(name = "customfield", type = Customfield.class)
     })
     protected List<Object> compositefieldOrCustomfieldOrDiv;
 
@@ -71,11 +71,11 @@ public class Field {
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link Sometype }
-     * {@link Customfield }
-     * {@link Input }
-     * {@link Compositefield }
-     * {@link Select }
      * {@link Div }
+     * {@link Compositefield }
+     * {@link Input }
+     * {@link Select }
+     * {@link Customfield }
      * 
      * 
      */

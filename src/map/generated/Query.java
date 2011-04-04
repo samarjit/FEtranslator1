@@ -18,8 +18,15 @@ import javax.xml.bind.annotation.XmlValue;
  * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;attribute name="type">
+ *         &lt;simpleType>
+ *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
+ *             &lt;enumeration value="SQL"/>
+ *             &lt;enumeration value="QUERYID"/>
+ *           &lt;/restriction>
+ *         &lt;/simpleType>
+ *       &lt;/attribute>
  *       &lt;attribute name="stackid" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -37,9 +44,9 @@ public class Query {
     @XmlValue
     protected String content;
     @XmlAttribute
-    protected String stackid;
-    @XmlAttribute
     protected String type;
+    @XmlAttribute
+    protected String stackid;
 
     /**
      * Gets the value of the content property.
@@ -66,30 +73,6 @@ public class Query {
     }
 
     /**
-     * Gets the value of the stackid property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getStackid() {
-        return stackid;
-    }
-
-    /**
-     * Sets the value of the stackid property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setStackid(String value) {
-        this.stackid = value;
-    }
-
-    /**
      * Gets the value of the type property.
      * 
      * @return
@@ -111,6 +94,30 @@ public class Query {
      */
     public void setType(String value) {
         this.type = value;
+    }
+
+    /**
+     * Gets the value of the stackid property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getStackid() {
+        return stackid;
+    }
+
+    /**
+     * Sets the value of the stackid property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setStackid(String value) {
+        this.stackid = value;
     }
 
 }

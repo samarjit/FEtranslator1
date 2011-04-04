@@ -65,23 +65,35 @@
       <xs:attribute name="id" type="xs:string"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="button" >
-	<xs:complexType mixed="true">
-	  
-	 			<xs:attribute name="forid" use="required" type="xs:string" />
-				<xs:attribute name="onclick"   />
-				<xs:attribute name="id" use="optional" />
-				<xs:attribute name="type" use="required" />
-				<xs:attribute name="replace" use="required">
+  
+  <xs:element name="button">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:restriction base="xs:anyType">
 					<xs:simpleType>
 						<xs:restriction base="xs:string">
-							<xs:enumeration value="modify" />
-							<xs:enumeration value="append" />
+							<xs:minLength value="1" />
+	
 						</xs:restriction>
 					</xs:simpleType>
-				</xs:attribute>
-	</xs:complexType>
-  </xs:element>
+					<xs:attribute name="forid" use="required" type="xs:string" />
+					<xs:attribute name="onclick" />
+					<xs:attribute name="id" use="optional" />
+					<xs:attribute name="type" use="required" />
+					<xs:attribute name="replace" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="modify" />
+								<xs:enumeration value="append" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+	
+				</xs:restriction>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	
   <xs:element name="crud">
     <xs:complexType>
        

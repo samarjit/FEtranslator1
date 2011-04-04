@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="dbdatatype" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="dbdatatype" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "sometype")
 public class Sometype {
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     protected String dbdatatype;
     @XmlAttribute(required = true)
     protected String name;

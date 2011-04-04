@@ -107,7 +107,7 @@
 			</fields>
 			<button type="submit" replace="modify" forid="submitbutton" id="submitbutton">Submit Button</button>
 			<button type="button" replace="append" forid="submitcontainer" id="submitbutton2" onclick="jsrpctest();">JS RPC Test</button>	
-				
+			 	
 		</panel>
 	</panels>
 </root>

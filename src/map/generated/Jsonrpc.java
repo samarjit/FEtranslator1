@@ -45,8 +45,8 @@ public class Jsonrpc {
 
     @XmlElementRefs({
         @XmlElementRef(name = "message", type = Message.class),
-        @XmlElementRef(name = "countquery", type = Countquery.class),
-        @XmlElementRef(name = "error", type = Error.class)
+        @XmlElementRef(name = "error", type = Error.class),
+        @XmlElementRef(name = "countquery", type = Countquery.class)
     })
     @XmlMixed
     protected List<Object> content;
@@ -73,10 +73,10 @@ public class Jsonrpc {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Message }
      * {@link String }
-     * {@link Countquery }
+     * {@link Message }
      * {@link Error }
+     * {@link Countquery }
      * 
      * 
      */

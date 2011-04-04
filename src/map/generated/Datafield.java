@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="column" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="column" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="forid" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "datafield")
 public class Datafield {
 
-    @XmlAttribute(required = true)
+    @XmlAttribute
     protected String column;
     @XmlAttribute(required = true)
     protected String forid;

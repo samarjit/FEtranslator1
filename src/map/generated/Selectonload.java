@@ -73,8 +73,8 @@ public class Selectonload {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link Message }
      * {@link String }
+     * {@link Message }
      * {@link Countquery }
      * {@link Error }
      * 

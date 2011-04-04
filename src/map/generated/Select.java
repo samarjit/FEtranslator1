@@ -4,7 +4,6 @@ package map.generated;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
@@ -20,26 +19,26 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{}text"/>
- *         &lt;element ref="{}rule"/>
+ *         &lt;element ref="{}text" minOccurs="0"/>
+ *         &lt;element ref="{}rule" minOccurs="0"/>
  *         &lt;element ref="{}validation" minOccurs="0"/>
- *         &lt;element ref="{}query"/>
+ *         &lt;element ref="{}query" minOccurs="0"/>
  *       &lt;/sequence>
- *       &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="column" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="dbcolsize" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="class" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="column" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="dbcolsize" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="dbdatatype" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="forid" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="hidden" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="label" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="mandatory" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="mask" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="mask" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="replace" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute ref="{}replace use="required""/>
  *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="validationattr" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -57,19 +56,16 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "select")
 public class Select {
 
-    @XmlElement(required = true)
     protected String text;
-    @XmlElement(required = true)
     protected String rule;
     protected Validation validation;
-    @XmlElement(required = true)
     protected Query query;
-    @XmlAttribute(name = "class", required = true)
+    @XmlAttribute(name = "class")
     @XmlSchemaType(name = "anySimpleType")
     protected String clazz;
-    @XmlAttribute(required = true)
+    @XmlAttribute
     protected String column;
-    @XmlAttribute(required = true)
+    @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String dbcolsize;
     @XmlAttribute
@@ -87,7 +83,7 @@ public class Select {
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String mandatory;
-    @XmlAttribute(required = true)
+    @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String mask;
     @XmlAttribute
@@ -99,7 +95,7 @@ public class Select {
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String validationattr;
-    @XmlAttribute(required = true)
+    @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String value;
 

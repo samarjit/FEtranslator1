@@ -23,27 +23,26 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element ref="{}query" minOccurs="0"/>
  *         &lt;element ref="{}validation" minOccurs="0"/>
  *       &lt;/sequence>
- *       &lt;attribute name="class" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="column" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="dbcolsize" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="class" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="column" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="dbcolsize" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="dbdatatype" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="forid" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="hidden" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="label" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="mandatory" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
- *       &lt;attribute name="mask" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
+ *       &lt;attribute name="mask" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="primarykey" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="replace" use="required">
+ *       &lt;attribute ref="{}replace use="required""/>
+ *       &lt;attribute name="type" use="required">
  *         &lt;simpleType>
  *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *             &lt;enumeration value="modify"/>
- *             &lt;enumeration value="append"/>
+ *             &lt;minLength value="2"/>
  *           &lt;/restriction>
  *         &lt;/simpleType>
  *       &lt;/attribute>
- *       &lt;attribute name="type" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="validationattr" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *       &lt;attribute name="value" use="required" type="{http://www.w3.org/2001/XMLSchema}anySimpleType" />
  *     &lt;/restriction>
@@ -65,12 +64,12 @@ public class Input {
     protected String rule;
     protected Query query;
     protected Validation validation;
-    @XmlAttribute(name = "class", required = true)
+    @XmlAttribute(name = "class")
     @XmlSchemaType(name = "anySimpleType")
     protected String clazz;
-    @XmlAttribute(required = true)
+    @XmlAttribute
     protected String column;
-    @XmlAttribute(required = true)
+    @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String dbcolsize;
     @XmlAttribute
@@ -88,7 +87,7 @@ public class Input {
     @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String mandatory;
-    @XmlAttribute(required = true)
+    @XmlAttribute
     @XmlSchemaType(name = "anySimpleType")
     protected String mask;
     @XmlAttribute(required = true)
