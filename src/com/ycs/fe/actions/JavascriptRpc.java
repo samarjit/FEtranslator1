@@ -3,7 +3,6 @@ package com.ycs.fe.actions;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 
-import map.ScreenMapRepo;
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -25,6 +24,7 @@ import com.ycs.fe.cache.BusinessLogicFactory;
 import com.ycs.fe.crud.CommandProcessor;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.ScreenMapRepo;
 
 
 public class JavascriptRpc extends ActionSupport {

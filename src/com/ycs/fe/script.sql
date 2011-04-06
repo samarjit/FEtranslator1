@@ -41,3 +41,9 @@ import java.util.Date;
 		return sm.format(dt); 
  }
 $$;
+
+
+create table user_role_map(userid varchar2(20),roleid varchar2(20));
+insert into user_role_map values('samarjit','admin');
+insert into user_role_map values('samarjit','employee');
+insert into user_role_map values('samarjit_manager','manager');

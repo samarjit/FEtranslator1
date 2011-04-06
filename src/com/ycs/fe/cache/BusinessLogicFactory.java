@@ -3,7 +3,6 @@ package com.ycs.fe.cache;
 import java.io.InputStream;
 import java.util.List;
 
-import map.ScreenMapRepo;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheException;
 
@@ -15,6 +14,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import com.ycs.fe.businesslogic.BaseBL;
+import com.ycs.fe.util.ScreenMapRepo;
 
 public class BusinessLogicFactory {
 	private static final String BLCACHE="BUSINESS_LOGIC_CACHE";

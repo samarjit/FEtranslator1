@@ -5,13 +5,13 @@ import java.util.HashMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import map.ScreenMapRepo;
 
 import org.apache.log4j.Logger;
 
 import repo.txnmap.generated.Root;
 
 import com.google.gson.Gson;
+import com.ycs.fe.util.ScreenMapRepo;
  
 
 /**

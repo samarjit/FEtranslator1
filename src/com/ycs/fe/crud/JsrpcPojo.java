@@ -3,7 +3,6 @@ package com.ycs.fe.crud;
 import java.util.HashMap;
 import java.util.List;
 
-import map.ScreenMapRepo;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
@@ -22,6 +21,7 @@ import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.ScreenMapRepo;
 
 public class JsrpcPojo {
 private Logger logger = Logger.getLogger(getClass()); 

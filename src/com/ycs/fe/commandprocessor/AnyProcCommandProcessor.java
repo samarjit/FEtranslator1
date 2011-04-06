@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import map.ScreenMapRepo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -15,11 +14,12 @@ import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.Node;
 
-import plsqlcall.MainWithoutType;
+ 
 
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.util.ParseSentenceOgnl;
+import com.ycs.fe.util.ScreenMapRepo;
 import com.ycs.fe.util.SentenceParseException;
 import com.ycs.fe.ws.SPCall;
 import com.ycs.fe.ws.SPCallService;

@@ -2,7 +2,6 @@ package com.ycs.fe.crud;
 
 import java.util.Set;
 
-import map.ScreenMapRepo;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -14,6 +13,7 @@ import com.ycs.fe.commandprocessor.BaseCommandProcessor;
 import com.ycs.fe.commandprocessor.CommandProcessorResolver;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.ScreenMapRepo;
 
 public class CommandProcessor {
 

@@ -1,4 +1,4 @@
-package map;
+package com.ycs.fe.util;
 
 import java.io.File;
 import java.io.InputStream;

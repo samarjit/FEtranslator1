@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import map.ScreenMapRepo;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -20,6 +19,7 @@ import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.ScreenMapRepo;
 
 public class SelectData {
 private Logger logger = Logger.getLogger(getClass()); 

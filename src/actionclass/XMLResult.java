@@ -16,7 +16,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import map.ScreenMapRepo;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -33,6 +32,7 @@ import com.opensymphony.xwork2.config.entities.ActionConfig;
 import com.opensymphony.xwork2.config.entities.ResultConfig;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.ycs.fe.util.ScreenMapRepo;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;

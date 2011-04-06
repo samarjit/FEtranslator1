@@ -4,21 +4,31 @@
 <%@ taglib uri="/struts-jquery-tags" prefix="sj"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
- 
- 
+
+<s:head/>
+
+<script type="text/javascript" >
+function fnLogout(){
+	
+}
+</script>
+<head> 
 <%String ctxstr = request.getContextPath(); %>
 
  
 </head>
 <body>
-<s:actionerror/>
-<s:actionmessage/>
-<h1>Login</h1>
-<form action="login.action">
-User Id: <input type="text" name="userid" /><br/>
-Passwd : <input type="password" name="passwd" /><br/>
-<button type="submit">submit</button>
+ 
+User: <s:property value="#session.userid"/> <br/>
+Role: <s:iterator value="#session.roles">
+	<s:property  value="roleId"/> ,
+</s:iterator>
+<br/>
+Current Task: 
+
+<form action="logout.action" >
+<button onclick="fnLogout()">Log out</button>
 </form>
+
 </body>
 </html>

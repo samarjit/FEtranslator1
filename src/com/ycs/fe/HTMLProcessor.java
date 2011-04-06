@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 
-import map.ScreenMapRepo;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -33,6 +32,7 @@ import com.ycs.fe.dao.FETranslatorDAO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.ScreenMapRepo;
 
 public abstract class HTMLProcessor {
 	private Logger logger = Logger.getLogger("com.ycs.fe.HTMLProcessor");

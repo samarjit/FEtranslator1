@@ -6,7 +6,6 @@ import java.util.HashMap;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import map.ScreenMapRepo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -21,6 +20,7 @@ import repo.txnmap.generated.Txn;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.util.ParseSentenceOgnl;
+import com.ycs.fe.util.ScreenMapRepo;
 import com.ycs.fe.util.SentenceParseException;
 import com.ycs.fe.ws.Exception_Exception;
 import com.ycs.fe.ws.SPCall;

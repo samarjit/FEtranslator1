@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import map.ScreenMapRepo;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -21,6 +20,7 @@ import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.ScreenMapRepo;
 
 public class InsertData {
 private Logger logger = Logger.getLogger(getClass()); 

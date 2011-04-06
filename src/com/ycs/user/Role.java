@@ -1,6 +1,10 @@
 package com.ycs.user;
 
-public class Role {
+import java.io.Serializable;
+
+public class Role implements Serializable{
+ 
+	private static final long serialVersionUID = 1L;
 	private String roleId;
 
 	public String getRoleId() {
@@ -11,4 +15,7 @@ public class Role {
 		this.roleId = roleId;
 	}
 	
+	public String toString(){
+		return roleId;
+	}
 }
