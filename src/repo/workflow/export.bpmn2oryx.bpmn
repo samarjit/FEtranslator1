@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:definitions targetNamespace="http://www.omg.org/bpmn20" expressionLanguage="http://www.w3.org/1999/XPath" typeLanguage="http://www.w3.org/2001/XMLSchema" id="_ab2fad63-addc-4cf4-9d28-18e807c49bc8" xmlns:ns2="http://schema.omg.org/spec/BPMN/2.0" xmlns:bpmndi="http://bpmndi.org">
+    <ns2:process id="_182f2b80-d6cc-45c3-a1f7-78160b393150">
+        <ns2:laneSet id="_6d4cce24-7c3c-49d1-9b80-0da87060430d">
+            <ns2:lane name="DefaultLane" id="_077eaadc-47c8-4cd1-9e09-dfbb11fe4c28">
+                <ns2:flowElementRef>_3634704B-6978-4742-BD50-DDC63E54AB39</ns2:flowElementRef>
+                <ns2:flowElementRef>_75305240-A31A-48A4-97B0-037B82DBC771</ns2:flowElementRef>
+                <ns2:flowElementRef>_30946D86-696C-409C-B787-043AC0732B0E</ns2:flowElementRef>
+
+            </ns2:lane>
+        </ns2:laneSet>
+        <ns2:startEvent name="" id="_3634704B-6978-4742-BD50-DDC63E54AB39"/>
+        <ns2:task isForCompensation="false" startQuantity="1" completionQuantity="1" name="" id="_75305240-A31A-48A4-97B0-037B82DBC771"/>
+        <ns2:endEvent name="" id="_30946D86-696C-409C-B787-043AC0732B0E"/>
+        <ns2:sequenceFlow sourceRef="_3634704B-6978-4742-BD50-DDC63E54AB39" targetRef="_75305240-A31A-48A4-97B0-037B82DBC771" name="" id="_DE7A83CF-5B0A-4922-9A8B-7881081DC735"/>
+        <ns2:sequenceFlow sourceRef="_75305240-A31A-48A4-97B0-037B82DBC771" targetRef="_30946D86-696C-409C-B787-043AC0732B0E" name="" id="_9F553BFB-DDDA-4369-8C17-0AA6EDD18BBA"/>
+    </ns2:process>
+    <bpmndi:processDiagram processRef="_182f2b80-d6cc-45c3-a1f7-78160b393150" id="_182f2b80-d6cc-45c3-a1f7-78160b393150_gui">
+
+        <bpmndi:laneCompartment isVisible="false" id="_077eaadc-47c8-4cd1-9e09-dfbb11fe4c28_gui" name="DefaultLane" x="0.0" y="0.0" width="0.0" height="0.0">
+            <bpmndi:eventShape eventRef="_3634704B-6978-4742-BD50-DDC63E54AB39" id="_3634704B-6978-4742-BD50-DDC63E54AB39_gui" name="" x="186.0" y="311.0" width="30.0" height="30.0"/>
+            <bpmndi:activityShape activityRef="_75305240-A31A-48A4-97B0-037B82DBC771" id="_75305240-A31A-48A4-97B0-037B82DBC771_gui" name="" x="261.0" y="286.0" width="100.0" height="80.0"/>
+            <bpmndi:eventShape eventRef="_30946D86-696C-409C-B787-043AC0732B0E" id="_30946D86-696C-409C-B787-043AC0732B0E_gui" name="" x="406.0" y="312.0" width="28.0" height="28.0"/>
+        </bpmndi:laneCompartment>
+        <bpmndi:sequenceFlowConnector sequenceFlowRef="_DE7A83CF-5B0A-4922-9A8B-7881081DC735" id="_DE7A83CF-5B0A-4922-9A8B-7881081DC735_gui" sourceRef="_3634704B-6978-4742-BD50-DDC63E54AB39_gui" targetRef="_75305240-A31A-48A4-97B0-037B82DBC771_gui" label=""/>
+        <bpmndi:sequenceFlowConnector sequenceFlowRef="_9F553BFB-DDDA-4369-8C17-0AA6EDD18BBA" id="_9F553BFB-DDDA-4369-8C17-0AA6EDD18BBA_gui" sourceRef="_75305240-A31A-48A4-97B0-037B82DBC771_gui" targetRef="_30946D86-696C-409C-B787-043AC0732B0E_gui" label=""/>
+    </bpmndi:processDiagram>
+</ns2:definitions>

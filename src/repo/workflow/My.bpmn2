@@ -12,7 +12,7 @@
              xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
              xmlns:tns="http://www.jboss.org/drools">
 
-  <process processType="Private" isExecutable="true" name="droolflow.b" >
+  <process processType="Private" isExecutable="true" id="com" name="My.bp" >
 
     <!-- nodes -->
     <startEvent id="_1" name="Start" />
@@ -27,47 +27,31 @@
     <endEvent id="_3" name="End" >
         <terminateEventDefinition/>
     </endEvent>
-    <callActivity id="_4" name="Sub-Process" >
-      <ioSpecification>
-        <inputSet>
-        </inputSet>
-        <outputSet>
-        </outputSet>
-      </ioSpecification>
-    </callActivity>
 
     <!-- connections -->
     <sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2" />
-    <sequenceFlow id="_4-_3" sourceRef="_4" targetRef="_3" />
-    <sequenceFlow id="_2-_4" sourceRef="_2" targetRef="_4" />
+    <sequenceFlow id="_2-_3" sourceRef="_2" targetRef="_3" />
 
   </process>
 
   <bpmndi:BPMNDiagram>
-    <bpmndi:BPMNPlane bpmnElement="null" >
+    <bpmndi:BPMNPlane bpmnElement="com" >
       <bpmndi:BPMNShape bpmnElement="_1" >
-        <dc:Bounds x="101" y="59" width="48" height="48" />
+        <dc:Bounds x="95" y="63" width="48" height="48" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="_2" >
-        <dc:Bounds x="119" y="196" width="100" height="48" />
+        <dc:Bounds x="143" y="326" width="100" height="48" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="_3" >
-        <dc:Bounds x="342" y="202" width="48" height="48" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_4" >
-        <dc:Bounds x="233" y="106" width="110" height="48" />
+        <dc:Bounds x="291" y="167" width="48" height="48" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="_1-_2" >
-        <di:waypoint x="125" y="83" />
-        <di:waypoint x="169" y="220" />
+        <di:waypoint x="119" y="87" />
+        <di:waypoint x="193" y="350" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_4-_3" >
-        <di:waypoint x="288" y="130" />
-        <di:waypoint x="366" y="226" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_2-_4" >
-        <di:waypoint x="169" y="220" />
-        <di:waypoint x="288" y="130" />
+      <bpmndi:BPMNEdge bpmnElement="_2-_3" >
+        <di:waypoint x="193" y="350" />
+        <di:waypoint x="315" y="191" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

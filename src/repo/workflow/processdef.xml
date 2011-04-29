@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process-definition  xmlns=""  name="process1">
+
+
+	<start-state name="start-state1">
+		<transition to="fork1"></transition>
+	</start-state>
+
+
+	<task-node name="task-node1">
+		<task></task>
+		<transition to="join1"></transition>
+	</task-node>
+
+	<task-node name="task-node2">
+		<transition to="join1"></transition>
+	</task-node>
+
+	<fork name="fork1">
+		<transition to="task-node1"></transition>
+		<transition to="task-node2" name="to task-node2"></transition>
+	</fork>
+
+	<join name="join1">
+		<transition to="end-state1"></transition>
+	</join>
+
+
+	<end-state name="end-state1"></end-state>
+
+
+	<exception-handler exception-class="">
+		<script></script>
+		<action class=""></action>
+	</exception-handler>
+
+
+</process-definition>

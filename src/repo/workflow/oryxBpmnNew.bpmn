@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions targetNamespace="http://www.omg.org/bpmn20" expressionLanguage="http://www.w3.org/1999/XPath" typeLanguage="http://www.w3.org/2001/XMLSchema" id="sid-8a575587-2114-4ede-b97e-5c1d8427627c" exporter="Signavio Process Editor, http://www.signavio.com" exporterVersion="" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:signavio="http://www.signavio.com" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI">
+    <process isExecutable="false" id="sid-2da17cd3-205b-4602-9fc3-4f27f03dd2c0">
+        <startEvent name="" id="sid-8e19b61d-c379-4f26-bb05-b9a4fee3b09f">
+            <extensionElements>
+                <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+            </extensionElements>
+            <outgoing>sid-0c003fad-ff3e-4387-9319-509898b276e0</outgoing>
+        </startEvent>
+        <task isForCompensation="false" startQuantity="1" completionQuantity="1" name="Hi" id="sid-4bb0b669-1d89-4d40-ac01-7ac0a937ffd5">
+            <extensionElements>
+                <signavio:signavioMetaData metaKey="bgcolor" metaValue="#b1c2d6"/>
+            </extensionElements>
+            <incoming>sid-0c003fad-ff3e-4387-9319-509898b276e0</incoming>
+            <outgoing>sid-5c6ecc9b-fdb1-4e76-af86-bb7dff70b3c5</outgoing>
+            <property name="prop1" itemKind="Information" isCollection="false" id="sid-696ed47e-0969-42f0-8272-d316ad91a07c">
+                <dataState name="running" id="sid-3c04bfc2-fef8-4440-a1a8-e7e3a307faeb"/>
+                <structure>string</structure>
+            </property>
+        </task>
+        <endEvent name="" id="sid-38c1cd10-cd58-44ce-b367-09c666c4ccb7">
+            <extensionElements>
+                <signavio:signavioMetaData metaKey="bgcolor" metaValue="#ffffff"/>
+            </extensionElements>
+            <incoming>sid-5c6ecc9b-fdb1-4e76-af86-bb7dff70b3c5</incoming>
+        </endEvent>
+        <sequenceFlow sourceRef="sid-8e19b61d-c379-4f26-bb05-b9a4fee3b09f" targetRef="sid-4bb0b669-1d89-4d40-ac01-7ac0a937ffd5" name="" id="sid-0c003fad-ff3e-4387-9319-509898b276e0"/>
+        <sequenceFlow sourceRef="sid-4bb0b669-1d89-4d40-ac01-7ac0a937ffd5" targetRef="sid-38c1cd10-cd58-44ce-b367-09c666c4ccb7" name="" id="sid-5c6ecc9b-fdb1-4e76-af86-bb7dff70b3c5"/>
+    </process>
+    <bpmndi:BPMNDiagram id="sid-d2c82c2f-7ff6-46c8-8836-347436c6f31b">
+        <bpmndi:BPMNPlane bpmnElement="sid-2da17cd3-205b-4602-9fc3-4f27f03dd2c0" id="sid-7b68bcce-cec5-45e0-9699-8fa6d24371d0">
+            <bpmndi:BPMNShape bpmnElement="sid-8e19b61d-c379-4f26-bb05-b9a4fee3b09f" id="sid-8e19b61d-c379-4f26-bb05-b9a4fee3b09f_gui">
+                <dc:Bounds x="150.0" y="326.0" width="30.0" height="30.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-4bb0b669-1d89-4d40-ac01-7ac0a937ffd5" id="sid-4bb0b669-1d89-4d40-ac01-7ac0a937ffd5_gui">
+                <dc:Bounds x="345.0" y="165.0" width="100.0" height="80.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-38c1cd10-cd58-44ce-b367-09c666c4ccb7" id="sid-38c1cd10-cd58-44ce-b367-09c666c4ccb7_gui">
+                <dc:Bounds x="370.0" y="327.0" width="28.0" height="28.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-5c6ecc9b-fdb1-4e76-af86-bb7dff70b3c5" id="sid-5c6ecc9b-fdb1-4e76-af86-bb7dff70b3c5_gui">
+                <di:waypoint x="395.0" y="245.0"/>
+                <di:waypoint x="395.0" y="286.0"/>
+                <di:waypoint x="384.0" y="286.0"/>
+                <di:waypoint x="384.0" y="327.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-0c003fad-ff3e-4387-9319-509898b276e0" id="sid-0c003fad-ff3e-4387-9319-509898b276e0_gui">
+                <di:waypoint x="180.0" y="341.0"/>
+                <di:waypoint x="202.5" y="341.0"/>
+                <di:waypoint x="202.5" y="205.0"/>
+                <di:waypoint x="345.0" y="205.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
+
