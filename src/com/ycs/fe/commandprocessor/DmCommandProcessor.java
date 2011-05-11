@@ -11,8 +11,10 @@ import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
 
 import repo.txnmap.generated.Root;
 import repo.txnmap.generated.Txn;
@@ -47,11 +49,21 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 	@Override
 	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO inputDTO, ResultDTO resultDTO) {
 		HashMap<String, Object>  data = new HashMap<String, Object>();
+		resultDTO = new ResultDTO();
 		try {
 //			String resultJsonConf = "{'cmd':'STUCAP','single':{'FF0151':'aaa','FF0148':'bbb','FF01258':'eee'},'multiple':[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]}";
+			
+			 String pageconfigxml =  ScreenMapRepo.findMapXML(screenName);
+			 org.dom4j.Document document1 = new SAXReader().read(pageconfigxml);
+			org.dom4j.Element rootele = document1.getRootElement();
+			Node crudnode = rootele.selectSingleNode("//dm");
+			Node queryNode = crudnode.selectSingleNode(querynodeXpath);
+			
+		
 			Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 			Node selectSingleNode = rootXml.selectSingleNode(querynodeXpath);
-			String jsonFromConf = selectSingleNode.getText();
+			
+			String jsonFromConf = queryNode.getText();
 			String resultJsonConf = ParseSentenceOgnl.parse(jsonFromConf, jsonRecord);
 			JSONObject jsonObj = JSONObject.fromObject(resultJsonConf);
 
@@ -167,6 +179,7 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 				}
 			}
 			xml += "</IDCT>";
+			xml = String.format("%06d", xml.length())+xml;
 			logger.debug("Input Xml :  " + xml);
 			System.out.println(xml);
 			String outputxml = callPLSQLLocal(xml);
@@ -181,6 +194,9 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 			e.printStackTrace();
 		} catch (SentenceParseException e1) {
 			e1.printStackTrace();
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		// inputStream = new StringBufferInputStream(resultHtml );

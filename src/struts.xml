@@ -96,6 +96,15 @@
 		</action>
 	</package>
 	
+	<package name="binGroup" extends="yidefaultPackage" namespace="/html">
+		<action name="binGroupView" class="actionclass.BinGroup" method="view">
+			<interceptor-ref name="myCustomStack" />
+			<result name="view" type="customXMLRes">
+				<param name="resultxml">BinGroup.xml</param>
+			</result>
+		</action>
+	</package>
+	
 	<package name="xslt-example" extends="yidefaultPackage">
 
 		<action name="testxsl" class="actionclass.ExampleXSLTAction" method="preview">

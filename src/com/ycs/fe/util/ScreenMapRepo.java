@@ -2,6 +2,7 @@ package com.ycs.fe.util;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -27,8 +28,11 @@ public class ScreenMapRepo {
 	public static String findMapXML(String scrName){
 		String path = null;
 		//String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map"); 
+		
 		InputStream scrxml = ScreenMapRepo.class.getResourceAsStream("screenmap.xml");
 		
+
+
 		Document doc;
 		try {
 		

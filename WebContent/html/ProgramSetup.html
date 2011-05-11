@@ -84,21 +84,27 @@ function  populateFieldsToModify(){
  	   $('#txtstatus').val("New");
  	  $('#btnModify').attr("disabled","disabled");
  	  iadt.setScreenMode("addrow");
-  }else {
-	  $("#issuername").val("HSBC Bank");
-      if($("#programname").val() == 'LOYCARD') $("#txtprogramdesc").val("Loyalty Card Program");
-      if($("#programname").val() == 'TRACARD') $("#txtprogramdesc").val("Travel Card Program");
-	  $("#countryofissue").val("SINGAPORE");
-	  $('#txtstatus').val("Modify");
-	  $('#btnModify').removeAttr("disabled");
-	  $('#btnAdd').attr("disabled","disabled");
-	  //iadt.setScreenMode("updaterow");
+  }else if(!$("#programname").val() == ''){
+  	getProgramDetails();
+//	  $("#issuername").val("HSBC Bank");
+//      if($("#programname").val() == 'LOYCARD') $("#txtprogramdesc").val("Loyalty Card Program");
+//      if($("#programname").val() == 'TRACARD') $("#txtprogramdesc").val("Travel Card Program");
+//	  $("#countryofissue").val("SINGAPORE");
+//	  $('#txtstatus').val("Modify");
+//	  $('#btnModify').removeAttr("disabled");
+//	  $('#btnAdd').attr("disabled","disabled");
+//	  //iadt.setScreenMode("updaterow");
   }
 }
 
+function getTextFromOptionValue(selectid,targetid,value){
+	var txt = $("#"+selectid+" option[value='"+value+"']").text();
+	$("#"+targetid).val(txt);
+}
 
 
 function onAdd (formid) {
+	
 	if(!$(formid).valid())return;
 
 	 if(screenMode == 'addrow')
@@ -207,6 +213,28 @@ function radClickCallback (obj) {
 	}
 }
 
+
+function getProgramDetails(){
+	var pmname = $('#programname').val();
+//	pmname = "{'name':'hello','email':'sample@f'}";
+//	var data1 = "[{'name':'AAA','email':'aaa@f'},{'name':'AAA','email':'aaa@f'}]";
+	var single = "{'FF0151':'aaa','FF0148':'bbb','FF01258':'ccc'}";
+	var multiple = "[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]";
+//	alert("getProgramDetails");
+	jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{single:"+single+",multiple:"+multiple+", command:'getpmdetails'}]}",function (data){
+
+	//jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{whereval:"+pmname+",param1:"+data1+", command:'getpmdetails'}]}",function (data){
+	alert(data);
+	var json = jQuery.parseJSON(data);
+	json = json.data.form1[0];
+	$("#txtprogramdesc").val(json.desc);
+	$("#issuername").val(json.issuername);
+	$("#countryofissue").val(json.countrycode);
+	$("#txtstatus").val("modify");
+	$("#country").val(json.country);
+	});
+}
+
 function onSearch(){
 	//Dummy data$('#multiplerows .trlightgrey').parent().append($('#searchtemp').find('tr').parent().html());
 	var submitdata = {whereval:"NewCard"};
@@ -265,7 +293,8 @@ function prgsubmitCallback (data) {
 }
 
 function onNext (args) {
-	location.href = 'BinGroup.html';
+	$('#form2')[0].action = "binGroupView.action";
+	$('#form2')[0].submit();
 }
 
 function enableDisableFlds() {
@@ -300,7 +329,7 @@ function setScreenMode(s) {
 	$('.head2 .screenMode').text("Screen Mode: "+s);
 	screenMode = s;
 }
-var fieldlist = "programname,txtnewprogname,txtprogramdesc,issuername,countryofissue,txtstatus".split(",");
+var fieldlist = "programname,txtnewprogname,txtprogramdesc,issuername,countryofissue,country,txtstatus".split(",");
 
 var keylist = "programname,txtnewprogname,txtstatus".split(",");
 
@@ -313,14 +342,17 @@ var keylist = "programname,txtnewprogname,txtstatus".split(",");
  <div align="center"  class="wrap">	
  <div class="navbar"><span class="disabled">Logged in as Henry</span> | <span class="enabled">Home</span> | <span class="enabled">Sign-Out</span></div>
   <div class="shrink">
-		 <div class="menuheader  ">
+		 <div class="menuheader">
 		 	
 		   </div>
    
  
 		 <div class="body">
 		 <form id="form1"  >
-		  <div class="displayLabel"><a href="ProgramSetup.html">Program Setup </a>&gt;&gt;<a href="BinGroup.html"> Bin Group</a> &gt;&gt; <a href="BinDetails.html">Bin Details</a></div>
+		  <div class="displayLabel">
+                            <a href="programsetupview.action">Program Setup </a>&gt;&gt;<a href="binGroupView.action"> Bin Group</a>
+                            &gt;&gt; <a href="BinDetails.html">Bin Details</a>
+                        </div>
 		  <hr />
 		
 		 <div class="infoBar" style="display:none"></div>
@@ -338,41 +370,56 @@ var keylist = "programname,txtnewprogname,txtstatus".split(",");
 	</tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="5" class="table">
-	<tr class="even">
-		<td width="400">Program Name <span class="star">*</span></td>
-		<td>
-        <select name="programname" id="programname"  maxlength="50" class="field" onchange="iadt.copySeltohidden(this,'newprog','txtnewprogname',populateFieldsToModify)" >
-        	<option value="">Select</option>
-            <option value="New">New</option>
-            <option value="LOYCARD">Loyalty Card</option>
-            <option value="TRACARD">Travel Card</option>
-         </select>
-         <span id="newprog"  style="display:none;padding-left:10px"> &nbsp;Enter new Program Name 
-         <input name="txtnewprogname" id="txtnewprogname" type="text" class="field"  value=""  /></span>&nbsp;<input  type="hidden" id="hidProgName" name="hidProgName" class="field"/></td>
-	</tr>
-    <tr class="even"><td width="400">Description</td>
-    <td><input type="text" class="field"    name="txtprogramdesc" id="txtprogramdesc" /></td></tr>
-    <tr class="odd" >
-      <td width="400" >Issuer Name <span class="star">*</span></td>
-       <td ><input name="issuername" type="text"  id="issuername" class="field" /></td>
+    <tr class="even">
+        <td width="400">
+            Program Name <span class="star">*</span>
+        </td>
+        <td>
+            <select name="programname" id="programname" maxlength="50" class="field" onchange="iadt.copySeltohidden(this,'newprog','txtnewprogname',populateFieldsToModify)">
+                <option value="">Select</option>
+                <option value="New">New</option>
+                <option value="LOYCARD">Loyalty Card</option>
+                <option value="TRACARD">Travel Card</option>
+            </select>
+            <span id="newprog" style="display:none;padding-left:10px">&nbsp;Enter new Program Name <input name="txtnewprogname" id="txtnewprogname" type="text" class="field" value="" /></span>&nbsp;<input type="hidden" id="hidProgName" name="hidProgName" class="field"/>
+        </td>
     </tr>
-    <tr class="odd" >
-      <td width="400" >Country of Issue</td>      
-      <td ><input  style="display:none" class="field" />
-        <select name="countryofissue" maxlength="50" class="field" id="countryofissue">
-        <option value="" selected="selected">Select</option>
-        <option value="INDIA">India</option>
-        <option value="SINGAPORE">Singapore</option>
-        <option value="AUSTRALIA">Australia</option>
-        <option value="PHILIPPINES">Philippines</option>
-        </select>        </td>
+    <tr class="even">
+        <td width="400">
+            Description
+        </td>
+        <td>
+            <input type="text" class="field" name="txtprogramdesc" id="txtprogramdesc" />
+        </td>
     </tr>
-    <tr class="odd"   >
-      <td width="400" >Status</td>
-      <td ><input name="txtstatus" type="text" class="field" id="txtstatus" value="New" /></td>
+    <tr class="odd">
+        <td width="400">
+            Issuer Name <span class="star">*</span>
+        </td>
+        <td>
+            <input name="issuername" type="text" id="issuername" class="field" />
+        </td>
+    </tr>
+    <tr class="odd">
+        <td width="400">
+            Country of Issue
+        </td>
+        <td>
+            <input style="display:none" class="field" />
+            <select name="countryofissue" maxlength="50" class="field" id="countryofissue" onchange="getTextFromOptionValue('countryofissue','country',this.value)">
+            </select>
+			<input type="text" name="country" id="country" class="field"/>
+        </td>
+    </tr>
+    <tr class="odd">
+        <td width="400">
+            Status
+        </td>
+        <td>
+            <input name="txtstatus" type="text" class="field" id="txtstatus" value="New" />
+        </td>
     </tr>
 </table>
-   
 
 <p>&nbsp;</p>
  
@@ -427,7 +474,8 @@ var keylist = "programname,txtnewprogname,txtstatus".split(",");
   		<td style='display:table-cell'>${txtnewprogname}<input type='hidden' value='${txtnewprogname}' id='txtnewprogname__${rowcount}' name='txtnewprogname'/></td>
         <td style='display:table-cell'>${txtprogramdesc}<input type='hidden' value='${txtprogramdesc}' id='txtprogramdesc__${rowcount}' name='txtprogramdesc'/></td>
         <td style='display:table-cell'>${issuername}<input type='hidden' value="${issuername}" id='issuername__${rowcount}' name='issuername'/></td>
-        <td style='display:table-cell'>${countryofissue}<input type='hidden' value='${countryofissue}' id='countryofissue__${rowcount}' name='countryofissue'/></td>
+        <td style='display:table-cell'>${country}<input type='hidden' value='${country}' id='country__${rowcount}' name='country'/></td>
+		<td style='display:none'>${countryofissue}<input type='hidden' value='${countryofissue}' id='countryofissue__${rowcount}' name='countryofissue'/></td>
         <td style='display:table-cell'>${txtstatus}<input type='hidden' value='${txtstatus}' id='txtstatus__${rowcount}' name='txtstatus'/></td>
         </tr></table>
 </div>
@@ -435,7 +483,7 @@ var keylist = "programname,txtnewprogname,txtstatus".split(",");
 <form id="form2"  >
 <DIV id=multiplerows>
     <div class="headerlist" style="display:none;">
-        programname,txtnewprogname,txtprogramdesc,issuername,countryofissue,txtstatus</div>
+        programname,txtnewprogname,txtprogramdesc,issuername,country,countryofissue,txtstatus</div>
 		
     <BR>
     <TABLE id=tablespace class=table1 border=0 cellSpacing=0 cellPadding=5 width="100%">

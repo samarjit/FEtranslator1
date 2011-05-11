@@ -2,6 +2,7 @@ package com.ycs.fe.commandprocessor;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.json.JSONArray;
@@ -10,11 +11,11 @@ import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
 import org.dom4j.Node;
-
- 
+import org.dom4j.io.SAXReader;
 
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
@@ -32,13 +33,22 @@ public class AnyProcCommandProcessor implements BaseCommandProcessor {
 	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO inputDTO, ResultDTO resultDTO) {
 		logger.debug("Processing AnyProc call");
 		HashMap<String, Object>  data = new HashMap<String, Object>();
+		resultDTO = new ResultDTO();
 //		 String resultJsonConf =
 //		 "{'procname':'WS_TEST_PROC','inputparam':[[{'NAME':'sam','EMAIL':'sam@yl.com'},{'NAME':'samarjit','EMAIL':'samarjit@yl.com'}],{'data1':'param2'}],'outputparam':'param3'}";
 
 		try {
+			 String pageconfigxml =  ScreenMapRepo.findMapXML(screenName);
+			 org.dom4j.Document document1 = new SAXReader().read(pageconfigxml);
+			org.dom4j.Element root = document1.getRootElement();
+			Node crudnode = root.selectSingleNode("//anyprocs");
+			Node queryNode = crudnode.selectSingleNode(querynodeXpath);
+			
 			Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 			Node selectSingleNode = rootXml.selectSingleNode(querynodeXpath);
-			String jsonFromConf = selectSingleNode.getText();
+			
+			String jsonFromConf = queryNode.getText();
+			System.out.println("JsonRecord in any proc call :"+jsonRecord);
 			String resultJsonConf = ParseSentenceOgnl.parse(jsonFromConf, jsonRecord);
 			JSONObject jsObj = JSONObject.fromObject(resultJsonConf);
 
@@ -49,9 +59,9 @@ public class AnyProcCommandProcessor implements BaseCommandProcessor {
 			Element pname = procele.addElement("procname");
 			Element inputele = procele.addElement("inputparam");
 			Element outputele = procele.addElement("outputparam");
-
+			String outstack = procele.attributeValue("outstack");
 			String procname = jsObj.getString("procname");
-			pname.addText(procname);
+			pname.addText(procname.toUpperCase());
 
 			// JSON js = JSONSerializer.toJSON(json);
 			// System.out.println(js.isArray());
@@ -67,12 +77,14 @@ public class AnyProcCommandProcessor implements BaseCommandProcessor {
 
 			String xmlString = doc.asXML();
 			String resXML = callProcedure(xmlString);
-			data.put("anyProcResult", resXML);
+			data.put(outstack, resXML);
 			resultDTO.setData(data);
 			
 		} catch (SentenceParseException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (DocumentException e) {
 			e.printStackTrace();
 		}
 		return resultDTO;

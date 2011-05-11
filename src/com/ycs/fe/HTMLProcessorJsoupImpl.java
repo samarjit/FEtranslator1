@@ -3,6 +3,8 @@ package com.ycs.fe;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ import org.xml.sax.SAXException;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.ycs.fe.dto.ResultDTO;
 
 public class HTMLProcessorJsoupImpl extends HTMLProcessor {
 
@@ -198,6 +201,7 @@ private boolean templateprocessed = false;
 	 * @param xmlelmNode
 	 * @param dochtml
 	 * @param headNode
+	 * 
 	 */
 	public void processSelectElm(Node xmlelmNode, org.jsoup.nodes.Document dochtml, org.jsoup.nodes.Element headNode){
 		 
@@ -238,7 +242,13 @@ private boolean templateprocessed = false;
 					n.append("<select />").child(0).attr("id", id); //append but text is empty
 				}else{
 					org.jsoup.nodes.Document selecttext = Jsoup.parse("<fakeroot>"+textelement.getText()+"</fakeroot>");
-					n.append(selecttext.outerHtml());  //append with data from <text>
+					if(selecttext.select("select").size() == 0){
+						//CDATA must contain <option/>
+						n.append("<select />").child(0).attr("id", id).append(selecttext.select("option").outerHtml());
+					}else{
+						//CDATA must contain <select><option/></select>
+						n.append(selecttext.select("select").outerHtml());  //append with data from <text>
+					}
 				}
 			}
 				//appendXmlFragment(dbuild,n,textelement.getText());
@@ -273,7 +283,8 @@ private boolean templateprocessed = false;
 					ValueStack stack = ActionContext.getContext().getValueStack();
 					@SuppressWarnings("unchecked")
 					Map<String,String>opts = (Map<String, String>) stack.findValue(id);
-					if(opts != null){
+					
+					if(opts != null && opts.size() != 0){
 						logger.debug("Populating <select/> from ValueStack");
 //						List list = dochtml.selectNodes("select");
 //						Node node = list.get(0);
@@ -285,8 +296,34 @@ private boolean templateprocessed = false;
 							//Element nodelm = (Element) node2;
 							//nodelm.appendContent(element);
 						}
+// from selectonload query
+					}else{ 
+					ResultDTO resultdto = null;
+					ArrayList optlist = null;
+					if( stack.getContext().containsKey("resultDTO")){
+						 resultdto =  (ResultDTO) stack.getContext().get("resultDTO");
 					}
-//				}
+					if(resultdto != null){
+						 HashMap<String, Object> datamap = resultdto.getData();
+						 if(datamap.containsKey(id)){
+							 Object data = datamap.get(id);
+							if(data instanceof ArrayList){
+								optlist = (ArrayList)data;
+							}
+						 }
+					}
+					
+					if(optlist != null){
+						logger.debug("Populating <select/> from ValueStack");
+						org.jsoup.nodes.Node node2 = dochtml.getElementById(id);//.selectSingleNode("//select[@id=\""+htmlid+"\"]");
+						for(int x=0; x < optlist.size();x++){
+							HashMap<String,String> option = (HashMap<String,String>)optlist.get(x);
+							org.jsoup.nodes.Element element = ((org.jsoup.nodes.Element) node2).appendElement("option");
+							element.attr("value", option.get(inputElm.attributeValue("key")));
+							element.text(option.get(inputElm.attributeValue("value")));
+						}
+					}
+				}
 
 					
 			

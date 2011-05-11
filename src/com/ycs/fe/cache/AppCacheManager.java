@@ -39,6 +39,7 @@ public class AppCacheManager {
 	
 	
 	private static Logger logger= Logger.getLogger(AppCacheManager.class);
+	private static Cache localCache;
 	
 	public void initCache(){
 		String path = null;
@@ -63,7 +64,7 @@ public class AppCacheManager {
 		
 	}
 	
-	public static void putInCache( Cache cache1){
+	public static void addCache( Cache cache1){
 		try {
 			
 			singletonManager.addCache(cache1);
@@ -75,6 +76,29 @@ public class AppCacheManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void createCache(String cacheName){
+		  localCache = new Cache(cacheName, 5000, false, false, 5, 2);
+		  singletonManager.addCache(localCache);
+	}
+	public static void putElementInCache(String cachename,String key, Object object){
+		try {
+			net.sf.ehcache.Element element = new net.sf.ehcache.Element(key, object);
+			singletonManager.getCache(cachename).put(element );
+			 
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (ObjectExistsException e) {
+			e.printStackTrace();
+		} catch (CacheException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public net.sf.ehcache.Element getElementFromCache(String cachename,String key){
+		return singletonManager.getCache(cachename).get(key);	
+	}
+	
 	public static Cache getFromCache(String key){
 		return singletonManager.getCache(key);
 	}

@@ -1,14 +1,15 @@
 package com.ycs.user;
 
 public class Task {
-private String taskName;
 
-public String getTaskName() {
-	return taskName;
-}
+	private String taskid;
 
-public void setTaskName(String taskName) {
-	this.taskName = taskName;
-}
+	public String getTaskid() {
+		return taskid;
+	}
+
+	public void setTaskid(String taskid) {
+		this.taskid = taskid;
+	}
 
 }

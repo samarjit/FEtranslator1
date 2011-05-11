@@ -95,143 +95,38 @@ function initRule_Callback(rule) {
 
 
 function createMenu(){
-    //	$.ajax({
-    //  url: 'menuHeader.html',
-    // 
-    //  type: 'GET',
-    //  async: false,
-    //  success: function(data){ // grab content from another page
-    //		$('.menuheader').html(data);
-    //	},
-    //  dataType: 'html'
-    //});
-    
-    var menuxml = "";
-    $.ajax({
-        url: 'menu.xml',
-        type: 'GET',
-        async: false,
-        success: function(data){ // grab content from another page
-            menuxml = data;
-        },
-        dataType: 'xml'
-    });
-    alert(menuxml);
-    var tabmenu = menuxml.getElementsByTagName("tab");
-    var headertable = document.createElement('table');
-    var row = document.createElement('tr');
-    var jsonArray = [];
-    for (var i = 0; i < tabmenu.length; i++) {
-        var tabname = tabmenu[i].getAttribute("name");
-        var tabclass = tabmenu[i].getAttribute("class");
-        var tabid = tabmenu[i].getAttribute("id");
-        var cell = document.createElement('td');
-        var div = document.createElement('div');
-        div.setAttribute("id", tabid);
-        div.setAttribute("class", tabclass);
-        var text = document.createTextNode(tabname);
-        div.appendChild(text);
-        cell.appendChild(div);
-        row.appendChild(cell);
-        
-        // menu 
-        var menu = tabmenu[i].getElementsByTagName("menu");
-        var cell_len = 0;
-        for (var k = 0; k < menu.length; k++) {
-            var pos = menu[k].getAttribute("position");
-            if (pos > cell_len) {
-                cell_len = pos;
-            }
-        }
-        
-        var outercell = [];
-        var outertable = document.createElement('table');
-        var outerrow = document.createElement('tr');
-        for (var l = 0; l < cell_len; l++) {
-            var cellpos = l + 1;
-            outercell[l] = document.createElement('td');
-            for (var j = 0; j < menu.length; j++) {
-                var menuname = menu[j].getAttribute("name");
-                var menuclass = menu[j].getAttribute("class");
-                var menuposition = menu[j].getAttribute("position");
-                if (menuposition == cellpos) {
-                    var menutable = document.createElement('table');
-                    menutable.setAttribute("class", menuclass);
-                    var menurow = document.createElement('tr');
-                    var menucell = document.createElement('th');
-                    var menunamenode = document.createTextNode(menuname);
-                    menucell.appendChild(menunamenode);
-                    menurow.appendChild(menucell);
-                    menutable.appendChild(menurow);
-                    var submenu = menu[j].getElementsByTagName("submenu");
-                    for (var m = 0; m < submenu.length; m++) {
-                        var href = submenu[m].getAttribute("onclick");
-                        var submenuname = submenu[m].firstChild.nodeValue;
-                        var submenurow = document.createElement('tr');
-                        var submenucell = document.createElement('td');
-                        var submenua = document.createElement('a');
-                        submenua.setAttribute("href", href);
-                        var submenudiv = document.createElement('div');
-                        var submenunamenode = document.createTextNode(submenuname);
-                        submenudiv.appendChild(submenunamenode);
-                        submenua.appendChild(submenudiv);
-                        submenucell.appendChild(submenua);
-                        submenurow.appendChild(submenucell);
-                        menutable.appendChild(submenurow);
-                    }
-                    outercell[l].appendChild(menutable);
-                }
-            }
-            outerrow.appendChild(outercell[l]);
-        }
-        outertable.appendChild(outerrow);
-        var menudiv = document.createElement('div');
-        menudiv.setAttribute("style", "display:block;width:300px");
-        menudiv.appendChild(outertable);
-        var tempdiv = document.createElement('div');
-        tempdiv.appendChild(menudiv);
-        //		alert(tempdiv.innerHTML);
-        var json = {
-            "id": tabid,
-            "menu": tempdiv.innerHTML
-        }
-        jsonArray[i] = json;
-    }
-    
-    headertable.appendChild(row);
-    $(".menuheader").html(headertable);
-    
-    for (var n = 0; n < jsonArray.length; n++) {
-        var tabid = jsonArray[n].id;
-        var menudiv = jsonArray[n].menu;
-        $("#" + tabid).menu({
-            content: menudiv, // grab content from this page
-            showSpeed: 400,
-            width: 500
-        });
-    }
-    
-    
-    // BUTTONS
-    $('.fg-button').hover(function(){
-        $(this).addClass('ui-state-focus');
-    }, function(){
-        $(this).removeClass('ui-state-focus');
-    });
+ 
+	
+	$.ajax({
+  url: 'menuHeader.html',
+ 
+  type: 'GET',
+  async: false,
+  success: function(data){ // grab content from another page
+		$('.menuheader').html(data);
+	},
+  dataType: 'html'
+});
+	 
+	
+	// BUTTONS
+    	$('.fg-button').hover(
+    		function(){ $(this).addClass('ui-state-focus'); },
+    		function(){ $(this).removeClass('ui-state-focus'); }
+    	);
     //MENUS DYNAMIC
-    //     $.get('menu1Content.html', function(data){ // grab content from another page
-    //     alert("data from html:"+ data);
-    //		$('#tab1').menu({ 
-    //					content: data,//$('#menu1').html(), // grab content from this page
-    //					showSpeed: 400,
-    //					width: 300
-    //				});
-    //		});
-    
-    
-    //MENUS DYNAMIC END
-    iadt.refreshHoverIcon();
-};
+     $.get('menu1Content.html', function(data){ // grab content from another page
+		$('#menubuttonUser').menu({ 
+					content: data,//$('#menu1').html(), // grab content from this page
+					showSpeed: 400,
+					width: 300
+				});
+		});
+	
+
+	 //MENUS DYNAMIC END
+     iadt.refreshHoverIcon ();
+  };
 
   
   var screenMode = "addrow";
@@ -278,12 +173,12 @@ function createMenu(){
   
    iadt.refreshHoverIcon = function() {
 		 //hover states on the static widgets
-//	    $('span.icons').live( 'hover', 
-//				function() { $(this).toggleClass('ui-state-error');   } 
-//			);
-	   $('body').delegate("span", 'hover', 
+	    $('span.icons').live( 'hover', 
 				function() { $(this).toggleClass('ui-state-error');   } 
 			);
+//	   $('body').delegate("span", 'hover', 
+//				function() { $(this).toggleClass('ui-state-error');   } 
+//			);
 	};
   
    iadt.showMessage = function(message) { 
@@ -404,7 +299,7 @@ iadt.addrow = function(formid){
 	 
 		//replace newly created tags inside <tr> 
 		 TRref.append(templateResult.find('tr').html());
-		
+		 
 	};
 	
 	$.fn.serializeObject = function()

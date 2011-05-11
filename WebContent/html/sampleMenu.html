@@ -1,0 +1,347 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD Xhtml 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+ 
+<html>
+ <head>
+  <title>Product Setup</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Autdor" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+
+  <link type="text/css" href="css/fg.menu.css" rel="stylesheet" />
+<link type="text/css" href="css/jquery-ui-1.8.8.custom.css" rel="stylesheet" /> 
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<link href="css/body.css" rel="stylesheet" type="text/css">
+ 
+ 
+
+ <link type="text/css" href="css/fg.menu.css" rel="stylesheet" />
+ 
+ 
+<script  src="js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.8.custom.min.js"></script>
+<script  src="js/jquery.validate.js"></script>
+<script type="text/javascript" src="js/fg.menu.js"></script>
+<script type="text/javascript" src="js/jsonStringify.js"></script>
+<script type="text/javascript" src="js/iadtframework.js"></script>
+
+
+<script type="text/javascript">
+ 
+var rule={
+		rules:{
+			loginid: {
+				required: true
+			}
+		},
+		messages:{
+			loginid:{
+				required: "Email ID/Login ID is required"
+			}
+		}
+	};
+	
+$(document).ready(function(){
+    $("#loginform").validate();
+	createMenu();
+	
+	$( "#txtFixedDate" ).datepicker({
+			showOn: "button",
+			buttonImage: "css/images/calendar.gif",
+			buttonImageOnly: true,
+			altField: "#txtExpPeriod",
+			altFormat: "dd/mm/yyyy",
+			dateFormat: "dd/mm/yyyy"
+		});
+	
+	iadt.setFieldlist(fieldlist);	
+  });
+
+ function showDatePicker(obj){
+ 	if(obj.checked == true){
+ 	  $("#spantxtFixedDate").show();
+	  $("#spantxtnumMonth").hide();
+	  }
+	else{
+	  $("#spantxtFixedDate").hide();
+	}
+ } 
+ 
+ function showMonthPicker(obj){
+ 	if(obj.checked == true){
+ 		$("#spantxtnumMonth").show();
+		 $("#spantxtFixedDate").hide();
+	}
+	else 
+		$("#spantxtnumMonth").hide();	
+ } 
+ 
+ function callsubmit(){
+ 	document.forms[0].submit();
+ }
+
+ 
+function initial()
+{
+
+}
+function clearall()
+{
+	
+	$('.field, .field2').validation().resetFrom();
+	$('#userregfrm').reset();
+}
+
+function updateHidProdName(){
+	if($("#selprodname").val() == 'New'){
+	   $("#spannewprog").show();
+	 }else{
+	   $("#hidprodname").val($("#selprodname").val());
+	   $("#spannewprog").hide();
+	   }
+}
+
+function onNext(){
+	if($("#txtnewprodname").val() == null){
+		iadt.showMessage("Please select a product to configure usage settings");
+		return;
+	}
+	
+	location.href="CountrySetup.html?prodcode="+$("#txtnewprodname").val();
+	
+}
+
+function populateFieldsToModify(args){
+	
+}
+var fieldlist="selprodname,txtnewprodname,hidprodname,programname,bingroup,binccy1,FixedDate,txtFixedDate,txtnumMonth,txtExpPeriod,txtservicecode,radrenewal,radio,selEmbossTpl".split(",");
+</script>
+ </head>
+ 
+ </head>
+ <body onLoad="initial();">
+ 
+ <div align="center"  class="wrap">	
+ <div class="navbar"><span class="disabled">Logged in as Henry</span> | <span class="enabled">Home</span> | <span class="enabled">Sign-Out</span></div>
+  <div class="shrink">
+		 <div class="menuheader  ">
+		 	
+		   </div>
+   
+ 
+		 <div class="body">
+		 <form id="form1">
+		  <div class="displayLabel"><a href="ProductSetup.html">Product Setup </a>&gt;&gt;<a href="CountrySetup.html"> Country Setup</a> &gt;&gt; <a href="ServiceDelivery.html">Service Delivery Channel </a> &gt;&gt; <a href="ClosedGroup.html">Closed Group</a>&gt;&gt; <a href="MerchantCategory.html">Merchant Category</a> &gt;&gt; <a href="ProductFee.html">Product Fee</a></div>
+		  <hr />
+		<div style="display: none;" class="infoBar"></div>
+		
+		 <p>&nbsp;</p>
+ 
+		 
+		 
+		 
+		 
+		 
+
+ 
+<table class="head2" border="0" cellspacing="0" height="20" cellpadding="0" width="100%">
+	<tr>
+		<td><b>Product Setup</b></td>
+		
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="5" class="table">
+	<tr class="even">
+		<td width="400">Product Name</td>
+		<td> 
+          
+         <select name="selprodname" id="selprodname" class="field" onchange="iadt.copySeltohidden(this,'spannew','txtnewprodname',populateFieldsToModify)"  >
+          <option value="">Select</option>
+          <option value="New">New</option>
+          <option value="USDLC">USD Loyalty Card</option>
+          <option value="USDTRL">USD Travel Card</option>
+         </select>
+          <span id="spannew" style="padding-left:10px;display:none"> &nbsp;Enter new Product Name 
+         <input name="txtnewprodname" id="txtnewprodname" type="text" class="field" onblur="copyTxttohidden(this,'hidprodname');" /> </span><input name="hidprodname" id="hidprodname"  type="hidden" class="field" /></td>
+	</tr>
+    <tr class="odd" >
+      <td >Program</td>
+       <td >  
+          <select name="programname"  id="programname" maxlength="50" class="field">
+        	<option value="">Select</option>
+            <option value="New">New</option>
+            <option value="LOYCARD">Loyalty Card</option>
+            <option value="TRACARD">Travel Card</option>
+         </select></td>
+    </tr>
+     <tr class="even" >
+       <td>Bin Group</td>
+       <td>
+         <select name="bingroup" id="bingroup" class="field" >
+          <option value="">Select</option>
+          <option value="BINGRP">BINGRP</option>
+         </select>&nbsp;
+         </td></tr>
+    <tr class="odd" >
+      <td> Additional Info</td>
+    <td>&nbsp;</td>
+    </tr>
+    <tr class="even" >
+      <td >Product Currency</td>      
+      <td ><SELECT style="WIDTH: 130px" class="field" onchange="binccy();" name="binccy1">
+              <OPTION value="NO_DATA">select</OPTION>
+              <OPTION value="USD">USD~US Dollar</OPTION>
+              <OPTION selected="selected" value="INR">INR~Indian   Rupees</OPTION>
+              <OPTION value="AUD">AUD~Australian Dollar</OPTION>
+              <OPTION value="SGD">SGD~Singapore Dollar</OPTION>
+              <OPTION value="THB">THB~Thailand Baht</OPTION>
+              <OPTION value="MYR">MYR~Malaysia Ringgit</OPTION>
+              <OPTION value="PHP">PHP~Philipines Peso</OPTION>
+              <OPTION value="IDR">IDR~Indonesia Rupiah</OPTION>
+            </SELECT> 
+       </td>
+    </tr>
+    <tr class="even" >
+        <td>Expiery Period </td>
+        <td><input name="FixedDate" type="radio" id="FixedDate" onclick="showDatePicker(this)" checked="CHECKED">
+                      Fixed Date <span id="spantxtFixedDate" style="padding-right:10px">
+                      <input type="text" id="txtFixedDate" name="txtFixedDate" class="field"  />
+                      </span>
+                      <input type="radio" name="FixedDate" id="numMonths" onclick="showMonthPicker(this)"  />
+                      Months <span  id="spantxtnumMonth" style="display:none;" >
+                      <input type="text" id="txtnumMonth" name="txtnumMonth" class="field"  onblur="copyTxttohidden(this,'txtExpPeriod');" />
+                      </span>
+                      <input type="hidden" name="txtExpPeriod" id="txtExpPeriod" class="field" />
+                      </td></tr>
+    </tr>
+    <tr class="odd">
+    		<td>Service Code</td>
+    		<td><input name="txtservicecode" type="text" class="field" id="txtservicecode" /></td>
+	</tr>
+    <tr class="odd">
+            <td>Do you want Renewal</td>
+            <td><input name="radrenewal" type="radio"   id="radrenewal1" value="1" />
+              Yes
+              <input type="radio" name="radrenewal" id="radrenewal2" value="0" />
+              No </td>
+          </tr>
+    <tr class="odd">
+            <td>Single Use/Multiple Use</td>
+            <td>
+               <input type="radio" name="radsinglemultiple" id="radsinglemultiple1" value="1" />
+              Multiple Use
+               <input type="radio" name="radsinglemultiple" id="radsinglemultiple2" value="0" />
+              Single Use
+              </td>
+          </tr>
+    <tr class="odd">
+            <td>Reloadable</td>
+            <td><input type="radio" name="radrealodable" id="radrealodable1" value="1" />
+              Yes
+              <input type="radio" name="radrealodable" id="radreloadable2" value="0" />
+              No </td>
+          </tr>
+
+    <tr class="odd">
+    		<td>Embossing Template</td>
+    		<td><select name="selEmbossTpl" id="selEmbossTpl" class="field" >
+            		<option value="">Select</option>
+                    <option value="VISAGOLD">VISA Gold</option>
+                    <option value="VISASILVER">VISA Silver</option>
+                    <option value="MASTER">Master</option>
+                </select>
+            </td>
+          </tr>     
+    <tr class="even">
+       <td>Plastic code</td>
+       <td><select class="field" name="selplasticcode" id="selplasticcode" >
+        		<option value="">Select</option>
+                <option value="PLS001">PLS001</option>
+				<option value="PLS002">PLS002</option>
+           </select>
+       </td>
+    </tr>
+    <tr class="even" >
+      <td width="400" >Satatus</td>
+      <td class="even" ><input name="txtstatus" type="text" class="field" id="txtstatus" value="New" /></td>
+    </tr>
+    <tr class="even" >
+      <td width="400" >Maker Id</td>
+      <td class="even" ><input name="txtmakerid" type="text" value="Henry" class="field" id="txtmakerid" /></td>
+    </tr>
+    <tr class="even" >
+      <td width="400" >Maker Date</td>
+      <td class="even" ><input name="txtmakerdate" type="text" class="field" id="txtmakerdate" value="12/12/2010" /></td>
+    </tr>            
+</table>
+   
+<p>&nbsp;</p>
+  
+  <div class="buttonPosition">
+    <table  border="0"   >
+    
+      <tr>
+             <td    style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onAdd()" >Add</button>
+             </td> 
+             <td      style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onModify()" >Modify</button>
+             </td> 
+             <td     style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onClose()" >Close</button>
+             </td> 
+             <td     style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onCancel()" >Cancel</button>
+             </td> 
+             <td     style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onSubmitForm()" >Submit</button>
+             </td> 
+             <td     style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onNext()" >Next</button>
+             </td>
+             <td     style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onViewUsage()" >View Usage Settings</button>
+             </td>
+             <td     style="cursor:hand">
+                 <button class="buttonenabled" type="button" onclick="onAuthorize()" >Authorize</button>
+             </td>
+             
+         </tr>
+     </table>
+</div>
+
+  <div id="showsubcan" style="display:none">
+<table  border="0" cellspacing="0" cellpadding="0" >
+
+  <tr>
+         <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';"  style="cursor:hand">Modify
+         </td><td>&nbsp;</td>
+         <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';"  style="cursor:hand">Next</button>
+         </td><td>&nbsp;</td>
+		 <td class="buttonenabled" onClick="location.href='welcome.html';" style="cursor:hand">Ok
+         </td>
+     </tr>
+ </table>
+</div>
+
+ </form>
+ 		 </div><!-- body div-->
+	<!-- shrink -->
+  </div>
+  <div class="push"></div>
+  <!-- center align div-->
+ </div>
+
+<div class="footer">
+ <center>
+  <div class="shrink" >
+	 <hr />
+  	<div  style="float:left"> www.XYZ.com</div> 
+<div style="float:right">Copyright Â© 2011 XYZ </div>
+  </div>
+  </center>	
+</div>
+
+</body>
+</html>

@@ -197,6 +197,7 @@
        	<xs:element name="txnproc"   >
        		<xs:complexType mixed="true">
        		 <xs:attribute name="id" type="xs:string"></xs:attribute>
+       		  <xs:attribute name="outstack" type="xs:string"></xs:attribute>
        		</xs:complexType>
        	</xs:element>
        </xs:sequence>
@@ -209,6 +210,7 @@
        	<xs:element name="buslogic"  >
        		<xs:complexType mixed="true">
        		 <xs:attribute name="id" type="xs:string"></xs:attribute>	
+       		  <xs:attribute name="outstack" type="xs:string"></xs:attribute>
        		</xs:complexType>
        	</xs:element>
        </xs:sequence>
@@ -221,7 +223,7 @@
   	 	<xs:element name="proc" maxOccurs="unbounded" >     		 
 	        <xs:complexType mixed="true">
 	          <xs:attribute name="id" type="xs:string"></xs:attribute>
-	          <xs:attribute name="xml" type="xs:string"></xs:attribute>
+	           <xs:attribute name="outstack" type="xs:string"></xs:attribute>
 	        </xs:complexType>	
        	</xs:element>
        	</xs:sequence>
@@ -411,6 +413,7 @@
       <xs:attribute name="type" type="xs:string"/>
       <xs:attribute name="validationattr"/>
       <xs:attribute name="value" use="optional"/>
+      <xs:attribute name="key" use="optional"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="sometype">
