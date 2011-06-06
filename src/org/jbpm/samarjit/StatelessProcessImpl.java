@@ -11,6 +11,8 @@ import org.jbpm.workflow.core.impl.WorkflowProcessImpl;
 import org.jbpm.workflow.core.node.StartNode;
 
 public class StatelessProcessImpl extends WorkflowProcessImpl {
+	private static final long serialVersionUID = 510l;
+	
 	public static final String RULEFLOW_TYPE = "RuleFlow";
 	 
 	public StatelessProcessImpl() {

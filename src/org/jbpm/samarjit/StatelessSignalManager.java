@@ -8,7 +8,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.drools.runtime.process.EventListener;
 import org.drools.runtime.process.ProcessInstance;
 import org.jbpm.process.instance.event.SignalManager;
-import org.jbpm.process.instance.event.DefaultSignalManager.SignalProcessInstanceAction;
 
 //DefaultSignalManager
 public class StatelessSignalManager implements SignalManager{

@@ -96,7 +96,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 			
 			String pathhtml = null;
 			if(xmlelmNode.getElementsByTagName("htmltempalte").getLength() > 0){
-				pathhtml = xmlelmNode.getElementsByTagName("htmltempalte").item(0).getTextContent().trim();
+				pathhtml = xmlelmNode.getElementsByTagName("htmltempalte").item(0).getNodeValue().trim();
 			}else{
 				logger.debug("HTMLProcessor: no template found in "+inputXML.substring(0,20)+"..." ); 
 				templateprocessed= false;
@@ -149,7 +149,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 								element.setAttribute("type", inputElm.getAttribute("type"));
 								element.setAttribute("class", inputElm.getAttribute("class"));
 								element.setAttribute("id", inputElm.getAttribute("id")+(j+1));
-								element.setTextContent(key[1]);
+								element.setNodeValue(key[1]);
 								n.appendChild(element);
 							}
 							
@@ -157,7 +157,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 				    }
 					
 //					n.setAttribute("value", inputElm.getAttribute("value"));
-//					n.setTextContent(inputElm.getAttribute("value"));
+//					n.setNodeValue(inputElm.getAttribute("value"));
 
 				}else{
 					//TODO: We need to insert in custom fields
@@ -176,7 +176,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 					if(textnodenl != null){
 						textelement = (Element) textnodenl.item(0);
 					}
-					//CDATASection cdata = dochtml.createCDATASection(textelement.getTextContent());
+					//CDATASection cdata = dochtml.createCDATASection(textelement.getNodeValue());
 					//element.appendChild(cdata);
 					appendXmlFragment(dbuild,n,textelement.getChildNodes());
 					
@@ -193,7 +193,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 				Element n = (Element) xp.evaluate("//*[@id=\""+htmlid+"\"]", dochtml, XPathConstants.NODE);
 				logger.debug("setting values forid:"+"//*[@id=\""+htmlid+"\"]");
 				if(n != null){
-					n.setTextContent(inputElm.getAttribute("value"));
+					n.setNodeValue(inputElm.getAttribute("value"));
 				}else{
 					//TODO: We need to insert in custom fields
 				}
@@ -212,9 +212,9 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 					if(textnodenl != null){
 						textelement = (Element) textnodenl.item(0);
 					}
-//					CDATASection cdata = dochtml.createCDATASection(textelement.getTextContent());
+//					CDATASection cdata = dochtml.createCDATASection(textelement.getNodeValue());
 //					element.appendChild(cdata);
-					appendXmlFragment(dbuild,n,textelement.getTextContent());
+					appendXmlFragment(dbuild,n,textelement.getNodeValue());
 					String listValue = inputElm.getAttribute("value");
 					
 					if(listValue != null && listValue != ""){
@@ -229,7 +229,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 							String[] key = val.split("=");
 							Element element = dochtml.createElement("option");
 							element.setAttribute("value", key[0]);
-							element.setTextContent(key[1]);
+							element.setNodeValue(key[1]);
 							node.appendChild(element);
 						}
 					}else{ //if hard coded values are not there then look for filling up from action context
@@ -241,7 +241,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 							for (Entry<String, String> option : opts.entrySet()) {
 								Element element = dochtml.createElement("option");
 								element.setAttribute("value", option.getKey());
-								element.setTextContent(option.getValue());
+								element.setNodeValue(option.getValue());
 								node.appendChild(element);
 							}
 						}
@@ -285,12 +285,12 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 			NodeList scriptsnl =   xmlelmNode.getElementsByTagName("scripts").item(0).getChildNodes();		
 			for (int i = 0; i < scriptsnl.getLength(); i++) {
 				Node scriptnode = scriptsnl.item(i);
-//				logger.debug("Adding scipts"+scriptnode.getTextContent());
+//				logger.debug("Adding scipts"+scriptnode.getNodeValue());
 				if(scriptnode.getNodeType() == Node.CDATA_SECTION_NODE){
-					appendXmlFragment(dbuild,headNode,scriptnode.getTextContent());
+					appendXmlFragment(dbuild,headNode,scriptnode.getNodeValue());
 				}
 				if(scriptnode.getNodeType() == Node.ELEMENT_NODE && "scriptinclude".equals(scriptnode.getNodeName())){
-					String[] includeScripts = scriptnode.getTextContent().split(",");
+					String[] includeScripts = scriptnode.getNodeValue().split(",");
 					for (String val : includeScripts) {
 						Element e = dochtml.createElement("script");
 						e.setAttribute("src", val);
@@ -326,12 +326,12 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 			NodeList stylenl =   xmlelmNode.getElementsByTagName("stylesheets").item(0).getChildNodes();		
 			for (int i = 0; i < stylenl.getLength(); i++) {
 				Node scriptnode = stylenl.item(i);
-//				logger.debug("Adding styles"+scriptnode.getTextContent());
+//				logger.debug("Adding styles"+scriptnode.getNodeValue());
 				if(scriptnode.getNodeType() == Node.CDATA_SECTION_NODE){
-					appendXmlFragment(dbuild,headNode,scriptnode.getTextContent());
+					appendXmlFragment(dbuild,headNode,scriptnode.getNodeValue());
 				}
 				if(scriptnode.getNodeType() == Node.ELEMENT_NODE && "styleinclude".equals(scriptnode.getNodeName())){
-					String[] includeScripts = scriptnode.getTextContent().split(",");
+					String[] includeScripts = scriptnode.getNodeValue().split(",");
 					for (String val : includeScripts) {
 						Element e = dochtml.createElement("link");
 						e.setAttribute("href", val);
@@ -351,14 +351,14 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 				Element n = (Element) xp.evaluate("//*[@id=\""+htmlid+"\"]", dochtml, XPathConstants.NODE);
 				logger.debug("setting values forid:"+"//*[@id=\""+htmlid+"\"]");
 				if(n != null){
-					n.setTextContent(inputElm.getAttribute("value"));
+					n.setNodeValue(inputElm.getAttribute("value"));
 				}else{
 					//TODO: We need to insert in custom fields
 					Element e = dochtml.createElement("div");
 					e.setAttribute("id", inputElm.getAttribute("id"));
 					Element body = (Element) dochtml.getElementsByTagName("body").item(0);
 					Node xpathnode = inputElm.getElementsByTagName("xpath").item(0);
-					if(xpathnode.getTextContent().length() >0 )
+					if(xpathnode.getNodeValue().length() >0 )
 						body = (Element) xp.evaluate("/html/body", dochtml, XPathConstants.NODE);
 					body.insertBefore(e, body.getFirstChild());
 					 
@@ -419,7 +419,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 			//Append all validations
 			nl = (NodeList) xp.evaluate("//validation", xmlelmNode, XPathConstants.NODESET);
 			for (int i = 0; i < nl.getLength(); i++) {
-				String validation = nl.item(i).getTextContent();
+				String validation = nl.item(i).getNodeValue();
 				
 				if(validation != null && validation.length() > 1){
 					globaljs += validation +"\n";
@@ -430,10 +430,10 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 			JSONObject rulejson = new JSONObject("{rules:{},messages:{}}");
 			for (int i = 0; i < nl.getLength(); i++) {
 				Element ruleElm = (Element) nl.item(i);
-				String ruletext = ruleElm.getTextContent();
+				String ruletext = ruleElm.getNodeValue();
 				logger.debug("Rule="+ruletext);
 				if(ruletext != null && ruletext.length() > 0){
-					JSONArray jar = new JSONArray(ruleElm.getTextContent());
+					JSONArray jar = new JSONArray(ruleElm.getNodeValue());
 					//JSONObject messageelmpart =  jobj.getJSONObject("messages");
 					for (int j = 0; j < jar.length(); j++) {
 						JSONObject jobj = jar.getJSONObject(j);
@@ -496,7 +496,7 @@ public class HTMLProcessorImpl extends HTMLProcessor   {
 //		Node fragmentNode = docBuilder.parse(new InputSource(new StringReader("<root>"+fragment+"</root>"))).getDocumentElement();
 		NodeList nl = fragment;
 		if(fragment.item(0).getNodeType() == Node.CDATA_SECTION_NODE){
-			appendXmlFragment( docBuilder,  parent,  fragment.item(0).getTextContent());
+			appendXmlFragment( docBuilder,  parent,  fragment.item(0).getNodeValue());
 			return;
 		}
 		for (int i = 0; i < nl.getLength(); i++) {

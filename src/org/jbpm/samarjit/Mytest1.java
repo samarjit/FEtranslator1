@@ -1,26 +1,18 @@
 package org.jbpm.samarjit;
 
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.drools.KnowledgeBase;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.compiler.DroolsError;
-import org.drools.compiler.PackageBuilder;
-import org.drools.definition.KnowledgePackage;
 import org.drools.definition.process.Process;
 import org.drools.definition.process.WorkflowProcess;
-import org.drools.definitions.impl.KnowledgePackageImp;
 import org.drools.event.process.ProcessCompletedEvent;
 import org.drools.event.process.ProcessEvent;
 import org.drools.event.process.ProcessEventListener;
@@ -29,13 +21,10 @@ import org.drools.event.process.ProcessNodeTriggeredEvent;
 import org.drools.event.process.ProcessStartedEvent;
 import org.drools.event.process.ProcessVariableChangedEvent;
 import org.drools.io.ResourceFactory;
-import org.drools.lang.descr.PackageDescr;
-import org.drools.rule.Package;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkItem;
 import org.drools.xml.SemanticModules;
-import org.jbpm.JbpmJUnitTestCase.TestWorkItemHandler;
 import org.jbpm.bpmn2.core.Definitions;
 import org.jbpm.bpmn2.xml.BPMNDISemanticModule;
 import org.jbpm.bpmn2.xml.BPMNExtensionsSemanticModule;
@@ -43,6 +32,7 @@ import org.jbpm.bpmn2.xml.BPMNSemanticModule;
 import org.jbpm.bpmn2.xml.XmlBPMNProcessDumper;
 import org.jbpm.compiler.xml.XmlProcessReader;
 import org.jbpm.ruleflow.core.RuleFlowProcess;
+import org.jbpm.samarjit.mynodeinst.TestWorkItemHandler;
 import org.jbpm.workflow.core.impl.WorkflowProcessImpl;
 import org.xml.sax.SAXException;
 
@@ -53,7 +43,7 @@ public class Mytest1 {
 	 * @throws SAXException
 	 */
 	public static void main(String[] args) throws SAXException, IOException {
-		PackageBuilder builder = new PackageBuilder();
+		/*PackageBuilder builder = new PackageBuilder();
 		// Set the system property so that automatic conversion can happen
 		System.setProperty("drools.ruleflow.port", "true");
 		InputStream in = new FileInputStream("src/test/resources/BPMN2-Lane.bpmn2");
@@ -74,10 +64,10 @@ public class Mytest1 {
 		System.out.println(pkg.getName());
 
 		List<KnowledgePackage> pkgs = new ArrayList<KnowledgePackage>();
-		pkgs.add(new KnowledgePackageImp(pkg));
+		pkgs.add(new KnowledgePackageImp(pkg));*/
 
 		KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-		kbuilder.add(ResourceFactory.newFileResource("src/test/resources/BPMN2-Lane.bpmn2"), ResourceType.BPMN2);
+		kbuilder.add(ResourceFactory.newFileResource("C:/softwares/Workflow/jBPM500/jbpm-installer/sample/evaluation/src/main/resources/Evaluation.bpmn"), ResourceType.BPMN2);
 		// // KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
 		// kbase.addKnowledgePackages( pkgs );
 		KnowledgeBase kbase = kbuilder.newKnowledgeBase();
@@ -88,7 +78,7 @@ public class Mytest1 {
 		modules.addSemanticModule(new BPMNDISemanticModule());
 		modules.addSemanticModule(new BPMNExtensionsSemanticModule());
 		XmlProcessReader reader = new XmlProcessReader(modules);
-		reader.read(new FileReader("src/test/resources/BPMN2-Lane.bpmn2"));
+		reader.read(new FileReader("C:/softwares/Workflow/jBPM500/jbpm-installer/sample/evaluation/src/main/resources/Evaluation.bpmn"));
 		 List<Process> processes = reader.getProcess();
 //		Collection<Process> processes = kbase.getProcesses();
 		for (Process process : processes) {
@@ -163,7 +153,7 @@ if (1 == 0 )return ;
 
 		TestWorkItemHandler workItemHandler = new TestWorkItemHandler();
 		ksession.getWorkItemManager().registerWorkItemHandler("Human Task", workItemHandler);
-		ProcessInstance processInstance = ksession.startProcess("SamarjitMyTestWflId_UserTask");
+		ProcessInstance processInstance = ksession.startProcess("com.sample.evaluation");
 		
 		
 		System.out.println(processInstance.getState() == ProcessInstance.STATE_ACTIVE);
@@ -171,15 +161,24 @@ if (1 == 0 )return ;
         results.put("ActorId", "mary");
         WorkItem workItem = workItemHandler.getWorkItem();
         System.out.println(workItem.getParameter("ActorId")); //expect john
-		ksession.getWorkItemManager()
+        	System.out.println("WorkItemID:"+workItem.getId()+" "+workItem.getParameters().get("Comment"));
+        ksession.getWorkItemManager()
 			.completeWorkItem(workItem.getId(), null);
 		
 		workItem = workItemHandler.getWorkItem();
 		System.out.println(workItem.getParameter("ActorId")); //expect mary
 		System.out.println(processInstance.getState() == ProcessInstance.STATE_ACTIVE);
-
+		 	System.out.println("WorkItemID:"+workItem.getId()+" "+workItem.getParameters().get("Comment"));
 		ksession.getWorkItemManager()
 			.completeWorkItem(workItem.getId(), null);
+		
+		 workItem = workItemHandler.getWorkItem();
+		 	System.out.println("WorkItemID:"+workItem.getId()+" "+workItem.getParameters().get("Comment"));
+		 ksession.getWorkItemManager()
+		 	.completeWorkItem(
+					workItem.getId(), 
+					null);	
+		 
 		System.out.println(processInstance.getState() == ProcessInstance.STATE_ACTIVE);
 		System.out.println("Process Events=" + processEventList);
 	}

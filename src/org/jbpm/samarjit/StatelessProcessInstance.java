@@ -9,30 +9,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.drools.common.InternalKnowledgeRuntime;
 import org.drools.definition.process.NodeContainer;
 import org.drools.definition.process.Process;
 import org.drools.definition.process.WorkflowProcess;
 import org.drools.runtime.process.EventListener;
 import org.drools.runtime.process.WorkflowProcessInstance;
- 
-
-import org.jbpm.process.instance.InternalProcessRuntime;
 import org.jbpm.process.instance.ProcessInstance;
 import org.jbpm.process.instance.impl.ProcessInstanceImpl;
 import org.jbpm.ruleflow.core.RuleFlowProcess;
+import org.jbpm.samarjit.dao.WorkflowDAO;
+import org.jbpm.samarjit.mynodeinst.StatelessEndNodeInstance;
 import org.jbpm.workflow.core.Node;
 import org.jbpm.workflow.core.impl.NodeImpl;
-import org.jbpm.workflow.core.impl.WorkflowProcessImpl;
 import org.jbpm.workflow.core.node.EventNode;
 import org.jbpm.workflow.core.node.EventNodeInterface;
 import org.jbpm.workflow.core.node.StartNode;
 import org.jbpm.workflow.instance.NodeInstance;
 import org.jbpm.workflow.instance.NodeInstanceContainer;
-import org.jbpm.workflow.instance.impl.NodeInstanceFactory;
-import org.jbpm.workflow.instance.impl.NodeInstanceFactoryRegistry;
-import org.jbpm.workflow.instance.impl.NodeInstanceImpl;
-import org.jbpm.workflow.instance.node.EndNodeInstance;
 import org.jbpm.workflow.instance.node.EventNodeInstance;
 import org.jbpm.workflow.instance.node.EventNodeInstanceInterface;
 
@@ -45,6 +38,7 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 	private long nodeInstanceCounter = 0;
 	private final List<NodeInstance> nodeInstances = new ArrayList<NodeInstance>();
 	private long id = 0;
+	private Map<String, Object> variables = new HashMap<String, Object>();
 	
 	public StatelessProcessInstance(Process p){
 		currentProcess = p;
@@ -53,9 +47,11 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 	public void internalStart() {
     	StartNode startNode = getRuleFlowProcess().getStart();
     	if (startNode != null) {
-    		((NodeInstance) getNodeInstance(startNode))
-    				.trigger(null, null);
+    		NodeInstance  startNodeInst = ((NodeInstance) getNodeInstance(startNode));
+    		WorkflowDAO.createProcessInstance(startNodeInst);
+    		startNodeInst.trigger(null, null);
     	}
+    	
     }
 	
 	public void start() {
@@ -73,47 +69,25 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 		return (RuleFlowProcess) getProcess();
 	}
 
-
-
-	/*public StartNode getStart() {
-        Node[] nodes = getNodes();
-        for (int i = 0; i < nodes.length; i++) {
-            if (nodes[i] instanceof StartNode) {
-                return (StartNode) nodes[i];
-            }
-        }
-        return null;
-    }*/
-	
-	/*private Node[] getNodes() {
-		// TODO Auto-generated method stub
-		return null;
-	}*/
-
-
-
-	public NodeInstance getNodeInstance(final Node node) {
-		StatelessNodeInstanceFactory conf = StatelessNodeInstanceFactoryRegistry.INSTANCE.getProcessNodeInstanceFactory(node);
-		if (conf == null) {
-			throw new IllegalArgumentException("Illegal node type: "
-					+ node.getClass());
-		}
-		StatelessNodeInstanceImpl nodeInstance = (StatelessNodeInstanceImpl) conf
-				.getNodeInstance(node, this, this);
-		if (nodeInstance == null) {
-			throw new IllegalArgumentException("Illegal node type: "
-					+ node.getClass());
-		}
-		 
-		return nodeInstance;
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("WorkflowProcessInstance:");
+		sb.append(getId());
+		sb.append(" [processId=");
+		sb.append(getProcessId());
+		sb.append(",state=");
+		sb.append(getState());
+		sb.append("]");
+		return sb.toString();
 	}
+
+	
 
 
 
 	
 	public void signalEvent(String type, Object event) {
 		// TODO Auto-generated method stub
-		System.out.println("Stateless Process Instance signalEvent empty()()()");
+		System.out.println("Stateless Process Instance signalEvent empty()()()"+event);
 		synchronized (this) {
 			if (getState() != ProcessInstance.STATE_ACTIVE) {
 				return;
@@ -189,7 +163,6 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 
 	
 	public long getId() {
-		// TODO Auto-generated method stub
 		return id;
 	}
 
@@ -226,13 +199,13 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 	
 	public Object getVariable(String paramString) {
 		// TODO Auto-generated method stub
-		return null;
+		return variables.get(paramString);
 	}
 
 	
 	public void setVariable(String paramString, Object paramObject) {
 		// TODO Auto-generated method stub
-		
+		variables .put(paramString, paramObject);
 	}
 
 	//org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl
@@ -284,6 +257,7 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 			StatelessRuntime.eINSTANCE.getEventSupport().fireAfterProcessCompleted(this, null/*kruntime*/);
 
 			StatelessRuntime.eINSTANCE.getSignalManager().signalEvent("processInstanceCompleted:" + getId(), this);
+			WorkflowDAO.completeProcessInstance(getId());
 		}
 	}
 	
@@ -348,9 +322,50 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 			return result;
 		}
 		
+		/*public StartNode getStart() {
+	        Node[] nodes = getNodes();
+	        for (int i = 0; i < nodes.length; i++) {
+	            if (nodes[i] instanceof StartNode) {
+	                return (StartNode) nodes[i];
+	            }
+	        }
+	        return null;
+	    }*/
+		
+		/*private Node[] getNodes() {
+			// TODO Auto-generated method stub
+			return null;
+		}*/
+	
+	
+	
+		/**
+		 * Creates new node Instance based on node type
+		 * @see org.jbpm.workflow.instance.NodeInstanceContainer#getNodeInstance(org.jbpm.workflow.core.Node)
+		 */
+		/*public NodeInstance getNodeInstance(final Node node) {
+			INodeInstanceFactory conf = StatelessNodeInstanceFactoryRegistry.INSTANCE.getProcessNodeInstanceFactory(node);
+			if (conf == null) {
+				throw new IllegalArgumentException("Illegal node type: "
+						+ node.getClass());
+			}
+			StatelessNodeInstanceImpl nodeInstance = (StatelessNodeInstanceImpl) conf
+					.getNodeInstance(node, this, this);
+			if (nodeInstance == null) {
+				throw new IllegalArgumentException("Illegal node type: "
+						+ node.getClass());
+			}
+			 
+			return nodeInstance;
+		}*/
+	
+		/**
+		 * Creates new node instance based on node type
+		 * @see org.jbpm.workflow.instance.NodeInstanceContainer#getNodeInstance(org.drools.definition.process.Node)
+		 */
 		public NodeInstance getNodeInstance(
 				org.drools.definition.process.Node node) {
-			  StatelessNodeInstanceFactory conf = StatelessNodeInstanceFactoryRegistry.INSTANCE.getProcessNodeInstanceFactory(node);
+			  INodeInstanceFactory conf = StatelessNodeInstanceFactoryRegistry.INSTANCE.getProcessNodeInstanceFactory(node);
 			if (conf == null) {
 				throw new IllegalArgumentException("Illegal node type: "
 						+ node.getClass());
@@ -365,10 +380,7 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 			return nodeInstance;
 		}
 
-		public void addNodeInstance(NodeInstance nodeInstance) {
-			((StatelessNodeInstanceImpl) nodeInstance).setId(nodeInstanceCounter++);
-			this.nodeInstances.add(nodeInstance);
-		}
+		
 
 		public void removeNodeInstance(NodeInstance nodeInstance) {
 			this.nodeInstances.remove(nodeInstance);
@@ -380,7 +392,7 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 
 		public void nodeInstanceCompleted(NodeInstance nodeInstance,
 				String outType) {
-			if (nodeInstance instanceof EndNodeInstance || 
+			if (nodeInstance instanceof StatelessEndNodeInstance || 
 	        		((org.jbpm.workflow.core.WorkflowProcess) getWorkflowProcess()).isDynamic()) {
 	            if (((org.jbpm.workflow.core.WorkflowProcess) getProcess()).isAutoComplete()) {
 	                if (nodeInstances.isEmpty()) {
@@ -395,6 +407,37 @@ public class StatelessProcessInstance  implements StatelessWorkflowEvent,Workflo
 
 		private  WorkflowProcess getWorkflowProcess() {
 			return (WorkflowProcess) getProcess();
+		}
+
+		public Map<String, Object> getVariableMap() {
+			return variables;
+		}
+		
+		/** 
+		 * This defines the strategy for setting node instance Id
+		 * @see org.jbpm.workflow.instance.NodeInstanceContainer#addNodeInstance(org.jbpm.workflow.instance.NodeInstance)
+		 */
+		public void addNodeInstance(NodeInstance nodeInstance) {
+			System.err.println("addNodeInstance:"+id+"   "  + nodeInstanceCounter);
+				((StatelessNodeInstanceImpl) nodeInstance).setId(id*1000 + nodeInstanceCounter++);
+			this.nodeInstances.add(nodeInstance);
+		}
+		//does not work as while restart after sometime there will be fresh tasks starting
+		@Deprecated 
+		public void addNodeInstanceFromDB(NodeInstance nodeInstance) {
+			System.err.println("addNodeInstancefromDB:"+id+"   "  + nodeInstanceCounter);
+				((StatelessNodeInstanceImpl) nodeInstance).setId(  nodeInstanceCounter++);
+				this.nodeInstances.add(nodeInstance);
+		}
+		
+		/**
+		 * This is an override to the inbuild id creation. This is to be used only during reload of half executed workflows, so that 
+		 * there will be continuation of Ids.
+		 * @param id
+		 * @since 18 May, 2011
+		 */
+		public void setNodeInstanceCounter(long id){
+			nodeInstanceCounter = id;
 		}
 	
 }

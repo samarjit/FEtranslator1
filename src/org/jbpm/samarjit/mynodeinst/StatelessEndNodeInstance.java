@@ -35,7 +35,9 @@ public class StatelessEndNodeInstance   extends StatelessNodeInstanceImpl {
         	if (!hidden) {
         		 getProcessEventSupport().fireBeforeNodeLeft(this, null /*kruntime*/);
         	}
-        	((StatelessProcessInstance) getProcessInstance()).setState( ProcessInstance.STATE_COMPLETED );
+        	//samarjit to completeEndNodeInstand
+        	triggerCompleted(type, true);
+        	//((StatelessProcessInstance) getProcessInstance()).setState( ProcessInstance.STATE_COMPLETED );//samarjit
             if (!hidden) {
             	 getProcessEventSupport().fireAfterNodeLeft(this, null /*kruntime*/);
             }

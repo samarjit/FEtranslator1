@@ -15,7 +15,7 @@ import org.drools.runtime.process.NodeInstance;
 @Deprecated
 public class StatelessEventEngine {
 	 public void fireBeforeNodeTriggered(NodeInstance nodeInstance, KnowledgeRuntime kruntime) {
-		 /*  82 */     Iterator iter = getEventListenersIterator();
+		 /*  82 */     Iterator<?> iter = getEventListenersIterator();
 		 /*     */ 
 		 /*  84 */     if (iter.hasNext()) {
 		 /*  85 */       ProcessNodeTriggeredEvent event = new ProcessNodeTriggeredEventImpl(nodeInstance, kruntime);
@@ -26,7 +26,7 @@ public class StatelessEventEngine {
 		 /*     */     }
 		 /*     */   }
 
-	private Iterator getEventListenersIterator() {
+	private Iterator<?> getEventListenersIterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}

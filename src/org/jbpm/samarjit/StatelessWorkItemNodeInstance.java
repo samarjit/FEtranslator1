@@ -5,14 +5,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.drools.WorkItemHandlerNotFoundException;
 import org.drools.process.core.Work;
-import org.drools.process.instance.WorkItemManager;
 import org.drools.process.instance.impl.WorkItemImpl;
-import org.drools.runtime.KnowledgeRuntime;
 import org.drools.runtime.process.NodeInstance;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkItem;
@@ -28,10 +25,15 @@ import org.jbpm.workflow.instance.impl.WorkItemResolverFactory;
 import org.mvel2.MVEL;
 
 public class StatelessWorkItemNodeInstance extends StatelessNodeInstanceImpl{
+	@SuppressWarnings("unused")
 	private static final Pattern PARAMETER_MATCHER = Pattern.compile("#\\{(\\S+)\\}", Pattern.DOTALL);
 	private transient WorkItem workItem;
 	private long workItemId = -1;
 	private List<Long> timerInstances;
+	
+	public String toString(){
+		return "["+getClass().getSimpleName()+"("+getNodeName()+"):_"+getNodeId()+":inst:"+getId()+", workItemId:"+workItemId+"]";
+	}
 	
 	public void internalTrigger(final StatelessNodeInstance from, String type) {
 	    	super.internalTrigger(from, type);
@@ -60,6 +62,14 @@ public class StatelessWorkItemNodeInstance extends StatelessNodeInstanceImpl{
 	    	this.workItemId = workItem.getId();
 	    }
 	
+	public void restartWorkItemInst(){
+		 WorkItemNode workItemNode = getWorkItemNode();
+	        createWorkItem(workItemNode);
+			if (workItemNode.isWaitForCompletion()) {
+			    addWorkItemListener();
+	        }
+			this.workItemId = workItem.getId();	
+	}
 	 public void triggerCompleted() {
 	        triggerCompleted(org.jbpm.workflow.core.Node.CONNECTION_DEFAULT_TYPE, true);
 	    }
@@ -150,6 +160,8 @@ public class StatelessWorkItemNodeInstance extends StatelessNodeInstanceImpl{
 		protected WorkItem createWorkItem(WorkItemNode workItemNode) {
 			Work work = workItemNode.getWork();
 	        workItem = new WorkItemImpl();
+	        
+	        ((WorkItemImpl) workItem) .setId(this.getId());
 	        ((org.drools.process.instance.WorkItem) workItem).setName(work.getName());
 	        ((org.drools.process.instance.WorkItem) workItem).setProcessInstanceId(getProcessInstance().getId());
 	        ((org.drools.process.instance.WorkItem) workItem).setParameters(new HashMap<String, Object>(work.getParameters()));
@@ -172,7 +184,7 @@ public class StatelessWorkItemNodeInstance extends StatelessNodeInstanceImpl{
 	            if (parameterValue != null) {
 	            	((org.drools.process.instance.WorkItem) workItem).setParameter(mapping.getKey(), parameterValue);
 	            }
-	        }
+	        }/*
 	        for (Map.Entry<String, Object> entry: workItem.getParameters().entrySet()) {
 	        	if (entry.getValue() instanceof String) {
 	        		String s = (String) entry.getValue();
@@ -205,7 +217,7 @@ public class StatelessWorkItemNodeInstance extends StatelessNodeInstanceImpl{
 	                }
 	                ((org.drools.process.instance.WorkItem) workItem).setParameter(entry.getKey(), s);
 	        	}
-	        }
+	        }*/
 	        return workItem;
 		}
 

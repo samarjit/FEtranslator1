@@ -3,9 +3,6 @@ package org.jbpm.samarjit;
 import org.drools.definition.process.Node;
 import org.drools.runtime.process.NodeInstance;
 import org.drools.runtime.process.NodeInstanceContainer;
-import org.jbpm.workflow.instance.WorkflowProcessInstance;
-import org.jbpm.workflow.instance.impl.NodeInstanceFactory;
-import org.jbpm.workflow.instance.impl.NodeInstanceImpl;
 
 public class StatelessNodeInstanceFactory implements INodeInstanceFactory{
 	

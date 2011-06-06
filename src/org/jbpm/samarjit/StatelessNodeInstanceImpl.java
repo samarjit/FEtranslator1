@@ -2,7 +2,6 @@ package org.jbpm.samarjit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -12,13 +11,9 @@ import org.drools.RuntimeDroolsException;
 import org.drools.definition.process.Connection;
 import org.drools.definition.process.Node;
 import org.drools.event.ProcessEventSupport;
-import org.drools.process.core.Work;
-import org.drools.process.instance.impl.WorkItemImpl;
 import org.drools.runtime.process.EventListener;
 import org.drools.runtime.process.NodeInstance;
 import org.drools.runtime.process.NodeInstanceContainer;
-import org.drools.runtime.process.WorkItem;
-import org.drools.runtime.process.WorkflowProcessInstance;
 import org.drools.spi.ProcessContext;
 import org.drools.time.TimeUtils;
 import org.jbpm.process.core.Context;
@@ -29,7 +24,6 @@ import org.jbpm.process.core.context.variable.VariableScope;
 import org.jbpm.process.core.timer.Timer;
 import org.jbpm.process.instance.ContextInstance;
 import org.jbpm.process.instance.ContextInstanceContainer;
-import org.jbpm.process.instance.InternalProcessRuntime;
 import org.jbpm.process.instance.ProcessInstance;
 import org.jbpm.process.instance.context.exception.ExceptionScopeInstance;
 import org.jbpm.process.instance.context.exclusive.ExclusiveGroupInstance;
@@ -37,33 +31,43 @@ import org.jbpm.process.instance.context.variable.VariableScopeInstance;
 import org.jbpm.process.instance.impl.Action;
 import org.jbpm.process.instance.timer.TimerInstance;
 import org.jbpm.process.instance.timer.TimerManager;
+import org.jbpm.samarjit.dao.WorkflowDAO;
 import org.jbpm.workflow.core.DroolsAction;
 import org.jbpm.workflow.core.impl.ExtendedNodeImpl;
 import org.jbpm.workflow.core.impl.NodeImpl;
 import org.jbpm.workflow.core.node.StateBasedNode;
-import org.jbpm.workflow.core.node.WorkItemNode;
 import org.jbpm.workflow.instance.impl.NodeInstanceResolverFactory;
 import org.jbpm.workflow.instance.node.EventBasedNodeInstanceInterface;
 import org.mvel2.MVEL;
  
-public abstract class StatelessNodeInstanceImpl implements StatelessNodeInstance, EventBasedNodeInstanceInterface, EventListener  {
+public  abstract class StatelessNodeInstanceImpl implements StatelessNodeInstance, EventBasedNodeInstanceInterface, EventListener, Comparable<NodeInstance>  {
 
 	private static final long serialVersionUID = 511l;
 	private static final Pattern PARAMETER_MATCHER = Pattern.compile("#\\{(\\S+)\\}", Pattern.DOTALL);
 	private long id;
     private long nodeId;
     private StatelessProcessInstance processInstance;
+    //StatelessProcessInstance is also containing nodesInstances
     private org.jbpm.workflow.instance.NodeInstanceContainer nodeInstanceContainer;
-   
+    
     private List<Long> timerInstances;
-	 
+	private Map<String, Object> variables = new HashMap<String, Object>();
+	private int state = 0; 
 	
+	public int getState(){
+		return state;
+	}
+	public void setState(int statenew){
+		this.state = statenew;
+	}
 	public final void trigger(NodeInstance from, String type) {
     	boolean hidden = false;
     	if (getNode().getMetaData().get("hidden") != null) {
     		hidden = true;
     	}
     	if (!hidden) {
+    		setState(0);
+    		WorkflowDAO.createNodeInstance(this);
     		getProcessEventSupport().fireBeforeNodeTriggered(this, null /*kruntime*/);
     	}System.out.println("StatelessNodeInstance():trigger..."+from);
         internalTrigger(from, type);
@@ -79,6 +83,14 @@ public abstract class StatelessNodeInstanceImpl implements StatelessNodeInstance
 
 //	public abstract void internalTrigger(NodeInstance from, String type);
 	//internalTrigger implementation is required to be done
+	
+	/**
+	 * This internalTrigger does not call to triggerCompleted() because by default every node is not self completing. A subclass's
+	 * internalTrigger() method is to be called in case of self completing nodes. For example an action node is self completing node
+	 * but a workItem node is not self completing node.
+	 * @param from
+	 * @param type
+	 */
 	public void internalTrigger(NodeInstance from, String type){
 		triggerEvent(ExtendedNodeImpl.EVENT_NODE_ENTER);
 		//StateBasedNodeInstance // activate timers
@@ -180,13 +192,17 @@ public abstract class StatelessNodeInstanceImpl implements StatelessNodeInstance
 		}
 	}
 	//extended node impl end
-
+	public String toString(){
+		return "["+getClass().getSimpleName()+"("+getNodeName()+"):_"+getNodeId()+":inst:"+getId()+"]";
+	}
 	protected void triggerCompleted(String type, boolean remove) {
 		cancelTimers();
-		System.out.println("StatelessNodeInstance():Trigger completed:"+type);
+		System.err.println("StatelessNodeInstance():Trigger completed:"+type+" "+this+" remove="+remove);
 		if (remove) {
             ((org.jbpm.workflow.instance.NodeInstanceContainer) getNodeInstanceContainer())
             	.removeNodeInstance(this);
+            setState(2);//completed
+            WorkflowDAO.completeNodeInstance(this);
         }
         Node node = getNode();
         List<Connection> connections = null;
@@ -290,17 +306,24 @@ public abstract class StatelessNodeInstanceImpl implements StatelessNodeInstance
             this.nodeInstanceContainer.addNodeInstance(this);
         }
     }
-	
+	//does not work as while restart after sometime there will be fresh tasks starting
+	@Deprecated
+	public void setNodeInstanceContainerFromDB(StatelessProcessInstance nodeInstanceContainer) {
+		 this.nodeInstanceContainer = (org.jbpm.workflow.instance.NodeInstanceContainer) nodeInstanceContainer;
+        if (nodeInstanceContainer != null) {
+            ((StatelessProcessInstance) this.nodeInstanceContainer).addNodeInstanceFromDB(this);
+        }
+	}
 	
 	public Object getVariable(String paramString) {
-		return null;
+		return variables.get(paramString);
 	}
 
 
 	
 	public void setVariable(String paramString, Object paramObject) {
 		// TODO Auto-generated method stub
-		
+		variables.put(paramString,paramObject);
 	}
 
 
@@ -433,6 +456,20 @@ public abstract class StatelessNodeInstanceImpl implements StatelessNodeInstance
 		}
 	}
 
+	public Map<String, Object> getVariableMap() {
+		return variables;
+	}
 
+
+	@Override
+	public int compareTo(NodeInstance o) {
+		return (int) ( o.getId() - this.id);
+	}
+
+
+	
+
+
+	 
 	 
 }
