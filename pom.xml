@@ -32,6 +32,75 @@
       </plugin>  
     </plugins>
   </build>   
+  
+  <profiles>
+		<profile>
+		<id>start.h2</id>
+			<build>
+			    <plugins>
+			      <plugin>
+			        <artifactId>maven-antrun-plugin</artifactId>
+			        <version>1.6</version>
+			        <configuration>
+			         <target  id="start.h2">
+			         	<property name="myclasspath" refid="maven.plugin.classpath"/>
+			         	<echo message="starting h2 with classpath ${myclasspath}" />
+			         	<java classname="org.h2.tools.Console" fork="true" spawn="true" >
+					    	<!--<arg value="-tcp" />
+					    	<arg value="-tcpAllowOthers"/>
+					      	<arg value="-tcpPort" />
+					    	<arg value="9092"/>
+					      	<arg value="-web"/>
+					      	<arg value="-webPort"/>
+					      	<arg value="8082"/>
+					    	<arg value="-webAllowOthers"/>
+					      	
+					      --><classpath refid="maven.plugin.classpath" />
+					    </java> 
+			         </target>	 
+			        </configuration>
+			        <dependencies>
+			         	<dependency>
+					      <groupId>com.h2database</groupId>
+					      <artifactId>h2</artifactId>
+					      <version>1.3.150</version>
+					    </dependency>
+			        </dependencies>
+	        		</plugin>
+	        	</plugins>
+        	</build>
+		</profile>
+		<profile>
+		<id>stop.h2</id>
+			<build>
+			    <plugins>
+			      <plugin>
+			        <artifactId>maven-antrun-plugin</artifactId>
+			        <version>1.6</version>
+			        <configuration>
+			         <target  id="start.h2">
+			         	<property name="myclasspath" refid="maven.plugin.classpath"/>
+			         	<echo message="starting h2 with classpath ${myclasspath}" />
+			         	<java classname="org.h2.tools.Server"   >
+					    	<arg value="-tcpShutdown" />
+					    	<arg value="tcp://localhost:9092"/>
+					      <classpath refid="maven.plugin.classpath" />
+					    </java> 
+			         </target>	 
+			        </configuration>
+			        <dependencies>
+			         	<dependency>
+					      <groupId>com.h2database</groupId>
+					      <artifactId>h2</artifactId>
+					      <version>1.3.150</version>
+					    </dependency>
+			        </dependencies>
+	        		</plugin>
+	        	</plugins>
+        	</build>
+		</profile>
+	</profiles>	
+	
   <dependencies>
     <dependency>
 	    <groupId>servletapi</groupId>
