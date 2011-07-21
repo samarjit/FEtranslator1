@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="config.xsl" ?>
+<root xsi:noNamespaceSchemaLocation="config.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<screen name="BinGroup">
+		<htmltemplate>
+			html/BinGroup.html
+		</htmltemplate>
+		<includedjsp>
+ 
+		</includedjsp>
+		<callbackclass>
+			
+		</callbackclass>
+		<scripts>
+			<scriptinclude></scriptinclude>
+			 <text><![CDATA[    
+				<script> 
+				var selonload='<@s.property value="resDTO" escape="false" />';
+				</script>
+				]]>
+			 </text>
+			<scriptinclude>hello.js</scriptinclude>
+		</scripts>
+		<stylesheets>
+			<styleinclude>some.css</styleinclude>
+			<text><![CDATA[
+				 jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&command=selectonload",function (data){alert(data);});
+			]]>
+			</text>
+			<styleinclude>some2.css</styleinclude>
+		</stylesheets>
+		<crud>
+			<jsonrpc id="getbindetails" outstack="form1">select BIN_GROUP_NAME  "selbingroup",BIN_GROUP_DESC  "txtbindesc",BIN_CURRENCY  "bincurency",issuer_name "issuername",SETTLEMENT_CURRENCY "settlementcurency",ISSUE_COUNTRY "countryofissue", MAKER_ID "txtmakerid",MAKER_DATE  "txtmakerdate",TOTAL_NUM_CARDS "txtTotalCards",BIN_RANGE_TO "hidbinrangeto", BIN_RANGE_FROM "hidbinrangefrom",BIN_RANGE_BEGIN "binrangebegin" 
+			from BIN_GROUP_DETAILS where BIN_GROUP_NAME = :whereval|STRING </jsonrpc>
+		</crud>
+		<dm>
+			<txnproc></txnproc>
+		</dm>
+		<bl>
+			<buslogic></buslogic>
+		</bl>
+		<anyprocs>
+			<proc></proc>
+		</anyprocs>
+		<commands>
+			<cmd name="getbindetails" opt="jsonrpc:getbindetails" instack="form1" result="ajax" processor="crud"></cmd>
+		</commands>
+	</screen>
+
+	<panels>
+		<panel id="form1">
+			
+			<fields>
+				<field>
+					<sometype name="whereval" dbdatatype="STRING"></sometype>
+				</field>
+				<field>
+					<select  type="text" class="userid" forid="selbingroup" value="txtbinname" key="txtbinname" name="selbingroup" id="selbingroup" column="FF0149" dbdatatype="STRING"  dbcolsize="" mask="" mandatory=""
+						hidden="" label="" replace="modify">
+						<text>
+						<![CDATA[<select name="selbingroup" id="selbingroup"  maxlength="50" class="field" onchange="iadt.copySeltohidden(this,'newprog','txtbincode',populateFieldsToModify)" >
+						<option value="">Select</option>
+                		<option value="New">New</option>
+                		</select>]]> 
+				        </text> 
+						<rule></rule>
+						<query stackid="selbingroup">select BIN_GROUP_NAME "txtbinname",BIN_GROUP_NAME "txtbinname" from BIN_GROUP_DETAILS</query>
+					</select>
+				</field>
+				
+				<field>
+					<input type="text" class="userid" forid="txtbindesc" value="" name="txtbindesc" id="txtbindesc" column="FF0151" dbdatatype="STRING" primarykey="YES" dbcolsize="" mask="" mandatory=""
+						hidden="" label="" replace="modify" >
+						<rule></rule>
+						<query></query>
+					</input>
+				</field>
+			
+				<field>
+					<select  type="text" class="userid" forid="bincurency" value="txtcname" key="txtccode" name="bincurency" id="bincurencyId" column="FF0149" dbdatatype="STRING"  dbcolsize="" mask="" mandatory=""
+						hidden="" label="" replace="append">
+						<text><![CDATA[
+                                   <SELECT style="WIDTH: 130px" class=field   name="bincurency"  id="bincurencyId">
+                                    <OPTION value="">select</OPTION> 
+                                          </SELECT>
+                                        ]]></text> 
+						<rule></rule>
+						<query stackid="bincurencyId" >select distinct CURRENCY_CODE "txtccode" , CURRENCY_CODE || ' - ' || CURRENCY  AS "txtcname" from country order by CURRENCY_CODE</query>
+					</select>
+				</field>
+				
+				<field>
+					<select  type="text" class="userid" forid="settlementcurency" value="txtcname" key="txtccode" name="settlementcurency" id="settlementcurency" column="FF0149" dbdatatype="STRING"  dbcolsize="" mask="" mandatory=""
+						hidden="" label="" replace="modify">
+						<text>
+						<![CDATA[ <SELECT style="WIDTH: 130px" class=field   name="bincurency"  id="bincurency">
+                                    <OPTION value="">select</OPTION> 
+                                          </SELECT>]]> 
+				        </text> 
+						<rule></rule>
+						<query stackid="settlementcurency">select distinct CURRENCY_CODE "txtccode" , CURRENCY_CODE || ' - ' || CURRENCY  AS "txtcname" from country order by CURRENCY_CODE</query>
+					</select>
+				</field>
+				<field>
+					<select  type="text" class="userid" forid="countryofissue" value="txtcname" key="txtccode" name="countryofissue" id="countryofissue" column="FF0149" dbdatatype="STRING"  dbcolsize="" mask="" mandatory=""
+						hidden="" label="" replace="modify">
+						<text>
+						<![CDATA[<select name="countryofissue" maxlength="50" class="field" id="countryofissue">
+				        <option value="" selected="selected">Select</option>
+				        </select>]]> 
+				        </text> 
+						<rule></rule>
+						<query stackid="countryofissue" type="SQL">select country_code "txtccode",country_name "txtcname" from country</query>
+					</select>
+				</field>
+			
+			</fields>
+			  
+			<testscriptlet><![CDATA[<@s.property value="selectmonthl"/> ]]></testscriptlet> 
+
+		</panel>
+		<panel id="userpanellist" >
+			
+			<fields>
+				<field>
+					<customfield forid="displayuserlist">
+					</customfield>
+				</field>
+			</fields>
+		</panel>
+	</panels>
+</root>

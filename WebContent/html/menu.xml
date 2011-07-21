@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	
+		<tab name="Program" class="fg-button" id="tab1">
+			<menu name="program setup" position="1" class="mi" id="tab1menu1">
+				<submenu onclick="ProgramSetup.html" id="submenu1">program</submenu>
+
+			</menu>
+			<menu name="program setup485hfd" position="1" class="mi" id="tab1menu2">
+				<submenu onclick="ProgramSetup.html" id="submenu2">Program5654</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu3">Bin group54656</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu4">Bin details65654</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu5">Program5654</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu6">Bin group54656</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu7">Bin details65654</submenu>
+			</menu>
+			<menu name="program " position="2" class="mi" id="tab1menu3">
+				<submenu onclick="ProgramSetup.html" id="submenu8">Program</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu9">Bin group</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu10">Bin details</submenu>
+			</menu>
+		</tab>
+		<tab name="Entitlement" class="fg-button" id="tab2">
+			<menu name="program setup485hfd" position="1" class="mi" id="tab2menu1">
+				<submenu onclick="ProgramSetup.html" id="submenu11">Program</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu12">Bin group</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu13">Bin details</submenu>
+			</menu>
+		</tab>
+		<tab name=" Security Management" class="fg-button" id="tab3">
+			<menu name="program setup" position="1" class="mi" id="tab3menu1">
+				<submenu onclick="ProgramSetup.html" id="submenu14">Program</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu15">Bin group</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu16">Bin details</submenu>
+			</menu>
+		</tab>
+		<tab name=" Security Management" class="fg-button" id="tab4">
+			<menu name="program setup" position="1" class="mi" id="tab4menu1">
+				<submenu onclick="ProgramSetup.html" id="submenu17">Program</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu18">Bin group</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu19">Bin details</submenu>
+			</menu>
+		</tab>
+		<tab name=" Security Management" class="fg-button" id="tab5">
+			<menu name="program setup" position="1" class="mi" id="tab5menu1">
+				<submenu onclick="ProgramSetup.html" id="submenu20">Program</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu21">Bin group</submenu>
+				<submenu onclick="ProgramSetup.html" id="submenu22">Bin details</submenu>
+			</menu>
+		</tab>
+
+</root>

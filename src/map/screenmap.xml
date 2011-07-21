@@ -2,5 +2,6 @@
 <root>
  <screen name="ProgramSetup" mappingxml="map/ProgramSetup.xml" />
  <screen name="TestPage" mappingxml="map/testsetup.xml" />
+ <screen name="BinGroup" mappingxml="map/BinGroup.xml" />
  
 </root>

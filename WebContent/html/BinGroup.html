@@ -1,647 +1,687 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD Xhtml 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
- 
- 
 <html>
- <head>
-  <title>Bin Group</title>
-  <meta name="Generator" content="EditPlus">
-  <meta name="Autdor" content="">
-  <meta name="Keywords" content="">
-  <meta name="Description" content="">
+    <head>
+        <title>Bin Group</title>
+        <meta name="Generator" content="EditPlus">
+        <meta name="Autdor" content="">
+        <meta name="Keywords" content="">
+        <meta name="Description" content="">
+        <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
+        <link type="text/css" href="../css/jquery-ui-1.8.8.custom.css" rel="stylesheet" />
+        <link href="../css/main.css" rel="stylesheet" type="text/css">
+        <link href="../css/body.css" rel="stylesheet" type="text/css">
+        <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
+        <script src="../js/jquery.js">
+        </script>
+        <script src="../js/jquery.validate.js">
+        </script>
+        <script type="text/javascript" src="../js/jquery.tmpl.js">
+        </script>
+        <script type="text/javascript" src="../js/fg.menu.js">
+        </script>
+        <script type="text/javascript" src="../js/iadtframework.js">
+        </script>
+        <script type="text/javascript" src="../js/gears_init.js">
+        </script>
+        <script type="text/javascript" src="../js/jsonStringify.js">
+        </script>
+        <script type="text/javascript">
+            var rule = {
+                rules: {
+                    loginid: {
+                        required: true
+                    }
+                },
+                messages: {
+                    loginid: {
+                        required: "Email ID/Login ID is required"
+                    }
+                }
+            };
+            
+            $(document).ready(function(){
+                //$("#loginform").validate();
+                $('#bfrm1, #bfrm2, #bfrm3').blur(function(){
+                    var num = $('#bfrm1').val() + '' + $('#bfrm2').val() + $('#bfrm3').val();
+                    $('#hidbinrangefrom').val(num);
+                    var nocards = parseFloat($('#hidbinrangeto').val()) - parseFloat($('#hidbinrangefrom').val());
+                    $('#txtTotalCards').val(nocards)
+                });
+                $('#bto1, #bto2, #bto3').blur(function(){
+                    var num = $('#bto1').val() + '' + $('#bto2').val() + $('#bto3').val();
+                    $('#hidbinrangeto').val(num);
+                    var nocards = parseFloat($('#hidbinrangeto').val()) - parseFloat($('#hidbinrangefrom').val());
+                    $('#txtTotalCards').val(nocards)
+                });
+                
+                
+                createMenu();
+                iadt.setFieldlist(fieldlist);
+                //iadt.detectGears();
+            
+                //initLocalDatabase();
+            
+            });
+            
+            function initLocalDatabase(args){
+                //	 var db = google.gears.factory.create('beta.database');
+                //	db.open('database-test');
+                // 	db.execute('create table if not exists BINGROUP  (BINGROUPCODE text PRIMARY KEY, DATA TEXT)');
+                //	db.close();
+            }
+            
+            function callsubmit(){
+                document.forms[0].submit();
+            }
+            
+            
+            function initial(){
+            
+            }
+            
+            function clearall(){
+            
+                //	$('.field, .field2').validation().resetFrom();
+                $('#form1')[0].reset();
+            }
+            
+            function onAddBin(){
+                if ($('#selbingroup').val() == 'New') {
+                    iadt.showMessage("Bin Details can be added only for saved records");
+                }
+                else {
+                    location.href = 'BinDetails.html?bingroupcode=' + $('#selbingroup').val();
+                }
+            }
+            
+            function onAdd(formid){
+                if (!$(formid).valid()) 
+                    return;
+                if (screenMode == 'addrow') 
+                    iadt.addrow(formid);
+                
+                //	 var db = google.gears.factory.create('beta.database');
+                //	db.open('database-test');
+                //	db.execute('insert into BINGROUP values (?, ?)', [$('#selbingroup').val(),
+                //                                                 JSONstring.make($('#form1').serializeArray())]);			 
+                iadt.setScreenMode("addrow");
+                enableDisableFlds();
+            }
+            
+            
+            /**
+             * Caleld after radClick() event to hide unhide widgets
+             * @param {Object} obj
+             */
+            function radClickCallback(obj){
+                if ($('#programname').val() == 'New') {
+                    $('#newprog').show();
+                }
+                else {
+                    $('#newprog').hide();
+                }
+                
+                //populating bin range fields
+                var fromval = $('#hidbinrangefrom').val();
+                fromval = $.strPad(fromval, 9);
+                $('#hidbinrangefrom').val(fromval);
+                
+                var toval = $('#hidbinrangeto').val();
+                toval = $.strPad(toval, 9);
+                $('#hidbinrangeto').val(toval);
+                
+                $('#bto1').val(toval.substr(0, 2));
+                $('#bto2').val(toval.substr(2, 4));
+                $('#bto3').val(toval.substr(6, 3));
+                
+                $('#bfrm1').val(fromval.substr(0, 2));
+                $('#bfrm2').val(fromval.substr(2, 4));
+                $('#bfrm3').val(fromval.substr(6, 3));
+                
+            }
+            
+            function onSubmit(args){
+                iadt.showMessage("Data saved successfully");
+            }
+            
+            function onNext(args){
+                location.href = 'BinGroup.html';
+            }
+            
+            
+            
+            
+            function onModify(formid){
+                if (!$(formid).valid()) 
+                    return;
+                $("#txtstatus").val('Modify');
+                //     var db = google.gears.factory.create('beta.database');
+                //         db.open('database-test');
+                
+                if (screenMode == 'addrow') {
+                    iadt.addrow(formid);
+                    //         db.execute('insert into BINGROUP values (?, ?)', 
+                    //		 			[$('#selbingroup').val(),	JSONstring.make($('#form1').serializeArray())]).close();
+                
+                }
+                if (screenMode == 'updaterow') {
+                    iadt.updaterow(formid);
+                    //         db.execute('update BINGROUP set DATA=? where BINGROUPCODE=?', 
+                    //		 			[JSONstring.make($('#form1').serializeArray()),	 $('#selbingroup').val() ] ).close();
+                
+                }
+                
 
-  <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
-<link type="text/css" href="../css/jquery-ui-1.8.8.custom.css" rel="stylesheet" /> 
-<link href="../css/main.css" rel="stylesheet" type="text/css">
-<link href="../css/body.css" rel="stylesheet" type="text/css">
- 
- 
-
- <link type="text/css" href="../css/fg.menu.css" rel="stylesheet" />
-   
- 
-<script  src="../js/jquery.js"></script>
-<script  src="../js/jquery.validate.js"></script>
-<script type="text/javascript" src="../js/jquery.tmpl.js"></script>
-<script type="text/javascript" src="../js/fg.menu.js"></script>
-<script type="text/javascript" src="../js/iadtframework.js"></script>
-<script type="text/javascript" src="../js/gears_init.js"></script>
-<script type="text/javascript" src="../js/jsonStringify.js"></script>
-
-<script type="text/javascript">
- 
-var rule={
-		rules:{
-			loginid: {
-				required: true
-			}
-		},
-		messages:{
-			loginid:{
-				required: "Email ID/Login ID is required"
-			}
-		}
-	};
-	
-$(document).ready(function(){
-    //$("#loginform").validate();
-	$('#bfrm1, #bfrm2, #bfrm3').blur(function() {
-  				var num = $('#bfrm1').val()+''+$('#bfrm2').val()+$('#bfrm3').val();
-				$('#hidbinrangefrom').val(num);
-				var nocards = parseFloat($('#hidbinrangeto').val())- parseFloat($('#hidbinrangefrom').val());
-				$('#txtTotalCards').val(nocards)	
-		});
-	$('#bto1, #bto2, #bto3').blur(function() {
-				var num = $('#bto1').val()+''+$('#bto2').val()+$('#bto3').val();
-  				$('#hidbinrangeto').val(num);
-				var nocards = parseFloat($('#hidbinrangeto').val())- parseFloat($('#hidbinrangefrom').val());
-				$('#txtTotalCards').val(nocards)	
-		});
-		
-		
-	createMenu();
-	iadt.setFieldlist(fieldlist);
-	iadt.detectGears();
-	
-	initLocalDatabase();
-	
-  });
-
- function initLocalDatabase (args) {
-//	 var db = google.gears.factory.create('beta.database');
-//	db.open('database-test');
-// 	db.execute('create table if not exists BINGROUP  (BINGROUPCODE text PRIMARY KEY, DATA TEXT)');
-//	db.close();
-}	
- 
- function callsubmit(){
- 	document.forms[0].submit();
- }
-
- 
-function initial()
-{
-
-}
-function clearall()
-{
-	
-//	$('.field, .field2').validation().resetFrom();
-	$('#form1')[0].reset();
-}
-
-function onAddBin(){
-	if($('#selbingroup').val() == 'New'){
-		iadt.showMessage("Bin Details can be added only for saved records");
-	}else{
-	    location.href = 'BinDetails.html?bingroupcode='+$('#selbingroup').val();
-	}
-}
-
-function onAdd(formid){
-		if(!$(formid).valid())return;
-		if(screenMode == 'addrow')
-				iadt.addrow(formid);
-	
-//	 var db = google.gears.factory.create('beta.database');
-//	db.open('database-test');
-//	db.execute('insert into BINGROUP values (?, ?)', [$('#selbingroup').val(),
-//                                                 JSONstring.make($('#form1').serializeArray())]);			 
-	iadt.setScreenMode("addrow");
-	enableDisableFlds();
-}
-
-
-/**
- * Caleld after radClick() event to hide unhide widgets 
- * @param {Object} obj
- */
-function radClickCallback (obj) {
-	if($('#programname').val()=='New'){
-		$('#newprog').show();
-	}else{
-		$('#newprog').hide();
-	}
-	
-		//populating bin range fields
-	var fromval = $('#hidbinrangefrom').val();
-	fromval = $.strPad(fromval,9);
-	$('#hidbinrangefrom').val(fromval);
-	
-	var toval = $('#hidbinrangeto').val();
-	toval = $.strPad(toval,9);
-	$('#hidbinrangeto').val(toval);
-	
-	$('#bto1').val(toval.substr(0,2));
-	$('#bto2').val(toval.substr(2,4));
-	$('#bto3').val(toval.substr(6,3));
-	
-	$('#bfrm1').val(fromval.substr(0,2));
-	$('#bfrm2').val(fromval.substr(2,4));
-	$('#bfrm3').val(fromval.substr(6,3));
-	
-}
-
-function onSubmit (args) {
-	iadt.showMessage("Data saved successfully");
-}
-
-function onNext (args) {
-	location.href = 'BinGroup.html';
-}
-
-
-
-
-function onModify (formid) {
-	if(!$(formid).valid())return;
-    $("#txtstatus").val('Modify');
-//     var db = google.gears.factory.create('beta.database');
-//         db.open('database-test');
-	 
-	 if (screenMode == 'addrow') {
-	 	iadt.addrow(formid);
-//         db.execute('insert into BINGROUP values (?, ?)', 
-//		 			[$('#selbingroup').val(),	JSONstring.make($('#form1').serializeArray())]).close();
-		 	
-	 }
-	 if (screenMode == 'updaterow') {
-	 	iadt.updaterow(formid);
-//         db.execute('update BINGROUP set DATA=? where BINGROUPCODE=?', 
-//		 			[JSONstring.make($('#form1').serializeArray()),	 $('#selbingroup').val() ] ).close();
-	  	
-	 }
-	
-	 	//alert(res);
-//	var rs = db.execute('select * from BINGROUP order by 1');
-//		try {
-//			while (rs.isValidRow()) {
-//			  alert(rs.field(0) + '@' + rs.field(1));
-//			  rs.next();
-//			}
-//			rs.close();
-//		}
-//		catch (e) {
-//		 rs.close();
-//		}
-//		db.close();
-	iadt.setScreenMode("addrow");
-	clearall();
-	enableDisableFlds();
-}
-
-function editMe ( objthis, radClickCallback) {
-	//get the radio
-	 $('input[type=radio]',objthis.parentNode.parentNode.parentNode).attr("checked","checked");
-	
-	 $('#btnAdd').attr('disabled','disabled'); 
-	 iadt.populateToFields($(objthis.parentNode.parentNode.parentNode).get(0), radClickCallback);
-	
-}
-
-function radClick (obj, radClickCallback) {
-	$('#btnAdd').attr('disabled','disabled'); 
-    iadt.populateToFields($(obj.parentNode.parentNode).get(0), radClickCallback); 
-	 
-}
-
-
-
-function deleteMe (objcross) {
-	var rowbinid = $('#selbingroup__'+$(objcross.parentNode.parentNode).find(":input").val()).val();
-	 
-//	 var db = google.gears.factory.create('beta.database');
-//    try {
-//		db.open('database-test');
-//		db.execute('delete from BINGROUP where BINGROUPCODE =?',[rowbinid]).close();
-//		iadt.showMessage("Bin Group for BinGroupCode:"+rowbinid+" is deleted");
-//	} catch (e) {
-//		console.log(e);
-//	}
-//	db.close();
-	$(objcross.parentNode.parentNode.parentNode).remove();
-	iadt.setScreenMode("addrow");
-	enableDisableFlds();
-}
-
-
-function onCancel() {
-	iadt.setScreenMode("addrow");
-	enableDisableFlds();
-	$('#form1')[0].reset(); 
-}
-
-function enableDisableFlds() {
-	if(screenMode == 'updaterow' && $('#txtstatus').val() == 'New'){
-	 
-	   var updateonar = iadt.getFieldlist();
-		for ( var i = 0; i < updateonar.length; i++) {
-			var arelm = updateonar[i];
-			jQuery("#"+ arelm).attr('disabled','disabled');
-		}
-	}else if(screenMode == 'updaterow' && $('#txtstatus').val() == 'Modify'){
-	   var updateonar = keylist;
-	  for ( var i = 0; i < updateonar.length; i++) {
-			var arelm = updateonar[i];
-			jQuery("#"+ arelm).attr('disabled','disabled');
-		}
-	}
-	if(screenMode == 'addrow'){
-	    $('#btnAdd').removeAttr('disabled'); 
-	    $.each(fieldlist, function(i,v){
-	    	$("#"+v).val("");
-	    });
-	}
-	 
-}
-
-function populateFieldsToModify(){
-var trobj  = $('#hiddendata').find('table[id=BINGRP1]')
-	if($('#selbingroup').val() == 'BINGRP1'){
-		var arList = fieldlist;
-		//tr:input 
-		var dataList =  $(trobj).find(":input");
-		$.each(arList,function (i,v){
-			var idname = v;
-			//first input is radio , skip that
-			  $("#"+idname).val(dataList[i].value);
-		});
-	}
-	
-//	 var db = google.gears.factory.create('beta.database');
-//    db.open('database-test');
-//    try {
-//	
-//
-//	var rs = db.execute('select DATA from BINGROUP where bingroupcode=? order by  1', [$('#selbingroup').val()]);
-//	    while (rs.isValidRow()) {
-//		  var json = rs.field(0);
-//		  if(json != null){
-//		  	json = jQuery.parseJSON(json);
-//			$.each(json,function(i,v){
-//				$("#"+v.name).val(v.value);
-//			});
-//		  }
-//		  rs.next();
-//		}
-//	rs.close();
-//	
-//	} catch (e) {
-//		alert(e);
-//	}
-//	db.close();
-		
-	//populating bin range fields
-	var fromval = $('#hidbinrangefrom').val();
-	fromval = $.strPad(fromval,9);
-	$('#hidbinrangefrom').val(fromval);
-	
-	var toval = $('#hidbinrangeto').val();
-	toval = $.strPad(toval,9);
-	$('#hidbinrangeto').val(toval);
-	
-	$('#bto1').val(toval.substr(0,2));
-	$('#bto2').val(toval.substr(2,4));
-	$('#bto3').val(toval.substr(6,3));
-	
-	$('#bfrm1').val(fromval.substr(0,2));
-	$('#bfrm2').val(fromval.substr(2,4));
-	$('#bfrm3').val(fromval.substr(6,3));
-	
-	if($('#selbingroup').val() == 'New'){
-		$('#txtstatus').val('New');
-		$('#btnModify').attr("disabled","disabled");
-		$('#btnAdd').removeAttr("disabled");
-		iadt.setScreenMode("addrow");
-	}else{
-		$('#btnAdd').attr("disabled","disabled");
-		$('#btnModify').removeAttr("disabled");
-		$('#txtstatus').val('Modify');
-		
-	}
-	
-	
-	
-}
-
-function setScreenMode(s) {
-	$('.head2 .screenMode').text("Screen Mode: "+s);
-	screenMode = s;
-}
-
-var fieldlist = "selbingroup,txtbincode,txtbindesc,bincurency,settlementcurency,issuername,countryofissue,hidbinrangefrom,hidbinrangeto,txtTotalCards,txtstatus,txtmakerid,txtmakerdate".split(",");
-var keylist = "txtbincode,txtmakerid,txtmakerdate,txtstatus".split(",");
-
-</script>
-
-</head>
- 
- </head>
- <body onLoad="initial();">
- 
- <div align="center"  class="wrap">	
- <div class="navbar"><span class="disabled">Logged in as Henry</span> | <span class="enabled">Home</span> | <span class="enabled">Sign-Out</span></div>
-  <div class="shrink">
-		 <div class="menuheader  " >
-		 	
-		   </div>
-   
- 
-		 <div class="body">
-		 <form id="form1">
-		  <div class="displayLabel"><a href="ProgramSetup.html">Program Setup </a>&gt;&gt;<a href="BinGroup.html"> Bin Group</a> &gt;&gt; <a href="BinDetails.html">Bin Details</a></div>
-		  <hr />
-		<div class="infoBar" style="display:none"></div>
-		<p>&nbsp;</p>
-		 
-		 
-		 
-		 
-		 
-		 
-
- 
-<table class="head2" border="0" cellspacing="0" height="20" cellpadding="0" width="100%">
-	<tr>
-		<td><b>Bin Group Details</b></td>
-		<td style="text-align:right;font-weight:normal"><div class="screenMode"> addrow</div> </td>
-	</tr>
-</table>
-<table width="100%" border="0" cellspacing="0" cellpadding="5" class="table">
-	<tr class="even">
-		<td width="400" >BIN Group Code</td><td class="even"> 
-          <select name="selbingroup" id="selbingroup"  maxlength="50" class="field" onchange="iadt.copySeltohidden(this,'newprog','txtbincode',populateFieldsToModify)" >
-        	<option value="">Select</option>
-            <option value="New">New</option>
-            <option value="BINGRP1">BINGRP1</option>
-            <option value="BINGRP2">BINGRP2</option>
-         </select>
-         <span id="newprog"  style="display:none;padding-left:10px"> &nbsp;Enter new Program Name 
-         <input name="txtbincode" id="txtbincode" type="text" class="field"  value=""  /></span>&nbsp;
-         </td>
-	</tr>
-    <tr class="even">
-		<td width="400" >BIN Group Description</td><td class="even"> 
-         <input name="txtbindesc" id="txtbindesc" type="text" class="field" value="BINGRP - Description"/></td>
-	</tr>
-    <tr class="odd" >
-      <td width="400" >Bin Currency</td>
-                                <td class="odd" >
-                                <SELECT style="WIDTH: 130px" class=field   name="bincurency"  id="bincurency">
-                                    <OPTION value=NO_DATA>select</OPTION> <OPTION value=USD>USD~US Dollar</OPTION> <OPTION selected value=INR>INR~Indian Rupees</OPTION> <OPTION value=AUD>AUD~Australian Dollar</OPTION> <OPTION value=SGD>SGD~Singapore Dollar</OPTION> <OPTION value=THB>THB~Thailand Baht</OPTION> <OPTION value=MYR>MYR~Malaysia Ringgit</OPTION> <OPTION value=PHP>PHP~Philipines Peso</OPTION> <OPTION value=IDR>IDR~Indonesia Rupiah</OPTION>
-                                </SELECT></td>
-    </tr>
-     <tr class="even" ><td width="400">Settlement Currency</td><td class="even"><SELECT style="WIDTH: 130px" class=field    name="settlementcurency" id="settlementcurency"> <OPTION value=NO_DATA>select</OPTION> <OPTION value=USD>USD~US Dollar</OPTION> <OPTION selected value=INR>INR~Indian Rupees</OPTION> <OPTION value=AUD>AUD~Australian Dollar</OPTION> <OPTION value=SGD>SGD~Singapore Dollar</OPTION> <OPTION value=THB>THB~Thailand Baht</OPTION> <OPTION value=MYR>MYR~Malaysia Ringgit</OPTION> <OPTION value=PHP>PHP~Philipines Peso</OPTION> <OPTION value=IDR>IDR~Indonesia Rupiah</OPTION></SELECT></td></tr>
-    <tr class="odd" ><td width="400"> Issuer Name</td><td class="odd"><input type="text" name="issuername" id="issuername" class="field" /></td></tr>
-    <tr class="even" >
-      <td width="400" >Country of Issue</td>      
-      <td class="even" ><input  style="display:none" class="field" />
-        <select name="countryofissue" maxlength="50" class="field" id="countryofissue">
-        <option value="">Select</option>
-        <option value="INDIA">India</option>
-        <option value="SINGAPORE">Singapore</option>
-        <option value="AUSTRALIA">Australia</option>
-        <option value="PHILIPPINES">Philippines</option>
-        </select>        </td>
-    </tr>
-    <tr class="even" >
-      <td width="400" >Satatus</td>
-      <td class="even" ><input name="txtstatus" type="text" class="field" id="txtstatus" /></td>
-    </tr>
-    <tr class="even" >
-      <td width="400" >Maker Id</td>
-      <td class="even" ><input name="txtmakerid" type="text" value="Henry" class="field" id="txtmakerid" /></td>
-    </tr>
-    <tr class="even" >
-      <td width="400" >Maker Date</td>
-      <td class="even" ><input name="txtmakerdate" type="text" class="field" id="txtmakerdate" value="12/12/2010" /></td>
-    </tr>
-	</table>
-   
-
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-    
-    <tr>
-      <td  >&nbsp;</td>
-    </tr>
-  </table>
-
-   
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td bgcolor="#FFFFFF">&nbsp;</td>
-    </tr>
-  </table>
-
-
-
-  <table class="head2" border="0" cellpadding="0" cellspacing="0" height="20" width="100%">
-    <tbody>
-      <tr>
-        <td>BIN Range Details </td>
-      </tr>
-    </tbody>
-  </table>
-  <table class="table" border="0" cellpadding="5" cellspacing="1" width="100%">
-    <tbody>
-      <tr>
-        <td width="24%"><strong>BIN Range </strong></td>
-        <td width="23%"><strong>From</strong></td>
-        <td width="20%">4625 </td>
-        <td width="25%">62 
-            <input type="text" class="field1" value="00" name="bfrm1" id='bfrm1' />
-          <input type="text" class="field2" value="0000" name="bfrm2" id='bfrm2' />
-          <input type="text" class="field2" value="000" name="bfrm3" id='bfrm3' />
-          <input type="text" name="hidbinrangefrom" id="hidbinrangefrom" />
-            0 </td>
-      </tr>
-      <tr>
-        <td width="20%">&nbsp;</td>
-        <td width="23%"><strong>To</strong></td>
-        <td width="20%">4625 </td>
-        <td width="25%">62 
-            <input type="text" class="field1" value="00" name="bto1" id='bto1' />
-          
-          <input type="text" class="field2" value="0000" name="bto2" id='bto2' />
-          <input type="text" class="field2" value="999" name="bto3" id='bto3' />
-          <input type="text" name="hidbinrangeto" id="hidbinrangeto" />
-          9 </td>
-      </tr>
-      <tr>
-        <td width="20%"></td>
-        <td width="23%"><strong>Total Number of Cards Possible</strong></td>
-        <td width="20%">&nbsp;</td>
-        <td width="25%"><input name="txtTotalCards" id="txtTotalCards" type="text" class="field" value="1000" readonly="readonly" /></td>
-      </tr>
-    </tbody>
-  </table>
-  <p>&nbsp;</p>	
-
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td>&nbsp;</td>
-	</tr>
-</table>
- 
-
-   
- 
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td bgcolor="#FFFFFF">&nbsp;</td>
-    </tr>
-  </table>
-  
- 
-
-
-  
-  <div class="buttonPosition">
-    <table  border="0"   >
-    
-      <tr>
-             <td    style="cursor:hand">
-                 <button class="buttonenabled"  type="button" id="btnAdd"  onclick="onAdd('#form1');" >Add</button>
-             </td> 
-             <td      style="cursor:hand">
-                 <button class="buttonenabled" type="button"  id="btnModify" onclick="onModify('#form1');"  >Modify</button>
-             </td> 
-               <td     style="cursor:hand">
-                 <button class="buttonenabled" type="button"  id="btnClose" >Close</button>
-             </td>
-             <td     style="cursor:hand">
-                 <button class="buttonenabled" type="button"  id="btnCancel" onclick="onCancel()" >Cancel</button>
-             </td> 
-               <td     style="cursor:hand">
-                 <button class="buttonenabled" type="button" id="btnAddBin" onclick='onAddBin();' >Add Bin</button>
-             </td> 
-         </tr>
-     </table>
-</div>
-
-  <div id="showsubcan" style="display:none">
-<table  border="0" cellspacing="0" cellpadding="0" >
-
-  <tr>
-         <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';"  style="cursor:hand">Modify
-         </td><td>&nbsp;</td>
-         <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';"  style="cursor:hand">Next</button>
-         </td><td>&nbsp;</td>
-		 <td class="buttonenabled" onClick="location.href='welcome.html';" style="cursor:hand">Ok
-         </td>
-     </tr>
- </table>
-</div>
-
- </form>
- 
-  <div id="listtemplate" cols="200" style="display:none" >
-    	<table><tr class='even'>
-	  <td>
-       <input type='radio' value='${rowcount}' name='check' id='check${rowcount}' onclick='iadt.radClick(this, radClickCallback );' />
-	    &nbsp;<span class='icons'><span class='ui-icon ui-icon-pencil' onclick='editMe(this , radClickCallback);' ></span></span>
-	          <span class='icons'><span class='ui-icon ui-icon-closethick' onclick='deleteMe(this)' ></span></span>
-      </td>
-        <td style='display:table-cell'>${selbingroup}<input type='hidden' value='${selbingroup}' id='selbingroup__${rowcount}' name='selbingroup__${rowcount}'/></td>
-      	<td style='display:table-cell'>${txtbincode}<input type='hidden' value='${txtbincode}' id='txtbincode__${rowcount}' name='txtbincode__${rowcount}'/></td>
-  		<td style='display:table-cell'>${txtbindesc}<input type='hidden' value='${txtbindesc}' id='txtbindesc__${rowcount}' name='txtbindesc__${rowcount}'/></td>
-        <td style='display:table-cell'>${bincurency}<input type='hidden' value='${bincurency}' id='bincurency__${rowcount}' name='bincurency__${rowcount}'/></td>
-        <td style='display:table-cell'>${settlementcurency}<input type='hidden' value='${settlementcurency}' id='settlementcurency__${rowcount}' name='settlementcurency__${rowcount}'/></td>
-		<td style='display:table-cell'>${issuername}<input type='hidden' value='${issuername}' id='issuername__${rowcount}' name='issuername__{rowcount}'/></td>
-		
-        <td style='display:table-cell'>${countryofissue}<input type='hidden' value='${countryofissue}' id='countryofissue__${rowcount}' name='countryofissue__${rowcount}'/></td>
-        <td style='display:table-cell'>${hidbinrangefrom}<input type='hidden' value='${hidbinrangefrom}' id='hidbinrangefrom__${rowcount}' name='hidbinrangefrom__{rowcount}'/></td>
-		<td style='display:table-cell'>${hidbinrangeto}<input type='hidden' value='${hidbinrangeto}' id='hidbinrangeto__${rowcount}' name='hidbinrangeto__${rowcount}'/></td>
-        <td style='display:table-cell'>${txtTotalCards}<input type='hidden' value='${txtTotalCards}' id='txtTotalCards__${rowcount}' name='txtTotalCards__${rowcount}'/></td>		
-		<td style='display:table-cell'>${txtstatus}<input type='hidden' value='${txtstatus}' id='txtstatus__${rowcount}' name='txtstatus__${rowcount}'/></td>
-		<td style='display:table-cell'>${txtmakerid}<input type='hidden' value='${txtmakerid}' id='txtmakerid__${rowcount}' name='txtmakerid__${rowcount}'/></td>
-
-		<td style='display:table-cell'>${txtmakerdate}<input type='hidden' value='${txtmakerdate}' id='txtmakerdate__${rowcount}' name='txtmakerdate__${rowcount}'/></td>
-        </tr></table>
-</div>
-
- <div id="hiddendata" style="display: none;">
-<table id="BINGRP1">
-	<tr>
-		</td>
-		<td style="display: table-cell;">BINGRP1<input value="BINGRP1"
-			id="selbingroup__2" name="selbingroup__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">BINGRP1<input value="BINGRP1"
-			id="txtbincode__2" name="txtbincode__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">BINGRP1 - desc<input
-			value="BINGRP1 - desc" id="txtbindesc__2"
-			name="txtbindesc__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">AUD<input value="AUD"
-			id="bincurency__2" name="bincurency__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">SGD<input value="SGD"
-			id="settlementcurency__2" name="settlementcurency__{rowcount}"
-			type="hidden"></td>
-		<td style="display: table-cell;">issuser<input value="issuser"
-			id="issuername__2" name="issuername__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">PHILIPPINES<input
-			value="PHILIPPINES" id="countryofissue__2"
-			name="countryofissue__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">100<input value="100"
-			id="hidbinrangefrom__2" name="hidbinrangefrom__{rowcount}"
-			type="hidden"></td>
-		<td style="display: table-cell;">2000<input value="2000"
-			id="hidbinrangeto__2" name="hidbinrangeto__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">1900<input value="1900"
-			id="txtTotalCards__2" name="txtTotalCards__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">Modify<input value="Modify"
-			id="txtstatus__2" name="txtstatus__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">Henry<input value="Henry"
-			id="txtmakerid__2" name="txtmakerid__{rowcount}" type="hidden"></td>
-		<td style="display: table-cell;">12/12/2010<input
-			value="12/12/2010" id="txtmakerdate__2"
-			name="txtmakerdate__{rowcount}" type="hidden"></td>
-	<tr>
-</table>
-</div>
- 
- 
- <form id="form2"  >
-<DIV id=multiplerows>
-    <div class="headerlist" style="display:none;">
-        selbingroup,txtbincode,txtbindesc,bincurency,settlementcurency,issuername,countryofissue,hidbinrangefrom,hidbinrangeto,txtTotalCards,txtstatus,txtmakerid,txtmakerdate</div>
-		
-    <BR>
-    <TABLE id=tablespace class=table1 border=0 cellSpacing=0 cellPadding=5 width="100%">
-        <TR class=trlightgrey >
-             <th width="6%" align=middle>Select</th>
-             <th  >Bin Group Code</th>
-             <th  >Bin Group Code(txt)</th>
-             <th  >Bin Group Desc</th>
-             <th  >Bin currency</th>
-             <th  >Settlement Currency</th>
-             <th  >Issuer Name</th>
-             <th  >Country of Issue</th>
-             <th  >Bin Range From</th>
-             <th  >Bin Range To</th>   
-             <th  >Total No. Cards</th>   
-             <th  >Status</th>  
-			 <th  >Maker Id</th>
-             <th  >Maker Date</th>                      
-        </TR>
-       
-    </TABLE>
-</DIV>
-</form>
- 		 </div><!-- body div-->
-	<!-- shrink -->
-  </div>
-  <div class="push"></div>
-  <!-- center align div-->
- </div>
-
-<div class="footer">
- <center>
-  <div class="shrink" >
-	 <hr />
-  	<div  style="float:left"> www.XYZ.com</div> 
-<div style="float:right">Copyright © 2011 XYZ </div>
-  </div>
-  </center>	
-</div>
-
-</body>
+                iadt.setScreenMode("addrow");
+                clearall();
+                enableDisableFlds();
+            }
+            
+            function editMe(objthis, radClickCallback){
+                //get the radio
+                $('input[type=radio]', objthis.parentNode.parentNode.parentNode).attr("checked", "checked");
+                
+                $('#btnAdd').attr('disabled', 'disabled');
+                iadt.populateToFields($(objthis.parentNode.parentNode.parentNode).get(0), radClickCallback);
+                
+            }
+            
+            function radClick(obj, radClickCallback){
+                $('#btnAdd').attr('disabled', 'disabled');
+                iadt.populateToFields($(obj.parentNode.parentNode).get(0), radClickCallback);
+                
+            }
+            
+            
+            
+            function deleteMe(objcross){
+                var rowbinid = $('#selbingroup__' + $(objcross.parentNode.parentNode).find(":input").val()).val();
+                
+                $(objcross.parentNode.parentNode.parentNode).remove();
+                iadt.setScreenMode("addrow");
+                enableDisableFlds();
+            }
+            
+            
+            function onCancel(){
+                iadt.setScreenMode("addrow");
+                enableDisableFlds();
+                $('#form1')[0].reset();
+            }
+            
+            function enableDisableFlds(){
+                if (screenMode == 'updaterow' && $('#txtstatus').val() == 'New') {
+                
+                    var updateonar = iadt.getFieldlist();
+                    for (var i = 0; i < updateonar.length; i++) {
+                        var arelm = updateonar[i];
+                        jQuery("#" + arelm).attr('disabled', 'disabled');
+                    }
+                }
+                else 
+                    if (screenMode == 'updaterow' && $('#txtstatus').val() == 'Modify') {
+                        var updateonar = keylist;
+                        for (var i = 0; i < updateonar.length; i++) {
+                            var arelm = updateonar[i];
+                            jQuery("#" + arelm).attr('disabled', 'disabled');
+                        }
+                    }
+                if (screenMode == 'addrow') {
+                    $('#btnAdd').removeAttr('disabled');
+                    $.each(fieldlist, function(i, v){
+                        $("#" + v).val("");
+                    });
+                }
+                
+            }
+            
+            function getBingroupDetails(){
+                var binname = $('#selbingroup').val();
+                jQuery.get("jsrpc.action?screenName=BinGroup&panelName=form1&submitdata={form1:[{whereval:'" + binname + "',command:'getbindetails'}]}", function(data){
+                    alert(data);
+                    var json = jQuery.parseJSON(data);
+                    json = json.data.form1[0];
+                    $("#txtbindesc").val(json.txtbindesc);
+                    $("#bincurency").val(json.bincurency);
+                    $("#settlementcurency").val(json.settlementcurency);
+                    $("#txtstatus").val("modify");
+                    $("#countryofissue").val(json.countryofissue);
+                    $("#txtTotalCards").val(json.txtTotalCards);
+                    $("#txtmakerid").val(json.txtmakerid);
+                    $("#txtmakerdate").val(json.txtmakerdate);
+                    $("#issuername").val(json.issuername);
+					
+					bin_begin = json.binrangebegin;
+					$("#binBeginFrom1").text(bin_begin.substring(0,4));
+					$("#binBeginFrom2").text(bin_begin.substring(4));
+					$("#binBeginTo1").text(bin_begin.substring(0,4));
+					$("#binBeginTo2").text(bin_begin.substring(4));
+					
+					var fromval = json.hidbinrangefrom;
+					fromval = $.strPad(fromval,9);
+					$('#hidbinrangefrom').val(fromval);
+					
+					var toval = json.hidbinrangeto;
+					toval = $.strPad(toval,9);
+					$('#hidbinrangeto').val(toval);
+					
+					$('#bto1').val(toval.substr(0,2));
+					$('#bto2').val(toval.substr(2,4));
+					$('#bto3').val(toval.substr(6,3));
+					
+					$('#bfrm1').val(fromval.substr(0,2));
+					$('#bfrm2').val(fromval.substr(2,4));
+					$('#bfrm3').val(fromval.substr(6,3));
+                });
+            }
+            
+            function populateFieldsToModify(){
+                if ($('#selbingroup').val() == 'New') {
+                    $('#txtstatus').val('New');
+                    $('#btnModify').attr("disabled", "disabled");
+                    $('#btnAdd').removeAttr("disabled");
+                    iadt.setScreenMode("addrow");
+                }
+                else {
+                    getBingroupDetails();
+                }
+            }
+            
+            function setScreenMode(s){
+                $('.head2 .screenMode').text("Screen Mode: " + s);
+                screenMode = s;
+            }
+            
+            var fieldlist = "selbingroup,txtbincode,txtbindesc,bincurency,settlementcurency,issuername,countryofissue,hidbinrangefrom,hidbinrangeto,txtTotalCards,txtstatus,txtmakerid,txtmakerdate".split(",");
+            var keylist = "txtbincode,txtmakerid,txtmakerdate,txtstatus".split(",");
+            
+        </script>
+    </head>
+    </head>
+    <body onLoad="initial();">
+        <div align="center" class="wrap">
+            <div class="navbar">
+                <span class="disabled">Logged in as Henry</span>
+                | <span class="enabled">Home</span>
+                | <span class="enabled">Sign-Out</span>
+            </div>
+            <div class="shrink">
+                <div class="menuheader  ">
+                </div>
+                <div class="body">
+                    <form id="form1">
+                        <div class="displayLabel">
+                            <a href="programsetupview.action">Program Setup </a>&gt;&gt;<a href="binGroupView.action"> Bin Group</a>
+                            &gt;&gt; <a href="BinDetails.html">Bin Details</a>
+                        </div>
+                        <hr/>
+                        <div class="infoBar" style="display:none">
+                        </div>
+                        <p>
+                            &nbsp;
+                        </p>
+                        <table class="head2" border="0" cellspacing="0" height="20" cellpadding="0" width="100%">
+                            <tr>
+                                <td>
+                                    <b>Bin Group Details</b>
+                                </td>
+                                <td style="text-align:right;font-weight:normal">
+                                    <div class="screenMode">
+                                        addrow
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="5" class="table">
+                            <tr class="even">
+                                <td width="400">
+                                    BIN Group Code
+                                </td>
+                                <td class="even">
+                                    <select name="selbingroup" id="selbingroup" maxlength="50" class="field" onchange="iadt.copySeltohidden(this,'newprog','txtbincode',populateFieldsToModify)">
+                                    </select>
+                                    <span id="newprog" style="display:none;padding-left:10px">&nbsp;Enter new Program Name <input name="txtbincode" id="txtbincode" type="text" class="field" value="" /></span>&nbsp;
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td width="400">
+                                    BIN Group Description
+                                </td>
+                                <td class="even">
+                                    <input name="txtbindesc" id="txtbindesc" type="text" class="field" value="BINGRP - Description"/>
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td width="400">
+                                    Bin Currency
+                                </td>
+                                <td class="odd">
+                                    <SELECT style="WIDTH: 130px" class=field name="bincurency" id="bincurency">
+                                    </SELECT>
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td width="400">
+                                    Settlement Currency
+                                </td>
+                                <td class="even">
+                                    <SELECT style="WIDTH: 130px" class=field name="settlementcurency" id="settlementcurency">
+                                    </SELECT>
+                                </td>
+                            </tr>
+                            <tr class="odd">
+                                <td width="400">
+                                    Issuer Name
+                                </td>
+                                <td class="odd">
+                                    <input type="text" name="issuername" id="issuername" class="field" />
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td width="400">
+                                    Country of Issue
+                                </td>
+                                <td class="even">
+                                    <input style="display:none" class="field" />
+                                    <select name="countryofissue" maxlength="50" class="field" id="countryofissue">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td width="400">
+                                    Satatus
+                                </td>
+                                <td class="even">
+                                    <input name="txtstatus" type="text" class="field" id="txtstatus" />
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td width="400">
+                                    Maker Id
+                                </td>
+                                <td class="even">
+                                    <input name="txtmakerid" type="text" value="Henry" class="field" id="txtmakerid" />
+                                </td>
+                            </tr>
+                            <tr class="even">
+                                <td width="400">
+                                    Maker Date
+                                </td>
+                                <td class="even">
+                                    <input name="txtmakerdate" type="text" class="field" id="txtmakerdate" value="12/12/2010" />
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td bgcolor="#FFFFFF">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="head2" border="0" cellpadding="0" cellspacing="0" height="20" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        BIN Range Details 
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table" border="0" cellpadding="5" cellspacing="1" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td width="24%">
+                                        <strong>BIN Range </strong>
+                                    </td>
+                                    <td width="23%">
+                                        <strong>From</strong>
+                                    </td>
+                                    <td width="20%">
+                                        <span id="binBeginFrom1">9999</span> 
+                                    </td>
+                                    <td width="25%">
+                                        <span id="binBeginFrom2">99</span> 
+										<input type="text" class="field1" value="00" name="bfrm1" id='bfrm1' maxlength='2' />
+										<input type="text" class="field2" value="0000" name="bfrm2" id='bfrm2' maxlength='4' />
+										<input type="text" class="field2" value="000" name="bfrm3" id='bfrm3' maxlength='3' />
+										<input type="text" name="hidbinrangefrom" id="hidbinrangefrom" maxlength='9' />0 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="20%">
+                                        &nbsp;
+                                    </td>
+                                    <td width="23%">
+                                        <strong>To</strong>
+                                    </td>
+                                    <td width="20%">
+                                        <span id="binBeginTo1">9999</span> 
+                                    </td>
+                                    <td width="25%">
+                                        <span id="binBeginTo2">99</span>  
+										<input type="text" class="field1" value="00" name="bto1" id='bto1' maxlength='2' />
+										<input type="text" class="field2" value="0000" name="bto2" id='bto2' maxlength='4' />
+										<input type="text" class="field2" value="999" name="bto3" id='bto3' maxlength='3' />
+										<input type="text" name="hidbinrangeto" id="hidbinrangeto" maxlength='9' />9 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="20%">
+                                    </td>
+                                    <td width="23%">
+                                        <strong>Total Number of Cards Possible</strong>
+                                    </td>
+                                    <td width="20%">
+                                        &nbsp;
+                                    </td>
+                                    <td width="25%">
+                                        <input name="txtTotalCards" id="txtTotalCards" type="text" class="field" value="1000" readonly="readonly" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            &nbsp;
+                        </p>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td bgcolor="#FFFFFF">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="buttonPosition">
+                            <table border="0">
+                                <tr>
+                                    <td style="cursor:hand">
+                                        <button class="buttonenabled" type="button" id="btnAdd" onclick="onAdd('#form1');">
+                                            Add
+                                        </button>
+                                    </td>
+                                    <td style="cursor:hand">
+                                        <button class="buttonenabled" type="button" id="btnModify" onclick="onModify('#form1');">
+                                            Modify
+                                        </button>
+                                    </td>
+                                    <td style="cursor:hand">
+                                        <button class="buttonenabled" type="button" id="btnClose">
+                                            Close
+                                        </button>
+                                    </td>
+                                    <td style="cursor:hand">
+                                        <button class="buttonenabled" type="button" id="btnCancel" onclick="onCancel()">
+                                            Cancel
+                                        </button>
+                                    </td>
+                                    <td style="cursor:hand">
+                                        <button class="buttonenabled" type="button" id="btnAddBin" onclick='onAddBin();'>
+                                            Add Bin
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="showsubcan" style="display:none">
+                            <table border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';" style="cursor:hand">
+                                        Modify
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td class="buttonenabled" onClick="location.href='entityRegistrationConfirm.html';" style="cursor:hand">
+                                    Next
+                                    </button>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td class="buttonenabled" onClick="location.href='welcome.html';" style="cursor:hand">
+                                    Ok
+                                </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </form>
+                    <div id="listtemplate" cols="200" style="display:none">
+                        <table>
+                            <tr class='even'>
+                                <td>
+                                    <input type='radio' value='${rowcount}' name='check' id='check${rowcount}' onclick='iadt.radClick(this, radClickCallback );'/>&nbsp;<span class='icons'><span class='ui-icon ui-icon-pencil' onclick='editMe(this , radClickCallback);'></span></span>
+                                    <span class='icons'><span class='ui-icon ui-icon-closethick' onclick='deleteMe(this)'></span></span>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${selbingroup}<input type='hidden' value='${selbingroup}' id='selbingroup__${rowcount}' name='selbingroup__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${txtbincode}<input type='hidden' value='${txtbincode}' id='txtbincode__${rowcount}' name='txtbincode__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${txtbindesc}<input type='hidden' value='${txtbindesc}' id='txtbindesc__${rowcount}' name='txtbindesc__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${bincurency}<input type='hidden' value='${bincurency}' id='bincurency__${rowcount}' name='bincurency__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${settlementcurency}<input type='hidden' value='${settlementcurency}' id='settlementcurency__${rowcount}' name='settlementcurency__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${issuername}<input type='hidden' value='${issuername}' id='issuername__${rowcount}' name='issuername__{rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${countryofissue}<input type='hidden' value='${countryofissue}' id='countryofissue__${rowcount}' name='countryofissue__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${hidbinrangefrom}<input type='hidden' value='${hidbinrangefrom}' id='hidbinrangefrom__${rowcount}' name='hidbinrangefrom__{rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${hidbinrangeto}<input type='hidden' value='${hidbinrangeto}' id='hidbinrangeto__${rowcount}' name='hidbinrangeto__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${txtTotalCards}<input type='hidden' value='${txtTotalCards}' id='txtTotalCards__${rowcount}' name='txtTotalCards__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${txtstatus}<input type='hidden' value='${txtstatus}' id='txtstatus__${rowcount}' name='txtstatus__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${txtmakerid}<input type='hidden' value='${txtmakerid}' id='txtmakerid__${rowcount}' name='txtmakerid__${rowcount}'/>
+                                </td>
+                                <td style='display:table-cell'>
+                                    ${txtmakerdate}<input type='hidden' value='${txtmakerdate}' id='txtmakerdate__${rowcount}' name='txtmakerdate__${rowcount}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <form id="form2">
+                        <DIV id=multiplerows>
+                            <div class="headerlist" style="display:none;">
+                                selbingroup,txtbincode,txtbindesc,bincurency,settlementcurency,issuername,countryofissue,hidbinrangefrom,hidbinrangeto,txtTotalCards,txtstatus,txtmakerid,txtmakerdate
+                            </div>
+                            <BR>
+                            <TABLE id=tablespace class=table1 border=0 cellSpacing=0 cellPadding=5 width="100%">
+                                <TR class=trlightgrey>
+                                    <th width="6%" align=middle>
+                                        Select
+                                    </th>
+                                    <th>
+                                        Bin Group Code
+                                    </th>
+                                    <th>
+                                        Bin Group Code(txt)
+                                    </th>
+                                    <th>
+                                        Bin Group Desc
+                                    </th>
+                                    <th>
+                                        Bin currency
+                                    </th>
+                                    <th>
+                                        Settlement Currency
+                                    </th>
+                                    <th>
+                                        Issuer Name
+                                    </th>
+                                    <th>
+                                        Country of Issue
+                                    </th>
+                                    <th>
+                                        Bin Range From
+                                    </th>
+                                    <th>
+                                        Bin Range To
+                                    </th>
+                                    <th>
+                                        Total No. Cards
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Maker Id
+                                    </th>
+                                    <th>
+                                        Maker Date
+                                    </th>
+                                </TR>
+                            </TABLE>
+                        </DIV>
+                    </form>
+                </div>
+                <!-- body div-->
+                <!-- shrink -->
+            </div>
+            <div class="push">
+            </div>
+            <!-- center align div-->
+        </div>
+        <div class="footer">
+            <center>
+                <div class="shrink">
+                    <hr/>
+                    <div style="float:left">
+                        www.XYZ.com
+                    </div>
+                    <div style="float:right">
+                        Copyright © 2011 XYZ 
+                    </div>
+                </div>
+            </center>
+        </div>
+    </body>
 </html>

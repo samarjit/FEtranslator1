@@ -11,9 +11,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.ycs.user.Role;
 import com.ycs.user.accesscontroller.PasswordValidator;
-import com.ycs.user.accesscontroller.UserRoleHelper;
 
 public class LoginAC extends ActionSupport implements SessionAware{
 	private static Logger logger = Logger.getLogger(LoginAC.class);
@@ -64,15 +62,32 @@ public class LoginAC extends ActionSupport implements SessionAware{
 				return com.opensymphony.xwork2.Action.ERROR;
 			}
 		
-			UserRoleHelper urh =  new UserRoleHelper();
-			List<Role> listRole = urh.getRolesForUser(userid);
-			logger.debug("Role:"+listRole);
+	// moved to menu helper.
 			
-			session.put("roles",listRole);
+//			UserRoleHelper urh =  new UserRoleHelper();
+//			List<Role> listRole = urh.getRolesForUser(userid);
+//			logger.debug("Role:"+listRole);
+//			
+//			session.put("roles",listRole);
+//			
+//			//get tasklist
+//			List<RoleRightsMap> roletasklist = new ArrayList<RoleRightsMap>();
+//				
+//			for(Role role:listRole){
+//				String roleid = role.getRoleId();
+//				RoleRightsMap roleAndTask = urh.getTaskList(roleid);
+//				roletasklist.add(roleAndTask);
+//			}
+//			logger.debug("RolesAndTask : "+ roletasklist);
+//			session.put("rolesAndTask",roletasklist);
+//			
+//			// menuXml
+//			MenuParser menuParser = new MenuParser();
+//			String menuXml = menuParser.getMenuXml(roletasklist);
+//			logger.debug("Menu XML : "+menuXml);
+//			session.put("menuXml", menuXml);
 		}
-		
-		
-		
+						
 		return SUCCESS;
 	}
 

@@ -3,6 +3,8 @@ package com.ycs.fe.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import ognl.Ognl;
 import ognl.OgnlException;
 
@@ -14,7 +16,7 @@ public class ParseSentenceOgnl {
 	public static String parse(String sentence, Object root) throws SentenceParseException {
 		String parsedresult = "";
 		try {
-			String PATTERN = "\\:(inp|res|vs)?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";// "\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
+			String PATTERN = "\\:(inp|res|vs)\\.?([^,'\\s\\|]*)\\|?([^,'\\s]*)";// "\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
 
 			Pattern pattern = Pattern.compile(PATTERN, Pattern.DOTALL | Pattern.MULTILINE);
 
@@ -37,7 +39,15 @@ public class ParseSentenceOgnl {
 					if ("inp".equals(m1.group(1))) { // :form[0].param ===  :param use jsonObject and get group(3) val
 						logger.debug(" Processing with #inputDTO");
 						String expr = m1.group(2);
-						String propval = (String) Ognl.getValue(expr, root);
+						Object pval =  Ognl.getValue(expr, root);
+						String propval = "";
+						if(pval instanceof String ){
+							 propval = (String)pval;
+						}else if(pval instanceof JSONArray){
+							propval = pval.toString();
+						}else if (pval instanceof JSONObject){
+							propval = pval.toString();
+						}
 						parsedresult += sentence.substring(prevend, m1.start());//
 						parsedresult += propval;
 
