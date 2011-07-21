@@ -1,0 +1,113 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
+
+<title>Widget Test</title>
+<script src="../js/jquery.js"></script>
+<script src="../js/json2.js"></script>
+
+<script language="javascript">
+var widgetList = {}; //every widget will be registered here
+
+function Widget(id){
+this.id = id 
+	display = function (model){
+		alert('display not implemented');
+	}
+	
+	getData = function (){
+	 /*returns json*/
+		alert('getData not implemented');
+	}
+	
+} 
+
+var txtWidgetName = new Widget("txt1");
+widgetList['txt1'] = txtWidgetName;
+txtWidgetName.display = function (model){
+$('#'+this.id).val(model);	
+}
+txtWidgetName.getData = function (){
+ return	$('#'+this.id).val();	
+}
+
+var tblWidget = new Widget("testtab");
+widgetList['testtab'] = tblWidget;
+	tblWidget.display = function(model) {
+	//var json = jQuery.parseJSON(model);
+	var tableTmp = $('#'+this.id);
+	var tableStr = '';
+	$.each(model,function(i,v){
+		tableStr += "<tr>";	
+		$.each(v,function(i2,v2){
+				tableStr += "<td>"+ v2+"</td>";		
+			});
+		tableStr += "</tr>";
+	});
+	tableStr +=  "<table>" +tableStr+ "</table>";
+	$('#'+this.id).html(tableStr);	
+   }
+	
+   tblWidget.getData = function() {
+	var jsonModel = [];
+	$('#'+this.id+" tr").each(function (i,v){
+		var rowModel = [];
+		$.each($(v).find('td'),function(i2,v2){
+			rowModel.push($(v2).text());		
+		});
+		jsonModel.push(rowModel);
+	});
+	
+	return jsonModel;
+   }
+
+
+
+///-----------
+function populate(){
+	textmodel = "data for text";
+	tablemodel = [
+	              ['header1','header2','header3'],
+	              ['data12','data22','data23'],
+	              ['data13','data23','data33']
+	];
+	
+	txtWidgetName.display(textmodel);
+	tblWidget.display(tablemodel);
+}
+
+function getPostData(){
+	alert(txtWidgetName.getData()+" "+tblWidget.getData());
+}
+
+
+function getFormData(){
+	for(widget in  widgetList){
+		console.log(widgetList[widget].id);
+		console.log(widgetList[widget].getData());
+	}	
+}
+
+window.onresize = function(event){
+	//console.log( $(document).width()+" "+$(document).height())	
+}
+
+</script>
+
+</head>
+<body>
+<input id="txt1"><input id="txt1"> 
+<div id="testtab"></div>
+
+<input type="button" value="Display" onclick="populate()" />
+<input type="button" value="Getdata" onclick="getPostData()" />
+
+<input type="button" value="Get From Data" onclick="getFormData()" />
+<form id='form1' >
+	
+</form>
+
+</body>
+
+
+</html>

@@ -1,7 +1,5 @@
 package org.jbpm.samarjit;
 
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +56,8 @@ public class Mytest2 {
 		modules.addSemanticModule(new BPMNSemanticModule());
 		modules.addSemanticModule(new BPMNDISemanticModule());
 		modules.addSemanticModule(new BPMNExtensionsSemanticModule());
-		XmlProcessReader reader = new XmlProcessReader(modules);
-		reader.read(Mytest2.class.getResourceAsStream("/Evaluation.bpmn"));
+		XmlProcessReader reader = new XmlProcessReader(modules,Mytest2.class.getClassLoader());
+		reader.read(Mytest2.class.getResourceAsStream("Evaluation.bpmn"));
 		 List<Process> processes = reader.getProcess();
 //		Collection<Process> processes = kbase.getProcesses();
 		 WorkflowProcessImpl procc=null;
@@ -88,7 +86,7 @@ public class Mytest2 {
 		 
 //		procc
 		StatelessWorkflowManager swflMgr = new StatelessWorkflowManager();
-		swflMgr.readWorkflowFiles(Mytest2.class.getResourceAsStream("/Evaluation.bpmn"));
+		swflMgr.readWorkflowFiles(Mytest2.class.getResourceAsStream("Evaluation.bpmn"));
 		final List<String> processEventList = new ArrayList<String>();
 		final ProcessEventListener processEventListener = new ProcessEventListener() {
 			public void afterNodeLeft(ProcessNodeLeftEvent event) {
@@ -136,7 +134,7 @@ public class Mytest2 {
 		TestWorkItemHandler workItemHandler = new TestWorkItemHandler();
 		swflMgr.registerWorkItemHandler("Human Task", workItemHandler);
 		long currentProcessInst = swflMgr.startProcess("com.sample.evaluation");
-		if(1==1)throw new Exception("Break out before completion for testing"); 
+		if(1==0)throw new Exception("Break out before completion for testing"); 
 //		swflMgr.restoreWorkflowSession();
 		 
 		System.out.println("Process instance length="+currentProcessInst);

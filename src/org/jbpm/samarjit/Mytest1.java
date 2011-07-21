@@ -77,7 +77,7 @@ public class Mytest1 {
 		modules.addSemanticModule(new BPMNSemanticModule());
 		modules.addSemanticModule(new BPMNDISemanticModule());
 		modules.addSemanticModule(new BPMNExtensionsSemanticModule());
-		XmlProcessReader reader = new XmlProcessReader(modules);
+		XmlProcessReader reader = new XmlProcessReader(modules, Mytest1.class.getClassLoader());
 		reader.read(new FileReader("C:/softwares/Workflow/jBPM500/jbpm-installer/sample/evaluation/src/main/resources/Evaluation.bpmn"));
 		 List<Process> processes = reader.getProcess();
 //		Collection<Process> processes = kbase.getProcesses();

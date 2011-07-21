@@ -10,7 +10,7 @@ public class TestactionAC extends ActionSupport{
  
 	public String execute(){
 		System.out.println("TestactionAC:Inside Action..name="+name);
-		name ="My name";
+		if(name == null)name ="My name";
 		System.out.println("TestactionAC:Inside Action class [retrievename]:"+retrievename);
 		return SUCCESS;
 	}

@@ -149,7 +149,7 @@
 			</result>
 		</action>
 		<action name="testftl" class="actionclass.TestactionAC">
-			<result name="success" type="freemarker">pages/test-success.ftl</result>
+			<result name="success"  type="freemarker">pages/test-success.ftl</result>
 		</action>
 		<action name="templatetest" class="actionclass.TestactionAC">
 			<result name="success">pages/templatetest.jsp</result>

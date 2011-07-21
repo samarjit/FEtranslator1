@@ -10,5 +10,6 @@
 <@sx.datetimepicker name="order.date" label="Order Date" displayFormat="dd-MMM-yyyy" />
 Hello, ${name}
 
+
 </body>
 </html>

@@ -29,7 +29,7 @@ public class StatelessWorkflowManager {
 		modules.addSemanticModule(new BPMNSemanticModule());
 		modules.addSemanticModule(new BPMNDISemanticModule());
 		modules.addSemanticModule(new BPMNExtensionsSemanticModule());
-		XmlProcessReader reader = new XmlProcessReader(modules);
+		XmlProcessReader reader = new XmlProcessReader(modules, this.getClass().getClassLoader());
 		reader.read(is);
 		processes = reader.getProcess();
 		return processes;
@@ -41,6 +41,11 @@ public class StatelessWorkflowManager {
 	
 	public Collection<NodeInstance> getNextTasks(int processInstanceId){
 		StatelessProcessInstance processInstance = (StatelessProcessInstance) StatelessRuntime.eINSTANCE.getProcessInstanceManager().getProcessInstance(processInstanceId);
+		Collection<NodeInstance> nInstances = processInstance.getNodeInstances();
+		for (NodeInstance nodeInstance : nInstances) {
+			System.out.println("#GetTasks() "+nodeInstance.getId()+" "+nodeInstance.getNodeId()+"::"+nodeInstance.getNodeName());
+			
+		}
 		return processInstance.getNodeInstances();
 	}
 	
