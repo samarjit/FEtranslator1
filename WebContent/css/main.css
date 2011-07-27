@@ -30,6 +30,12 @@ text-align: left;
  width:100%; 
  text-align:center;	
 }
+
+.label{
+	font-weight:bold;
+	display:inline;
+}
+
 .header{
  background-color:#10253f;
  color:white;

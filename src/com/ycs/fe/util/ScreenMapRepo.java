@@ -1,8 +1,10 @@
 package com.ycs.fe.util;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
@@ -10,8 +12,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-
-import com.opensymphony.xwork2.ActionContext;
 
  
  
@@ -27,14 +27,14 @@ public class ScreenMapRepo {
 	 */
 	public static String findMapXML(String scrName){
 		String path = null;
-		//String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map"); 
+		String screenpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map"); 
 		
-		InputStream scrxml = ScreenMapRepo.class.getResourceAsStream("screenmap.xml");
-		
+//		InputStream scrxml = ScreenMapRepo.class.getResourceAsStream("/screenmap.xml");
 
 
 		Document doc;
 		try {
+			InputStream scrxml = new BufferedInputStream(new FileInputStream(screenpath+"\\screenmap.xml"));
 		
 			doc = new SAXReader().read(scrxml);
 			Element root = doc.getRootElement();
@@ -51,6 +51,8 @@ public class ScreenMapRepo {
 			path = f.getAbsolutePath();
 			
 		} catch (DocumentException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 

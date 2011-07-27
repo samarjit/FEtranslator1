@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.ycs.fe.dao.UserRoleHelperDAO;
 import com.ycs.fe.util.MenuParser;
@@ -20,7 +21,7 @@ public class MenuHelper extends ActionSupport implements SessionAware {
 	private Map<String, Object> session;
 
 	public String execute() {
-		session = (Map<String, Object>) ServletActionContext.getRequest().getSession();
+		session = (Map<String, Object>) ActionContext.getContext().getSession();
 		String userid = (String) session.get("userid");
 		UserRoleHelperDAO urh = new UserRoleHelperDAO();
 		List<Role> listRole = urh.getRolesForUser(userid);
@@ -44,7 +45,7 @@ public class MenuHelper extends ActionSupport implements SessionAware {
 		String menuXml = menuParser.getMenuXml(roletasklist);
 		logger.debug("Menu XML : " + menuXml);
 		session.put("menuXml", menuXml);
-
+		System.out.println(menuXml);
 		return SUCCESS;
 	}
 

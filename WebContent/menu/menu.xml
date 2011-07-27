@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<home>
+		<frameset rows="140,*" frameborder="NO" border="0" framespacing="0">
+			<frame src="top.html" name="topFrame" scrolling="NO" title="topFrame" />
+			<frameset cols="215,*" frameborder="NO" border="0" framespacing="0">
+				<frameset rows="40,*" frameborder="NO" border="0" framespacing="0">
+					<frame src="lefttop.html" name="topFrame1" scrolling="NO" title="topFrame1" />
+					<frameset rows="*,80" frameborder="NO" border="0" framespacing="0">
+						<frame src="cardinventory.html" name="leftFrame" scrolling="NO" title="leftFrame" />
+						<frame src="leftbottom.html" name="bottomFrame" scrolling="NO" 	title="bottomFrame" />
+					</frameset>
+				</frameset>
+				<frame src="welcome.html" name="mainFrame" title="mainFrame" />
+			</frameset>
+		</frameset>
+	</home>
+	<tab name="Card Inventory" class="fg-button" id="tab1" mainframe="">
+		<menu name="CardOrder" position="1" class="mi" id="tab1menu1"
+			onclick="cardOrder.action"></menu>
+		<menu name="Authorize" position="1" class="mi" id="tab1menu2"
+			onclick="../html/authorize.html"></menu>
+		<menu name="GenerateCard" position="2" class="mi" id="tab1menu3"
+			onclick="../html/cardGenerate.html"></menu>
+		<menu name="Emboss" position="2" class="mi" id="tab1menu3"
+			onclick="../html/emboss.html"></menu>
+		<menu name="Card Receipt" position="2" class="mi" id="tab1menu3"
+			onclick="../html/cardReceipt.html"></menu>
+		<menu name="Card Order Status" position="2" class="mi" id="tab1menu3"
+			onclick="../html/cardStatus.html"></menu>
+	</tab>
+</root>

@@ -116,7 +116,7 @@ function createMenu(){
         },
         dataType: 'xml'
     });
-    alert(menuxml);
+   
     var tabmenu = menuxml.getElementsByTagName("tab");
     var headertable = document.createElement('table');
     var row = document.createElement('tr');
@@ -186,11 +186,11 @@ function createMenu(){
         }
         outertable.appendChild(outerrow);
         var menudiv = document.createElement('div');
-        menudiv.setAttribute("style", "display:block;width:300px");
+        menudiv.setAttribute("style", "display:block;");
         menudiv.appendChild(outertable);
         var tempdiv = document.createElement('div');
         tempdiv.appendChild(menudiv);
-        //		alert(tempdiv.innerHTML);
+       // 		alert(tempdiv.innerHTML);
         var json = {
             "id": tabid,
             "menu": tempdiv.innerHTML
@@ -200,14 +200,14 @@ function createMenu(){
     
     headertable.appendChild(row);
     $(".menuheader").html(headertable);
-    
+   
     for (var n = 0; n < jsonArray.length; n++) {
         var tabid = jsonArray[n].id;
         var menudiv = jsonArray[n].menu;
         $("#" + tabid).menu({
             content: menudiv, // grab content from this page
             showSpeed: 400,
-            width: 500
+            width: 300
         });
     }
     
@@ -321,13 +321,43 @@ function createMenu(){
 		if(radClickCallback != null)
 		radClickCallback(radioObj);
 	};
-  
+ 
+	iadt.updateUIRows = function (dataList){
+		
+	    var arList = iadt.getFieldlist();
+	    var templatedata = $(iadt.options.listtemplate).html();
+			$(iadt.options.divlist + ' table').empty();
+			$(iadt.options.divlist + ' table').append($("#tableheader table").html());
+			
+	    $.each(dataList, function(index, Obj){	
+		  var datamodel = {
+	        rowcount: Obj["row"],
+	        divlist: iadt.options.divlist,
+	        divheaderlist: iadt.options.divheaderlist
+	    };
+	        var formval = Obj;
+	        $.each(arList, function(i, v){
+	            var idname = v;
+	            //var ishidden = v.indexOf("hidden") >1?"none":"table-cell";
+	            var val = formval[idname];
+	            //str+="<td style='display:"+ishidden+"'>"+val+"<input type='hidden' value='"+val+"' id='"+idname+"__"+rowcount+"' name='"+idname+"__"+rowcount+"'/></td>";
+	            datamodel[idname] = val;
+	        });
+	        
+	        if (arguments.length == 2) {
+	            $.extend(datamodel, arguments[1]);
+	        }
+	        //str+="</tr>";
+	        var templateResult = $.tmpl(templatedata, datamodel);
+		    $(iadt.options.divlist + ' table').append($('tr', templateResult).parent().html());
+	    });
+	};
   /**
    * Adds row to the list table
  * @param formid
  * @param ... options = Object() which will be added to datamodel
  */
-iadt.addrow = function(formid){
+iadt.addrow = function(formid,rowcount){
 		var arList = iadt.getFieldlist();
 
 		var rowcount = $(iadt.options.divlist+' table').get(0).rows.length;

@@ -5,18 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.interceptor.SessionAware;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.ycs.user.accesscontroller.PasswordValidator;
 
 public class LoginAC extends ActionSupport implements SessionAware{
 	private static Logger logger = Logger.getLogger(LoginAC.class);
 	private static final long serialVersionUID = 1L;
-	private Map<String, Object> session;
+	private Map<String, Object> session = ActionContext.getContext().getSession();
 	
 	
 	private String userid;
@@ -50,9 +50,6 @@ public class LoginAC extends ActionSupport implements SessionAware{
 			 
 		}else{//Logging in
 		
-			session.put("userid",userid);
-			session.put("passwd",passwd);
-			
 			logger.debug("login action started for user:"+userid);
 			PasswordValidator passv = new PasswordValidator();
 			if(!passv.isValidUser(userid, passwd)){
@@ -62,6 +59,9 @@ public class LoginAC extends ActionSupport implements SessionAware{
 				return com.opensymphony.xwork2.Action.ERROR;
 			}
 		
+			session.put("userid",userid);
+			session.put("passwd",passwd);
+			
 	// moved to menu helper.
 			
 //			UserRoleHelper urh =  new UserRoleHelper();
@@ -97,7 +97,8 @@ public class LoginAC extends ActionSupport implements SessionAware{
 		})
 	public String executeLogout(){
 		if(isLoggedIn())
-		ServletActionContext.getRequest().getSession().invalidate();
+	//	ServletActionContext.getRequest().getSession().invalidate();
+	   ActionContext.getContext().getSession().clear();
 		logger.debug("logged out!");
 		return SUCCESS;
 	}

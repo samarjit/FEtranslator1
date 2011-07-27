@@ -20,27 +20,27 @@
 		</menu>
 	</tab>
 	<tab name="Entitlement" class="fg-button" id="tab2">
-		<menu name="program setup485hfd" position="1" class="mi">
+		<menu name="program setup485hfd" position="3" class="mi">
 			<submenu onclick="ProgramSetup.html">Program</submenu>
 			<submenu onclick="ProgramSetup.html">Bin group</submenu>
 			<submenu onclick="ProgramSetup.html">Bin details</submenu>
 		</menu>
 	</tab>
-	<tab name=" Security Management" class="fg-button" id="tab3">
+	<tab name="Security Management88888" class="fg-button" id="tab3">
 		<menu name="program setup" position="1" class="mi">
 			<submenu onclick="ProgramSetup.html">Program</submenu>
 			<submenu onclick="ProgramSetup.html">Bin group</submenu>
 			<submenu onclick="ProgramSetup.html">Bin details</submenu>
 		</menu>
 	</tab>
-	<tab name=" Security Management" class="fg-button" id="tab4">
+	<tab name="Security Management" class="fg-button" id="tab4">
 		<menu name="program setup" position="1" class="mi">
 			<submenu onclick="ProgramSetup.html">Program</submenu>
 			<submenu onclick="ProgramSetup.html">Bin group</submenu>
 			<submenu onclick="ProgramSetup.html">Bin details</submenu>
 		</menu>
 	</tab>
-	<tab name=" Security Management" class="fg-button" id="tab5">
+	<tab name="Security Management" class="fg-button" id="tab5">
 		<menu name="program setup" position="1" class="mi">
 			<submenu onclick="ProgramSetup.html">Program</submenu>
 			<submenu onclick="ProgramSetup.html">Bin group</submenu>

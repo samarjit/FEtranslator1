@@ -194,7 +194,7 @@
   <xs:element name="dm">
     <xs:complexType  >
        <xs:sequence>
-       	<xs:element name="txnproc"   >
+       	<xs:element name="txnproc" minOccurs="0" maxOccurs="unbounded" >
        		<xs:complexType mixed="true">
        		 <xs:attribute name="id" type="xs:string"></xs:attribute>
        		  <xs:attribute name="outstack" type="xs:string"></xs:attribute>
@@ -207,7 +207,7 @@
   <xs:element name="bl">
     <xs:complexType >
        <xs:sequence>
-       	<xs:element name="buslogic"  >
+       	<xs:element name="buslogic" minOccurs="0" maxOccurs="unbounded" >
        		<xs:complexType mixed="true">
        		 <xs:attribute name="id" type="xs:string"></xs:attribute>	
        		  <xs:attribute name="outstack" type="xs:string"></xs:attribute>
@@ -220,7 +220,7 @@
   <xs:element name="anyprocs">
   	 <xs:complexType>
   	 	<xs:sequence >
-  	 	<xs:element name="proc" maxOccurs="unbounded" >     		 
+  	 	<xs:element name="proc" maxOccurs="unbounded" minOccurs="0">     		 
 	        <xs:complexType mixed="true">
 	          <xs:attribute name="id" type="xs:string"></xs:attribute>
 	           <xs:attribute name="outstack" type="xs:string"></xs:attribute>
@@ -272,6 +272,7 @@
         <xs:element ref="input"/>
         <xs:element ref="select"/>
         <xs:element ref="sometype"/>
+        <xs:element ref="label" maxOccurs="unbounded"/>
       </xs:choice>
     </xs:complexType>
   </xs:element>
@@ -342,7 +343,15 @@
       </xs:sequence>
       <xs:attribute name="forid" use="required" type="xs:string"/>
       <xs:attribute name="id" use="required" type="xs:string"/>
-      <xs:attribute name="replace" type="xs:string"/>
+      <xs:attribute ref="replace" use="required"/>
+    </xs:complexType>
+  </xs:element>
+   <xs:element name="label">
+    <xs:complexType>
+      <xs:attribute name="forname" use="required" type="xs:string"/>
+      <xs:attribute name="value" use="required" type="xs:string"/>
+      <xs:attribute name="key" use="required" type="xs:string"/>
+      <xs:attribute ref="replace" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="xpath">

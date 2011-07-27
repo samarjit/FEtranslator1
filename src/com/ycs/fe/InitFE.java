@@ -113,7 +113,7 @@ public class InitFE implements ServletContextListener {
 		    }).start();
 			 */
         	Class.forName("org.h2.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1","SA","");
+			Connection conn = DriverManager.getConnection("jdbc:h2:tcp://localhost/mem:db1;DB_CLOSE_DELAY=-1","SA","");
 			InputStream in = getClass().getResourceAsStream("script.sql");
 			if (in == null) {
 				System.out.println("Please add the file script.sql to the classpath, package " + getClass().getPackage().getName());

@@ -16,6 +16,11 @@ Debugging tools
 <hr/>
 <a href="html/programsetupview.action">Program Setup (Demo)</a> <br/>
 <a href="pages/jaxbtest.action">Program Setup Admin - under construction</a> <br/><br/>
+
+<a href="cms/login.jsp">Card Management System Login</a> <br>
+
+<a href="cms/cmsAction.action?screenName=locale">Set Language</a> <br>
+
 <a href="<%=ctxstr%>/logout.jsp">logout</a><br/>
  
 </body>

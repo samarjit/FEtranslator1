@@ -76,6 +76,7 @@ function clearall() {
 	//$('#from1').reset();
 }
 
+
 /**
  * Callback from iadt.copySeltohidden()
  */
@@ -102,15 +103,90 @@ function getTextFromOptionValue(selectid,targetid,value){
 	$("#"+targetid).val(txt);
 }
 
+function updateFormData(formid){
+	var update = false;
+	var cmds = {New: 'Create', Modify: 'Update', Close: 'Update', Delete:'Delete'};
+	if(formdata == null){
+		formdata = {};
+		formdata[formid] = [];
+	}
+	var unqFldValue = $("#"+unqFldId).val();
+	
+	rowObj = {};
+	$.each(fieldlist,function(i,v){
+		rowObj[v] = $("#"+v).val();
+		rowObj.command = cmds[$("#txtstatus").val()];
+	});
+	
+	$.each(formdata[formid],function(i,v){
+		if(unqFldValue == v[unqFldId]){
+			alert(unqFldValue+ "  "+unqFldId+" "+v[unqFldId] +" Present already");
+			v = $.extend(true,v,rowObj);
+			update = true;
+			return;
+		}
+	});	
+	if (!update) {
+		rowCount = rowCount+1;
+		rowObj.row = rowCount;
+		formdata[formid].push(rowObj);
+	}
+	alert(JSONstring.make(formdata))
+	updateUIRows(formdata[formid]);
+}
+
+function deleteFormData(objthis,formid){
+	var delval = $('input[type=radio]',objthis.parentNode.parentNode.parentNode).val();
+	$.each(formdata[formid],function(i,v){
+		if(delval == v[unqFldId]){
+			formdata[formid].pop(v);
+			alert(delval+" Deleted SuccessFully");
+		}
+	});	
+	updateUIRows(formdata[formid]);	
+}
+
+function updateUIRows(dataList){
+	
+    var arList = iadt.getFieldlist();
+    var templatedata = $(iadt.options.listtemplate).html();
+		$(iadt.options.divlist + ' table').empty();
+		$(iadt.options.divlist + ' table').append('<TR class=trlightgrey ><th width="6%" align=middle>Select</th><th width="9%"  style="display:none">Program Select</th><th width="9%">Prgram Name</th><th width="12%">Prgram Description</th><th width="12%">Issuer Name</th><th width="12%">Country of Issue</th><th width="12%">Status</th></TR>');
+        
+    $.each(dataList, function(index, Obj){	
+	  var datamodel = {
+        rowcount: Obj["row"],
+        divlist: iadt.options.divlist,
+        divheaderlist: iadt.options.divheaderlist
+    };
+        var formval = Obj;
+        $.each(arList, function(i, v){
+            var idname = v;
+            //var ishidden = v.indexOf("hidden") >1?"none":"table-cell";
+            var val = formval[idname];
+            //str+="<td style='display:"+ishidden+"'>"+val+"<input type='hidden' value='"+val+"' id='"+idname+"__"+rowcount+"' name='"+idname+"__"+rowcount+"'/></td>";
+            datamodel[idname] = val;
+        });
+        
+        if (arguments.length == 2) {
+            $.extend(datamodel, arguments[1]);
+        }
+        //str+="</tr>";
+        var templateResult = $.tmpl(templatedata, datamodel);
+	    $(iadt.options.divlist + ' table').append($('tr', templateResult).parent().html());
+    });
+}
+	
 
 function onAdd (formid) {
 	
 	if(!$(formid).valid())return;
-
-	 if(screenMode == 'addrow')
-		iadt.addrow(formid);
- 
-	 
+	
+	 if (screenMode == 'addrow') {
+		updateFormData(formid);
+//	 	iadt.addrow(formid, rowCount);
+	 }
+	
 	iadt.setScreenMode("addrow");
 	enableDisableFlds();
 }
@@ -119,12 +195,12 @@ function onAdd (formid) {
 function onModify (formid) {
 	if(!$(formid).valid())return;
     $("#txtstatus").val('Modify');
-    
+     updateFormData(formid);
 	 if(screenMode == 'addrow')
-	iadt.addrow(formid);
+//	iadt.addrow(formid);
 	 
 	 if(screenMode == 'updaterow')
-	iadt.updaterow(formid);
+//	iadt.updaterow(formid);
 	
 	iadt.setScreenMode("addrow");
 	enableDisableFlds();
@@ -157,8 +233,11 @@ else
 	iadt.showMessage("Please select a record to view details");
 }
 
-function deleteMe ( objthis) {
-	$(objthis.parentNode.parentNode.parentNode).remove();
+function deleteMe(objthis,formid) {
+	deleteFormData(objthis,formid);
+	
+	 $('input[type=radio]',objthis.parentNode.parentNode.parentNode).attr("checked","checked");
+//	$(objthis.parentNode.parentNode.parentNode).remove();
 	iadt.setScreenMode("addrow");
 	enableDisableFlds();
 }
@@ -214,23 +293,40 @@ function radClickCallback (obj) {
 }
 
 
+function getFormData(){
+	var cmds = {New: 'Create', Modify: 'Update', Close: 'Update', Delete:'Delete'};
+	var formdata = {form1:[]};
+	$(iadt.options.divlist).find("tr:gt(0)").each(function(id, obj){
+        var rowobj={};		
+      //  rowobj["row"] = id;
+ 
+		$("input:gt(0)", this).each(function(i,v){
+			 rowobj[v.name] = v.value;
+			 rowobj.command = cmds[v.value];
+			 }); 
+			alert("rowobj"+JSONstring.make(rowobj)); 
+		formdata["form1"].push(rowobj);	 
+	});
+	return formdata;
+}
+
 function getProgramDetails(){
 	var pmname = $('#programname').val();
-//	pmname = "{'name':'hello','email':'sample@f'}";
-//	var data1 = "[{'name':'AAA','email':'aaa@f'},{'name':'AAA','email':'aaa@f'}]";
-	var single = "{'FF0151':'aaa','FF0148':'bbb','FF01258':'ccc'}";
-	var multiple = "[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]";
+	//pmname = "{'name':'hello','email':'sample@f'}";
+	var data1 = "[{'name':'AAA','email':'aaa@f'},{'name':'AAA','email':'aaa@f'}]";
+//	var single = "{'FF0151':'aaa','FF0148':'bbb','FF01258':'ccc'}";
+//	var multiple = "[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]";
 //	alert("getProgramDetails");
-	jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{single:"+single+",multiple:"+multiple+", command:'getpmdetails'}]}",function (data){
+	//jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{single:"+single+",multiple:"+multiple+", command:'getpmdetails'}]}",function (data){
 
-	//jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{whereval:"+pmname+",param1:"+data1+", command:'getpmdetails'}]}",function (data){
-	alert(data);
+	jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{whereval:'"+pmname+"', command:'getpmdetails'}]}",function (data){
+	//alert("****"+data);
 	var json = jQuery.parseJSON(data);
 	json = json.data.form1[0];
 	$("#txtprogramdesc").val(json.desc);
 	$("#issuername").val(json.issuername);
 	$("#countryofissue").val(json.countrycode);
-	$("#txtstatus").val("modify");
+	$("#txtstatus").val("Modify");
 	$("#country").val(json.country);
 	});
 }
@@ -263,27 +359,17 @@ function onSearch(){
 }
 
 function onSubmit (args) {
-var cmds = {New: 'Create', Modify: 'Update', Close: 'Update', Delete:'Delete'};
-	//document.getElementById("form1").submit();
-	var formdata = {form1:[]};
-	
-	$(iadt.options.divlist).find("tr:gt(0)").each(function(id, obj){
-        var rowobj={};		
-        rowobj["row"] = id;
- 
-		$("input:gt(0)", this).each(function(i,v){
-			 rowobj[v.name] = v.value;
-			 rowobj.command = cmds[v.value];
-			 }); 
-		formdata["form1"].push(rowobj);	 
-	});
 
+	//document.getElementById("form1").submit();
+	
+	var formdata = getFormData();
 	
 	var submitdata = "screenName=ProgramSetup&submitdata="+JSONstring.make(formdata);
 	$('#form2')[0].action = "programsetupsave.action";
 //	$('#form2').append("<input type='hidden' id='submitdata' name='submitdata' />");
 //	$('#submitdata').val(submitdata);
 	 
+	 alert(submitdata);
 	$.get("programsetupsave.action",submitdata, prgsubmitCallback);
 	 
 }
@@ -332,16 +418,19 @@ function setScreenMode(s) {
 var fieldlist = "programname,txtnewprogname,txtprogramdesc,issuername,countryofissue,country,txtstatus".split(",");
 
 var keylist = "programname,txtnewprogname,txtstatus".split(",");
-
+var rowCount = 0;
+var formdata = null;
+var unqFldId = "txtnewprogname";
 </script>
 </head>
- 
- </head>
+
  <body onLoad="initial();">
  
  <div align="center"  class="wrap">	
  <div class="navbar"><span class="disabled">Logged in as Henry</span> | <span class="enabled">Home</span> | <span class="enabled">Sign-Out</span></div>
   <div class="shrink">
+  	<div id="testmenu">
+  		</div>
 		 <div class="menuheader">
 		 	
 		   </div>
@@ -466,9 +555,9 @@ var keylist = "programname,txtnewprogname,txtstatus".split(",");
 <div id="listtemplate" cols="200" style="display:none">
     	<table  border=1><tr class='even'>
 	  <td>
-       <input type='radio' value='${rowcount}' name='check' id='check${rowcount}' onclick='radClick(this,radClickCallback );' />
+       <input type='radio' value='${txtnewprogname}' name='check' id='check${rowcount}' onclick='radClick(this,radClickCallback );' />
 	    &nbsp;<span class='icons'><span class='ui-icon ui-icon-pencil' onclick='editMe(this, radClickCallback);' ></span></span>
-	          <span class='icons'><span class='ui-icon ui-icon-closethick' onclick='deleteMe(this)' ></span></span>
+	          <span class='icons'><span class='ui-icon ui-icon-closethick' onclick='deleteMe(this,"#form1")' ></span></span>
       </td>
       	<td style='display:none'>${programname}<input type='hidden' value='${programname}' id='programname__${rowcount}' name='programname'/></td>
   		<td style='display:table-cell'>${txtnewprogname}<input type='hidden' value='${txtnewprogname}' id='txtnewprogname__${rowcount}' name='txtnewprogname'/></td>

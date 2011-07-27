@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -175,24 +176,42 @@ private boolean templateprocessed = false;
 	}
 	public void processDisplayField(Node xmlelmNode, org.jsoup.nodes.Document dochtml, org.jsoup.nodes.Element headNode){
 		@SuppressWarnings("unchecked")
-		List<Node> nl = xmlelmNode.selectNodes("//fields/field/display");//(List) xp.evaluate("//fields/field/display", xmlelmNode, XPathConstants.NODESET);
+		List<Node> nl = xmlelmNode.selectNodes("//fields/field/label");//(List) xp.evaluate("//fields/field/display", xmlelmNode, XPathConstants.NODESET);
 		for (int i = 0; i < nl.size(); i++) {
 			Element inputElm = (Element) nl.get(i);
-			String htmlid = inputElm.attributeValue("forid");
-			org.jsoup.nodes.Element n =  dochtml.getElementById(htmlid);//.selectSingleNode("//*[@id=\""+htmlid+"\"]");//(Element) xp.evaluate("//*[@id=\""+htmlid+"\"]", dochtml, XPathConstants.NODE);
+			String htmlid = inputElm.attributeValue("forname");
+			org.jsoup.select.Elements lblele =	dochtml.getElementsByAttributeValue("name", htmlid);
 			String replace=inputElm.attributeValue("replace");
-			logger.debug("setting values forid:"+"//*[@id=\""+htmlid+"\"]");
-			if(n != null  ){
-				if( replace.equals("append"))
-				n.appendText(inputElm.attributeValue("value"));
-				else{
-					n.getAllElements().remove();
-					n.appendText(inputElm.attributeValue("value"));
+			String prop = inputElm.attributeValue("key");
+			String key = null;
+			String resourceBundle = ActionContext.getContext().getValueStack().findString("resourceBundle");
+			if (resourceBundle != null){
+				ResourceBundle labels = ResourceBundle.getBundle(resourceBundle, ActionContext.getContext().getLocale());
+				if (prop != null && prop.trim() != "") {
+					key = labels.getString(prop);
 				}
-			}else{
-				//TODO: We need to insert in custom fields
 			}
-			
+			logger.debug("setting values forid:"+"//*[@id=\""+htmlid+"\"]");
+			for (org.jsoup.nodes.Element n : lblele) {
+				if (n != null) {
+					if (replace.equals("append")) {
+						if (key != null && key.trim() != "") {
+							n.appendText(key);
+						} else {
+							n.appendText(inputElm.attributeValue("value"));
+						}
+					} else {
+						n.empty();
+						if (key != null && key.trim() != "") {
+							n.appendText(key);
+						} else {
+							n.appendText(inputElm.attributeValue("value"));
+						}
+					}
+				} else {
+					// TODO: We need to insert in custom fields
+				}
+			}
 		}
 	}
 	

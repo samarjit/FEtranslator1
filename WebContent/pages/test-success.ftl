@@ -7,9 +7,8 @@
     <@sx.head/>
 </head>
 <body>
-<@sx.datetimepicker name="order.date" label="Order Date" displayFormat="dd-MMM-yyyy" />
+<@sx.datetimepicker key="global.username" displayFormat="dd-MMM-yyyy" />
 Hello, ${name}
-
 
 </body>
 </html>

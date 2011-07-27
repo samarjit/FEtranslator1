@@ -56,14 +56,16 @@ public abstract class HTMLProcessor {
 
 	 
 	public void populateValueStack(ActionInvocation invocation, String resultCode) {
-		ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(resultCode);
-		logger.debug("Result classname = "+resultConfig.getClassName()); 
-		
-		String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
-		String xmlFileName = resultConfig.getParams().get("resultxml");
+//	ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(resultCode);
+//		logger.debug("Result classname = "+resultConfig.getClassName()); 
+//		
+//		String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
+//		String xmlFileName = resultConfig.getParams().get("resultxml");
 	 
 		String screenName1 = (String) invocation.getInvocationContext().getValueStack().findValue("screenName",String.class);
-		JSONObject jsonsubmitdata = (JSONObject) invocation.getInvocationContext().getValueStack().findValue("submitdata",JSONObject.class);
+		String jsonsubmitStr = (String) invocation.getInvocationContext().getValueStack().findValue("submitdata",String.class);
+		JSONObject jsonsubmitdata = new JSONObject().getJSONObject(jsonsubmitStr);
+//		JSONObject jsonsubmitdata = (JSONObject) invocation.getInvocationContext().getValueStack().findValue("submitdata",JSONObject.class);
 		logger.debug("For screenName:"+screenName1);
 		String xmlconfigfile =  ScreenMapRepo.findMapXML(screenName1);
 		//if(XMLResult.class.getName().equals(resultConfig.getClassName())){ Let it run for all actions that is coming from 
@@ -126,6 +128,7 @@ public abstract class HTMLProcessor {
 				
 			} catch (DocumentException e) {
 				logger.debug("result xml file not readable --",e);
+				e.printStackTrace();
 			} catch (JSONException e) {
 				logger.debug("result xml file not readable --",e);
 				e.printStackTrace();

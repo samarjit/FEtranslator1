@@ -1,24 +1,45 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="/struts-tags" prefix="s"%>
-<%@ taglib uri="/struts-jquery-tags" prefix="sj"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <html>
 <head>
- 
- 
-<%String ctxstr = request.getContextPath(); %>
-
- 
 </head>
+
 <body>
-<s:actionerror/>
-<s:actionmessage/>
-<h1>Login</h1>
-<form action="login.action">
-User Id: <input type="text" name="userid" /><br/>
-Passwd : <input type="password" name="passwd" /><br/>
-<button type="submit">submit</button>
-</form>
+<h1>Struts 2 localization example</h1>
+
+<s:form action="loginPage.action" >
+		<table>
+			<tr>
+				<td><s:textfield name="userid"  key="global.username" value="sam_admin"/></td>
+			</tr>
+			<tr>
+				<td><s:password name="passwd" key="global.password" value="sam_admin" /></td>
+			</tr>
+			<tr>
+				<td><s:submit key="global.submit" name="submit" /></td>
+			</tr>
+		</table>
+
+		
+</s:form>
+
+<s:url id="localeEN" namespace="/" action="locale" >
+   <s:param name="request_locale" >en</s:param>
+</s:url>
+<s:url id="localezhCN" namespace="/" action="locale" >
+   <s:param name="request_locale" >zh_CN</s:param>
+</s:url>
+<s:url id="localeDE" namespace="/" action="locale" >
+   <s:param name="request_locale" >de</s:param>
+</s:url>
+<s:url id="localeFR" namespace="/" action="locale" >
+   <s:param name="request_locale" >fr</s:param>
+</s:url>
+
+<s:a href="%{localeEN}" >English</s:a>
+<s:a href="%{localezhCN}" >Chinese</s:a>
+<s:a href="%{localeDE}" >German</s:a>
+<s:a href="%{localeFR}" >France</s:a>
+ 
 </body>
 </html>

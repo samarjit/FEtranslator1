@@ -4,6 +4,7 @@
 "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
+	<constant name="struts.custom.i18n.resources" value="global" />
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.convention.classes.reload" value="false" />
 	
@@ -105,6 +106,7 @@
 		</action>
 	</package>
 	
+	
 	<package name="xslt-example" extends="yidefaultPackage">
 
 		<action name="testxsl" class="actionclass.ExampleXSLTAction" method="preview">
@@ -158,7 +160,7 @@
 			</result>
 		</action>
 		<action name="testftl" class="actionclass.TestactionAC">
-			<result name="success"  type="freemarker">pages/test-success.ftl</result>
+			<result name="success" type="freemarker">pages/test-success.ftl</result>
 		</action>
 		<action name="templatetest" class="actionclass.TestactionAC">
 			<result name="success">pages/templatetest.jsp</result>
@@ -204,6 +206,37 @@
 			<result name="input">/xslinterceptorinp.jsp</result>
 		</action>
 	</package>
+	<package name="myactionPack" extends="yidefaultPackage" >
+		<action name="myaction" class="actionclass.MyAction">
+			<result>/success.jsp</result>
+			</action>
+		</package>
 	
+       <package name="card" extends="yidefaultPackage" namespace="/cms">
+            <action name="loginPage" class="com.ycs.login.actions.LoginAC">
+                <result name="success" type="redirectAction">menuGen</result>
+                <result name="error">
+                    /cms/login.jsp
+                </result>
+            </action >
+            <action name="menuGen" class="com.ycs.user.accesscontroller.MenuHelper">
+                <result name="success">
+                    /cms/home.html
+                </result>
+            </action>
+            
+            <action name="locale" class="com.ycs.fe.actions.LocaleAction">
+				<result name="success" >/cms/login.jsp</result>
+			</action>
+			
+			<action name="cmsAction" class="actionclass.CardOrder">
+                <interceptor-ref name="myCustomStack"/>
+                <result name="success" type="customXMLRes">
+                    <param name="resultxml">
+                    </param>
+                </result>
+            </action>
+            
+        </package> 
 	
 </struts>
