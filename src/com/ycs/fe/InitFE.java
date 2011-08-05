@@ -61,7 +61,7 @@ public class InitFE implements ServletContextListener {
 		}
 	 	System.out.println("FE Servlet context Started!!!");
 	 	//remove all the below lines in production
-	 	initDb();
+	 //initDb();
 	 	//init some variables
 	 	
 	}

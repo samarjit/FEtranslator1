@@ -86,3 +86,28 @@ java.lang.Exception: Stack Trace
 	at org.h2.server.web.WebThread.process(WebThread.java:137)
 	at org.h2.server.web.WebThread.run(WebThread.java:93)
 	at java.lang.Thread.run(Thread.java:619)
+08-01 14:29:57 database: close
+org.h2.message.DbException: IO Exception: "java.io.EOFException"; "C:\Eclipse\workspace1\FEtranslator1\hsqldb\h2dbfile.h2.db" [90031-150]
+	at org.h2.message.DbException.get(DbException.java:156)
+	at org.h2.message.DbException.convertIOException(DbException.java:313)
+	at org.h2.store.FileStore.readFully(FileStore.java:287)
+	at org.h2.store.PageStore.readPage(PageStore.java:1270)
+	at org.h2.store.PageStore.getPage(PageStore.java:706)
+	at org.h2.store.PageStreamTrunk$Iterator.next(PageStreamTrunk.java:247)
+	at org.h2.store.PageLog.free(PageLog.java:210)
+	at org.h2.store.PageStore.compact(PageStore.java:467)
+	at org.h2.engine.Database.closeOpenFilesAndUnlock(Database.java:1123)
+	at org.h2.engine.Database.close(Database.java:1074)
+	at org.h2.engine.Database.removeSession(Database.java:953)
+	at org.h2.engine.Session.close(Session.java:571)
+	at org.h2.server.TcpServerThread.closeSession(TcpServerThread.java:159)
+	at org.h2.server.TcpServerThread.process(TcpServerThread.java:242)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:137)
+	at java.lang.Thread.run(Thread.java:619)
+Caused by: org.h2.jdbc.JdbcSQLException: IO Exception: "java.io.EOFException"; "C:\Eclipse\workspace1\FEtranslator1\hsqldb\h2dbfile.h2.db" [90031-150]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:327)
+	... 16 more
+Caused by: java.io.EOFException
+	at java.io.RandomAccessFile.readFully(RandomAccessFile.java:383)
+	at org.h2.store.FileStore.readFully(FileStore.java:285)
+	... 13 more

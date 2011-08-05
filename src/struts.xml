@@ -4,7 +4,7 @@
 "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-	<constant name="struts.custom.i18n.resources" value="global" />
+	<constant name="struts.custom.i18n.resources" value="i18n.global" />
 	<constant name="struts.devMode" value="true" />
 	<constant name="struts.convention.classes.reload" value="false" />
 	
@@ -51,7 +51,9 @@
 			<result-type name="customXMLRes" class="actionclass.XMLResult">
 			</result-type>
 		</result-types>
+		
 		<interceptors>
+			<interceptor name="menugenerator" class="actionclass.MenuGeneratorInterceptor" />
 			<interceptor name="decorator" class="actionclass.DecoratorInterceptor" />
 			<interceptor-stack name="myCustomStack">
 				<interceptor-ref name="defaultStack" />
@@ -77,6 +79,9 @@
 			<result name="view" type="customXMLRes">
 				<param name="resultxml">ProgramSetup.xml</param>
 			</result>
+			<result name="freemarker" type="freemarker">${resultPage}</result>
+			<result name="dispatcher" >${resultPage}</result>
+			<result name="velocity" >${resultPage}</result>
 			<result name="input">/index.jsp</result>
 		</action>
 		<action name="programsetupsave" class="actionclass.ProgramSetup" method="save">
@@ -88,11 +93,15 @@
 		</action>
 		<action name="programsetupsave" class="actionclass.ProgramSetup" method="save">
 			<param name="pageconfigxml">ProgramSetup.xml</param>
-			<result name="saveajax" type="stream">	
+			<result name="ajax" type="stream">	
 				<param name="resultxml">ProgramSetup.xml</param>
 				<param name="contentType">text/html</param>
 				<param name="inputName">inputStream</param>
 			</result>
+			<result name="freemarker" type="freemarker">${resultPage}</result>
+			<result name="dispatcher" >${resultPage}</result>
+			<result name="velocity" >${resultPage}</result>
+			<result name="input">/index.jsp</result>
 			<result name="input">/index.jsp</result>
 		</action>
 	</package>
@@ -107,7 +116,7 @@
 	</package>
 	
 	
-	<package name="xslt-example" extends="yidefaultPackage">
+	<!--package name="xslt-example" extends="yidefaultPackage">
 
 		<action name="testxsl" class="actionclass.ExampleXSLTAction" method="preview">
 			<interceptor-ref name="myCustomStack" />
@@ -128,7 +137,7 @@
 		</action>
 		
 		
-	</package>
+	</package-->
 	
 	
 	<package name="odl-engine" extends="yidefaultPackage">
@@ -167,7 +176,7 @@
 		</action>
 	</package>
 	
-	<package name="old-xslt-example" extends="struts-default">
+	<!--package name="old-xslt-example" extends="struts-default">
 		<result-types>
 			<result-type name="customJSON" class="actionclass.XMLResult">
 			</result-type>
@@ -205,7 +214,7 @@
 			<result name="preview"  >/pages/loginmap.jsp</result>
 			<result name="input">/xslinterceptorinp.jsp</result>
 		</action>
-	</package>
+	</package-->
 	<package name="myactionPack" extends="yidefaultPackage" >
 		<action name="myaction" class="actionclass.MyAction">
 			<result>/success.jsp</result>
@@ -214,14 +223,13 @@
 	
        <package name="card" extends="yidefaultPackage" namespace="/cms">
             <action name="loginPage" class="com.ycs.login.actions.LoginAC">
-                <result name="success" type="redirectAction">menuGen</result>
+                <result name="success" type="chain">menuGen</result>
                 <result name="error">
                     /cms/login.jsp
                 </result>
             </action >
             <action name="menuGen" class="com.ycs.user.accesscontroller.MenuHelper">
-                <result name="success">
-                    /cms/home.html
+                <result name="success" >/cms/home.html
                 </result>
             </action>
             
@@ -236,7 +244,7 @@
                     </param>
                 </result>
             </action>
-            
+           
         </package> 
 	
 </struts>

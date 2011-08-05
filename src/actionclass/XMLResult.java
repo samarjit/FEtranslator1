@@ -113,10 +113,12 @@ public class XMLResult extends StrutsResultSupport {
 	                }
 	            }
          String screenName1 = (String) invocation.getInvocationContext().getValueStack().findValue("screenName",String.class);
-         xmlFileName =  ScreenMapRepo.findMapXML(screenName1);
+         xmlFileName =  ScreenMapRepo.findMapXMLPath(screenName1);
 		       File f = new File(xmlFileName);
 		       xmlFileName = f.getName();
-		       
+		      String tplpath = f.getParent();
+		      
+		      logger.debug("XMl file Directory Path:"+tplpath);
 		       logger.debug("XMl map file:"+xmlFileName);
 		 /////////////////////////////////////////////  
          
@@ -142,8 +144,8 @@ public class XMLResult extends StrutsResultSupport {
          
          //freemarker
         this.invocation = invocation;
-        String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
-        logger.debug("tplpath="+tplpath);
+//   String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
+//        logger.debug("tplpath="+tplpath);
         Configuration cfg = new Configuration();
         	cfg.setDirectoryForTemplateLoading(new File(tplpath));
      		cfg.setObjectWrapper(new DefaultObjectWrapper()); 

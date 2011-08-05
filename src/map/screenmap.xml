@@ -3,20 +3,25 @@
  <screen name="ProgramSetup" mappingxml="map/ProgramSetup.xml" />
  <screen name="TestPage" mappingxml="map/testsetup.xml" />
  <screen name="test1" mappingxml="map/test1.xml" />
+
+ <screen name="home" mappingxml="map/cms/home.xml" />
+ <screen name="locale" mappingxml="map/cms/locale.xml" />
+ <screen name="welcome" mappingxml="map/cms/welcome.xml" />
  
- <screen name="locale" mappingxml="map/locale.xml" />
- <screen name="welcome" mappingxml="map/welcome.xml" />
+ <screen name="cardOrder" mappingxml="map/cms/cardOrder.xml" />
+ <screen name="cardOrderConfirm" mappingxml="map/cms/cardOrderConfirm.xml" />
+ <screen name="cardOrderAck" mappingxml="map/cms/cardOrderAck.xml" />
  
- <screen name="cardOrder" mappingxml="map/cardOrder.xml" />
- <screen name="cardOrderConfirm" mappingxml="map/cardOrderConfirm.xml" />
- <screen name="cardOrderAck" mappingxml="map/cardOrderAck.xml" />
+ <screen name="authorizeCardList" mappingxml="map/cms/authorizeCardList.xml" />
+ <screen name="authorizeCardOrder" mappingxml="map/cms/authorizeCardOrder.xml" />
  
- <screen name="authorizeCardList" mappingxml="map/authorizeCardList.xml" />
- <screen name="authorizeCardOrder" mappingxml="map/authorizeCardOrder.xml" />
+ <screen name="generateCardList" mappingxml="map/cms/generateCardList.xml" />
+ <screen name="generateCard" mappingxml="map/cms/generateCard.xml" />
  
- <screen name="generateCardList" mappingxml="map/generateCardList.xml" />
- <screen name="generateCard" mappingxml="map/generateCard.xml" />
+ <screen name="embossList" mappingxml="map/cms/embossList.xml" />
+ <screen name="embossStatusUpdate" mappingxml="map/cms/embossStatusUpdate.xml" />
  
- <screen name="embossList" mappingxml="map/embossList.xml" />
- <screen name="embossStatusUpdate" mappingxml="map/embossStatusUpdate.xml" />
+ <screen name="cardReceiptList" mappingxml="map/cms/cardReceiptList.xml" />
+ <screen name="cardReceipt" mappingxml="map/cms/cardReceipt.xml" />
+ 
 </root>

@@ -8,6 +8,7 @@
   <hr/>
   <h3>Error Message</h3>
     <s:actionerror/>
+    <s:actionmessage/>
     <p>
       <s:property value="%{exception.message}"/>
     </p>

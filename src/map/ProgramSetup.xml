@@ -82,6 +82,7 @@
 		   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud" />
 		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud" />
 		   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc" />
+		   <cmd name="RedirectPage" opt="buslogic:ArbritrarySelect"  instack="formChild"  result="TutCrud1.html"  processor="bl" />
 		</commands>
 	</screen>
 

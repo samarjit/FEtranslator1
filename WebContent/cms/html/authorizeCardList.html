@@ -1,0 +1,282 @@
+<html>
+    <head>
+        <title>Universal Bank</title>
+        <link href="../css/body.css" rel="stylesheet" type="text/css">
+        <link href="../css/main.css" rel="stylesheet" type="text/css">
+		<script  src="../js/jquery-1.4.4.min.js"></script>
+		<script  src="../js/jquery.validate.js"></script>
+		<script type="text/javascript" src="../js/fg.menu.js"></script>
+		<script type="text/javascript" src="../js/jquery.tmpl.js"></script>
+		<script type="text/javascript" src="../js/jsonStringify.js"></script>
+		<script type="text/javascript" src="../js/iadtframework.js"></script>
+		
+		<link rel="stylesheet" type="text/css" media="screen" href="../css/jquery-ui-1.8.1.custom.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="../css/ui.jqgrid.css" />
+		
+		<script src="../js/i18n/grid.locale-en.js" type="text/javascript"></script>
+		<script src="../js/jquery.jqGrid.src.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        	
+			var fieldlist ="invoice,productCode,productName,plasticCode,plasticDesc,quantity,orderBy,orderDate,authorizeStatus".split(",");
+			var keylist =  "productCode,plasticCode,quantity".split(",");
+			var unqFldId = "invoice"; 
+			var formdata;			
+            $(document).ready(function(){
+				iadt.setFieldlist(fieldlist);
+				jqgridjson();
+				//getJqgridData();
+				//calljqgrid();
+				//getOrderList();				
+            });
+			
+			function jqgridjson(){
+				jQuery("#list1").jqGrid({
+					ajaxGridOptions : {type:"POST"},
+					serializeGridData : function(postdata) {
+						alert("postdata"+postdata)
+						postdata.page = 1;
+						return postdata;
+					},
+					userData: function(userdata){
+						alert("userdata"+userdata);
+					},
+				   	url:"jqgrid.action?screenName=authorizeCardList&submitdata={form1:[{command:'orderList'}]}",
+					datatype: "jsonstring",
+					height: 200,
+				   	colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
+				   	colModel:[
+				   		{name:'id',index:'id', width:60, sorttype:"int"},
+				   		{name:'invdate',index:'invdate', width:90, sorttype:"date"},
+				   		{name:'name',index:'name', width:100},
+				   		{name:'amount',index:'amount', width:80, align:"right",sorttype:"float"},
+				   		{name:'tax',index:'tax', width:80, align:"right",sorttype:"float"},		
+				   		{name:'total',index:'total', width:80,align:"right",sorttype:"float"},		
+				   		{name:'note',index:'note', width:150, sortable:false}		
+				   	],
+				   	rowNum:5,
+				   	rowList:[5,10,20,30],
+				   	pager: '#pager1',
+				   	sortname: 'id',
+				    viewrecords: true,
+				    sortorder: "desc",
+				    loadonce: true,
+				    caption: "Load Once Example"
+				});
+
+
+			}
+			function calljqgrid(formdata){
+				jQuery("#list1").jqGrid({
+					url:"jqgrid.action?screenName=authorizeCardList&submitdata={form1:[{command:'orderList'}]}", 
+					datatype: "json",
+					height:200,
+					colNames:['Inv No','Date', 'Client','Amount','Tax','Total','Notes'], 
+					colModel:[ 	
+								{name:'invoice',index:'invoice',width:'10%'}, 
+								{name:'productCode',index:'productCode', width:'10%'},
+								{name:'productName',index:'productName', width:'20%'},
+								{name:'plasticCode',index:'plasticCode', width:'20%', align:"right"},
+								{name:'plasticDesc',index:'plasticDesc', width:'25%', align:"right"},
+								{name:'quantity',index:'quantity', width:'15%',align:"right"},
+								{name:'orderBy',index:'orderBy', width:'15%', sortable:false} 
+								
+					], 
+					multiselect: true,
+					rowNum:10,
+					autowidth: true,
+					rowList:[5,10,20,30], 
+					pager: jQuery('#pager1'),
+					sortname: 'invoice', 
+					viewrecords: true, 
+					rownumWidth: 500,
+					sortorder: "", 
+					caption:"XMLExample"
+			}).navGrid('#pager1',{edit:true,add:true,del:true});
+			
+			
+			}
+			
+		function getJqgridData(){
+			var json;
+				  jQuery.get("jsrpc.action?screenName=authorizeCardList&submitdata={form1:[{command:'orderList'}]}", function(data){
+//					alert(data);
+					 json = jQuery.parseJSON(data);
+					  formdata = json.data.form1
+						calljqgrid(formdata);
+                    });
+				
+			}
+			
+			function getOrderList(){
+				  jQuery.get("jsrpc.action?screenName=authorizeCardList&submitdata={form1:[{command:'orderList'}]}", function(data){
+						var json = jQuery.parseJSON(data);
+						var formdata = json.data.form1;
+						iadt.updateUIRows(formdata);
+                    });
+					tableToGrid("#tablespace");
+			}
+			
+			function OnAuthorize(){
+				var slctdInvoice = $("input:radio[name=check]:checked").val();
+			if (slctdInvoice == undefined || slctdInvoice == "") {
+				alert("Select the card Order");
+				return false;
+			}
+				$("#submitdata").val(slctdInvoice);
+				$('#form1')[0].action = "cmsAction?screenName=authorizeCardOrder";
+				$('#form1')[0].submit();
+			}
+            
+	
+	 		function onCancel(){
+				$('#form1')[0].action = "cmsAction?screenName=welcome";
+				$('#form1')[0].submit();
+			}
+			
+			
+        </script>
+    </head>
+    <body>
+    	<table width="100%" cellpadding="4" cellspacing="0" border="0" class="head1"  height="20" >
+                <tr>
+                    <td>
+                        Card Order 
+                    </td>
+                </tr>
+		</table>
+		<table width="100%" cellpadding="4" cellspacing="0" border="0"  height="20" >
+                <tr>
+                    <td>
+                       &nbsp;
+                    </td>
+                </tr>
+				
+		</table>
+		<table width="80%" border="0" cellpadding="5" cellspacing="0" class="table1">
+		    <tr>
+		        <td>
+		            <div>
+		                <table id="list1">
+		                </table>
+		                <div id="pager1">
+		                </div>
+		            </div>
+		        </td>
+		    </tr>
+		</table>
+		<table width="100%" cellpadding="4" cellspacing="0" border="0"  height="20" >
+                <tr>
+                    <td>
+                       &nbsp;
+                    </td>
+                </tr>
+				
+		</table>
+        <div id="listtemplate" cols="200" style="display:none">
+            <table border=1>
+                <tr class='even'>
+                	 <td>
+                        <input type='radio' value='${invoice}' name='check' id='check_${rowcount}' />
+                    </td>
+					 <td style='display:table-cell'>
+                        ${invoice}<input type='hidden' value='${invoice}' id='invoice__${rowcount}' name='invoice'/>
+                    </td>
+                    <td style='display:table-cell'>
+                        ${productCode}<input type='hidden' value='${productCode}' id='productCode__${rowcount}' name='productCode'/>
+                    </td>
+                    <td style='display:table-cell'>
+                        ${productName}<input type='hidden' value='${productName}' id='productName__${rowcount}' name='productName'/>
+                    </td>
+                    <td style='display:table-cell'>
+                        ${plasticCode}<input type='hidden' value="${plasticCode}" id='plasticCode__${rowcount}' name='plasticCode'/>
+                    </td>
+                    <td style='display:table-cell'>
+                        ${plasticDesc}<input type='hidden' value='${plasticDesc}' id='plasticDesc__${rowcount}' name='plasticDesc'/>
+                    </td>
+					 <td style='display:table-cell'>
+                        ${quantity}<input type='hidden' value='${quantity}' id='quantity__${rowcount}' name='quantity'/>
+                    </td>
+                    <td style='display:table-cell'>
+                        ${orderBy}<input type='hidden' value='${orderBy}' id='orderBy_${rowcount}' name='orderBy'/>
+                    </td>
+					 <td style='display:table-cell'>
+                        ${orderDate}<input type='hidden' value='${orderDate}' id='orderDate__${rowcount}' name='orderDate'/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="tableheader" style="display:none;">
+            <table class="table1" id="tablespace" width="100%" border="0" cellspacing="1" cellpadding="5">
+                <tr align="left" class="trlightgrey">
+                	<th width="3%">Select</th>
+					<th width="8%">Order Ref No</th>
+                    <th width="8%">Product Code</th>
+                    <th width="18%">Product Name</th>
+                    <th width="20%">Plastic Code</th>
+                    <th width="20%">Plastic Description</th>
+                    <th width="8%">Ordered Quantity</th>
+					<th width="12%">Ordered By</th>
+					<th width="12%">Ordered Date</th>
+					
+                </tr>
+            </table>
+        </div>
+        <form name="form1" id="form1" method="post">
+        	<table width="100%" cellpadding="0" cellspacing="0" border="0" style="display:none;">
+                <tr>
+                    <td>
+                     <input type="text" name="submitdata" id="submitdata" >
+                    </td>
+                </tr>
+				
+		</table>
+            <table width="95%" cellpadding="0" cellspacing="0" border="0">
+	            <tr>
+	                <td>
+	                    <div id="multiplerows">
+	                        <div class="headerlist" style="display:none;">
+	                            productCode,productName,plasticCode,plasticDesc,quantity,orderBy,orderDate,authorizeStatus
+	                        </div>
+							<table class="table1" id="tablespace" width="100%" border="0" cellspacing="1" cellpadding="5">
+				                <tr align="left" class="trlightgrey">
+				                    <th width="3%">Select</th>
+									<th width="8%">Order Ref No</th>
+				                    <th width="8%">Product Code</th>
+				                    <th width="18%">Product Name</th>
+				                    <th width="20%">Plastic Code</th>
+				                    <th width="20%">Plastic Description</th>
+				                    <th width="8%">Ordered Quantity</th>
+									<th width="12%">Ordered By</th>
+									<th width="12%">Ordered Date</th>
+								
+				                </tr>
+				            </table>
+	                    </div>
+	                </td>
+	            </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table width="95%" border="0" cellspacing="0" cellpadding="0">
+                            <tr id="mulcancel">
+                                <td align="center">
+                                    <button type="button" onclick="OnAuthorize()" class="buttonenabled">
+                                        Authorize 
+                                    </button>
+                                    &nbsp; 
+                                    <button type="button" onclick="onCancel()" class="buttonenabled">
+                                        Cancel 
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+    <html>

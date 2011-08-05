@@ -52,10 +52,44 @@ var rule={
 		}
 	};
 
+function createMenuLocal(){
+	$.ajax({                                                    
+		  url: 'menuHeader.html',                                     
+		                                                              
+		  type: 'GET',                                                
+		  async: false,                                               
+		  success: function(data){ // grab content from another page  
+				$('.menuheader').html(data);                            
+			},                                                          
+		  dataType: 'html'                                            
+	});                                                           
+	
+	
+	// BUTTONS                                                                                  
+	$('.fg-button').hover(function(){                                                           
+	    $(this).addClass('ui-state-focus');                                                     
+	}, function(){                                                                              
+	    $(this).removeClass('ui-state-focus');                                                  
+	});                                                                                         
+	//MENUS DYNAMIC                                                                             
+	    $.get('menu1Content.html', function(data){ // grab content from another page         
+	    alert("data from html:"+ data);                                                      
+		$('#menubuttonUser').menu({                                                                   
+					content: data,//$('#menu1').html(), // grab content from this page      
+					showSpeed: 400,                                                         
+					width: 300                                                              
+				});                                                                         
+		});                                                                                 
+	                                                                                         
+	                                                                                            
+	//MENUS DYNAMIC END                                                                         
+	iadt.refreshHoverIcon();                                                                    
+
+}
 var formvalidator = null;	
 $(document).ready(function(){
     formvalidator = $("#form1").validate(rule);
-	createMenu();
+	createMenuLocal();
 	iadt.setFieldlist(fieldlist);
 		 
   });
@@ -228,7 +262,7 @@ function onCancel() {
 
 function onViewDetails(){
 if(	$('#multiplerows .trlightgrey').siblings().find('input[type=radio]:checked').length > 0)
-	location.href = 'ProgramSetupViewDetails.html';
+	location.href = 'programsetupsave.action?screenName=ProgramSetup&submitdata={"form1":[{"command":"RedirectPage"}]}';//""'ProgramSetupViewDetails.html';
 else 
 	iadt.showMessage("Please select a record to view details");
 }

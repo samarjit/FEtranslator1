@@ -53,7 +53,7 @@ public class DmCommandProcessor implements BaseCommandProcessor {
 		try {
 //			String resultJsonConf = "{'cmd':'STUCAP','single':{'FF0151':'aaa','FF0148':'bbb','FF01258':'eee'},'multiple':[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]}";
 			
-			 String pageconfigxml =  ScreenMapRepo.findMapXML(screenName);
+			 String pageconfigxml =  ScreenMapRepo.findMapXMLPath(screenName);
 			 org.dom4j.Document document1 = new SAXReader().read(pageconfigxml);
 			org.dom4j.Element rootele = document1.getRootElement();
 			Node crudnode = rootele.selectSingleNode("//dm");

@@ -1,4 +1,6 @@
 //alert("I am coming from test.js");
+//$.params
+//$.serialize
 //var str="";$.each($('#form1').serializeArray(),function(i,v){ str+=(v.name+",");});
 //JSONstring.make($('#form1').serializeArray())
 //it gives a list of comma separated names
@@ -108,7 +110,7 @@ function createMenu(){
     
     var menuxml = "";
     $.ajax({
-        url: 'menu.xml',
+        url: 'getmenuxml.action',
         type: 'GET',
         async: false,
         success: function(data){ // grab content from another page
@@ -166,7 +168,8 @@ function createMenu(){
                     var submenu = menu[j].getElementsByTagName("submenu");
                     for (var m = 0; m < submenu.length; m++) {
                         var href = submenu[m].getAttribute("onclick");
-                        var submenuname = submenu[m].firstChild.nodeValue;
+                        //var submenuname = submenu[m].firstChild.nodeValue;
+                        var submenuname = submenu[m].getAttribute("name");
                         var submenurow = document.createElement('tr');
                         var submenucell = document.createElement('td');
                         var submenua = document.createElement('a');

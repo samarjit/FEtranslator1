@@ -38,7 +38,7 @@ public class AnyProcCommandProcessor implements BaseCommandProcessor {
 //		 "{'procname':'WS_TEST_PROC','inputparam':[[{'NAME':'sam','EMAIL':'sam@yl.com'},{'NAME':'samarjit','EMAIL':'samarjit@yl.com'}],{'data1':'param2'}],'outputparam':'param3'}";
 
 		try {
-			 String pageconfigxml =  ScreenMapRepo.findMapXML(screenName);
+			 String pageconfigxml =  ScreenMapRepo.findMapXMLPath(screenName);
 			 org.dom4j.Document document1 = new SAXReader().read(pageconfigxml);
 			org.dom4j.Element root = document1.getRootElement();
 			Node crudnode = root.selectSingleNode("//anyprocs");

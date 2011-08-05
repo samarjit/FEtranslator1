@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.interceptor.SessionAware;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.inject.Inject;
 import com.ycs.user.accesscontroller.PasswordValidator;
 
 public class LoginAC extends ActionSupport implements SessionAware{
@@ -21,7 +23,7 @@ public class LoginAC extends ActionSupport implements SessionAware{
 	
 	private String userid;
 	private String passwd;
-	
+	private String resourceBundle;
 	
 	
 	public String getUserid() {
@@ -40,11 +42,17 @@ public class LoginAC extends ActionSupport implements SessionAware{
 		this.passwd = passwd;
 	}
 
+	@Inject(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES)
+	public void setResourceBundle(String resourceBundle) {
+      this.resourceBundle = resourceBundle;
+  } 
 	@Action(value="login", results={
 			@Result(name="success",location="/jsp/dashboard.jsp"),
-			@Result(name="error",location="/login.jsp")
+			@Result(name="error",location="/cms/login.jsp")
 		})
 	public String execute(){
+		
+		ActionContext.getContext().getSession().put("resourceBundle", resourceBundle);
 		if(session.containsKey("userid")){
 			logger.debug("User already logged in");
 			 
@@ -92,8 +100,8 @@ public class LoginAC extends ActionSupport implements SessionAware{
 	}
 
 	@Action(value="logout", results={
-			@Result(name="success",location="/login.jsp"),
-			@Result(name="error",location="/login.jsp")
+			@Result(name="success",location="/cms/login.jsp"),
+			@Result(name="error",location="/cms/login.jsp")
 		})
 	public String executeLogout(){
 		if(isLoggedIn())

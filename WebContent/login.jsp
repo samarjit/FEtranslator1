@@ -13,7 +13,7 @@
 				<td><s:textfield name="userid"  key="global.username" value="sam_admin"/></td>
 			</tr>
 			<tr>
-				<td><s:password name="passwd" key="global.password" value="sam_admin" /></td>
+				<td><s:password name="passwd" key="global.password" value="sam_admin"/></td>
 			</tr>
 			<tr>
 				<td><s:submit key="global.submit" name="submit" /></td>

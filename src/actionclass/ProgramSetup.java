@@ -23,10 +23,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.ycs.fe.commandprocessor.ReturnCommandProcessor;
 import com.ycs.fe.crud.CommandProcessor;
 import com.ycs.fe.crud.InsertData;
 import com.ycs.fe.crud.UpdateData;
 import com.ycs.fe.dto.InputDTO;
+import com.ycs.fe.dto.PageReturnType;
 import com.ycs.fe.dto.ResultDTO;
 
 public class ProgramSetup extends ActionSupport {
@@ -43,7 +45,7 @@ private Logger logger = Logger.getLogger(getClass());
 	private String screenName;
 	private Map<String, Object> session;
 	private String submitdatatxncode; 
-	
+	private String resultPage;
 	public InputStream getInputStream() {
 		return inputStream;
 	}
@@ -121,10 +123,20 @@ private Logger logger = Logger.getLogger(getClass());
 			
 		}*/
 		
-		 
-//		resultHtml = result;
-		inputStream = new StringBufferInputStream(resultHtml );
-		return "saveajax";
+		PageReturnType pg = null;
+		try{
+			pg = new ReturnCommandProcessor().getReturnType(screenName, jobj1);
+			screenName = pg.nextScreenName;
+			resultPage = pg.resultPage;
+		
+			if("ajax".equals(pg.resultName)){
+				inputStream = new StringBufferInputStream(resultHtml );
+			}
+		}catch(Exception e){
+			logger.debug("result processing exception for page :"+screenName,e);
+		}
+		System.out.println("resultName = "+pg.resultName);
+		return pg.resultName;
 	}
 	
 	public String processTxn(){
@@ -236,6 +248,14 @@ private Logger logger = Logger.getLogger(getClass());
 
 	public String getSubmitdatatxncode() {
 		return submitdatatxncode;
+	}
+
+	public String getResultPage() {
+		return resultPage;
+	}
+
+	public void setResultPage(String resultPage) {
+		this.resultPage = resultPage;
 	}
 
 	

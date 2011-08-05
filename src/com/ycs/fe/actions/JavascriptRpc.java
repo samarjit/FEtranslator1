@@ -1,5 +1,6 @@
 package com.ycs.fe.actions;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 
@@ -62,7 +63,7 @@ public class JavascriptRpc extends ActionSupport {
 		if(bl != null)
 		  bl.preJsRPCListerner(ActionContext.getContext().getActionInvocation());
 		
-		String path = ScreenMapRepo.findMapXML(screenName);
+		String path = ScreenMapRepo.findMapXMLPath(screenName);
 		String parsedquery = "";
 		ResultDTO resDTO = new ResultDTO();
 		

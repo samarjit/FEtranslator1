@@ -84,6 +84,9 @@ public class AppCacheManager {
 	public static void putElementInCache(String cachename,String key, Object object){
 		try {
 			net.sf.ehcache.Element element = new net.sf.ehcache.Element(key, object);
+			if(singletonManager.getCache(cachename) == null){
+				createCache(cachename);
+			}
 			singletonManager.getCache(cachename).put(element );
 			 
 		} catch (IllegalStateException e) {
@@ -95,7 +98,8 @@ public class AppCacheManager {
 		}
 	}
 	
-	public net.sf.ehcache.Element getElementFromCache(String cachename,String key){
+	public static net.sf.ehcache.Element getElementFromCache(String cachename,String key){
+		if(singletonManager.getCache(cachename) == null)return null;
 		return singletonManager.getCache(cachename).get(key);	
 	}
 	

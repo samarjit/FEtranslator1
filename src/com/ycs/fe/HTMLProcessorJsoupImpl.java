@@ -184,7 +184,8 @@ private boolean templateprocessed = false;
 			String replace=inputElm.attributeValue("replace");
 			String prop = inputElm.attributeValue("key");
 			String key = null;
-			String resourceBundle = ActionContext.getContext().getValueStack().findString("resourceBundle");
+			//String resourceBundle = ActionContext.getContext().getValueStack().findString("resourceBundle");
+			String resourceBundle = (String) ActionContext.getContext().getSession().get("resourceBundle");
 			if (resourceBundle != null){
 				ResourceBundle labels = ResourceBundle.getBundle(resourceBundle, ActionContext.getContext().getLocale());
 				if (prop != null && prop.trim() != "") {

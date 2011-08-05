@@ -31,16 +31,17 @@ public class CardOrder extends ActionSupport{
 		this.submitdata = submitdata;
 	}
 	
-	@Inject(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES)
-    public void setResourceBundle(String resourceBundle) {
-        this.resourceBundle = resourceBundle;
-    }
+//	@Inject(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES)
+//    public void setResourceBundle(String resourceBundle) {
+//        this.resourceBundle = resourceBundle;
+//    }
 
 	public String execute() {
-		String rb = ActionContext.getContext().getValueStack().findString("resourceBundle");
-		if (rb == null || rb == "") {
-			ActionContext.getContext().getValueStack().set("resourceBundle", resourceBundle);
-		}
+//		String rb = ActionContext.getContext().getValueStack().findString("resourceBundle");
+//		if (rb == null || rb == "") {
+//			ActionContext.getContext().getValueStack().set("resourceBundle", resourceBundle);
+//		}
+//		Locale ll = ActionContext.getContext().getLocale();
 		return SUCCESS;
 	}
 	public String onload(){

@@ -123,6 +123,9 @@ insert into BIN_GROUP_DETAILS (BIN_GROUP_NAME ,BIN_GROUP_DESC ,BIN_CURRENCY ,SET
 create table role_rights_map (role varchar(20), menu_id varchar(20));
 insert into ROLE_RIGHTS_MAP (ROLE ,MENU_ID ) values('ADMIN','tab1');
 insert into ROLE_RIGHTS_MAP (ROLE ,MENU_ID ) values('ADMIN','tab1menu1');
+insert into ROLE_RIGHTS_MAP (ROLE ,MENU_ID ) values('ADMIN','tab1menu4');
+insert into ROLE_RIGHTS_MAP (ROLE ,MENU_ID ) values('ADMIN','tab1menu5');
+insert into ROLE_RIGHTS_MAP (ROLE ,MENU_ID ) values('ADMIN','tab1menu6');
 insert into ROLE_RIGHTS_MAP (ROLE ,MENU_ID ) values('ADMIN','submenu1');
 insert into ROLE_RIGHTS_MAP (ROLE ,MENU_ID ) values('ADMIN','tab1menu2');
 insert into ROLE_RIGHTS_MAP (ROLE ,MENU_ID ) values('ADMIN','submenu2');

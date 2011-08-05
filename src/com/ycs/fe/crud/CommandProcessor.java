@@ -13,6 +13,7 @@ import com.ycs.fe.commandprocessor.BaseCommandProcessor;
 import com.ycs.fe.commandprocessor.CommandProcessorResolver;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.Constants;
 import com.ycs.fe.util.ScreenMapRepo;
 
 public class CommandProcessor {
@@ -35,10 +36,11 @@ public class CommandProcessor {
 	 */
 	public ResultDTO commandProcessor( JSON submitdataObj, String screenName, InputDTO inputDTO){
 //		JsrpcPojo rpc = new JsrpcPojo();
-		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 		
 		ResultDTO resDTO = null;
-		
+		if(Constants.CMD_PROCESSOR == Constants.APP_LAYER){
+			
+			Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 			
 		    @SuppressWarnings("unchecked")
 			Set<String>  itr =  ( (JSONObject) submitdataObj).keySet(); 
@@ -46,8 +48,8 @@ public class CommandProcessor {
 		    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
 		    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction
 		    		String cmd = ((JSONObject) jsonRecord).getString("command");
-		    		Element elmCmd = (Element) rootXml.selectSingleNode("//commands/cmd[@name='"+cmd+"' ] ");
-		    		System.out.println("//commands/cmd[@name='"+cmd+"' ] ");
+		    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
+		    		System.out.println("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
 //		    		String instack = elmCmd.attributeValue("instack");
 		    		String operation = elmCmd.attributeValue("opt");
 		    		String strProcessor = elmCmd.attributeValue("processor");
@@ -62,10 +64,19 @@ public class CommandProcessor {
 		    		}
 		    	}
 			}
+		}else{
+			String resultJson = remoteCommandProcessor (submitdataObj.toString(), screenName);
+			resDTO = (ResultDTO) JSONObject.toBean(JSONObject.fromObject(resultJson), ResultDTO.class);
+		}
 		 
 		return resDTO;
 	}
 	
+	private String remoteCommandProcessor(String submitdataObj, String screenName) {
+		 
+		return null;
+	}
+
 	/**
 	 * @param args
 	 */

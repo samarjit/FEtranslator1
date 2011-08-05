@@ -29,7 +29,7 @@ private Logger logger = Logger.getLogger(getClass());
 	    return update(screenName, panelname,"sqlupdate", jsonObject);
 	}
 	public ResultDTO update(String screenName, String panelname,String querynode, JSONObject jsonObject) {
-		    String pageconfigxml =  ScreenMapRepo.findMapXML(screenName);
+		    String pageconfigxml =  ScreenMapRepo.findMapXMLPath(screenName);
 			String parsedquery = "";
 			ResultDTO queryres = new ResultDTO();
 			try {

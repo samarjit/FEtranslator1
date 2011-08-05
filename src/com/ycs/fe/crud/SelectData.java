@@ -30,7 +30,7 @@ private Logger logger = Logger.getLogger(getClass());
 	public ResultDTO selectData(String screenName, String panelname,String querynode, JSONObject jsonObject) {
 		 
 		 
-		    String pageconfigxml =  ScreenMapRepo.findMapXML(screenName);
+		    String pageconfigxml =  ScreenMapRepo.findMapXMLPath(screenName);
 			String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
 			String parsedquery = "";
 			ResultDTO resultDTO = new ResultDTO();

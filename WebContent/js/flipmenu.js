@@ -32,13 +32,13 @@
 	flipImg_static = "../images/flip_static.png";
 
 // ## Initialise all flipMenus onload
-	flipInitOnLoad = true;
+	flipInitOnLoad = false;
 
 // ## Message to display in status bar while loading
 	flipLoadingMessage = "Loading...";
-
+	
 // ######################################################################
-
+	
 function alterSize(someSize, alterAmount) {
 	someSize = String(someSize);
 	var tmpNr = parseFloat(someSize.replace(/\D/g, ""));
@@ -64,6 +64,8 @@ document.write(
 
 if (flipImages) {
 	aFlipPreloads = [];
+	
+	
 	aFlipPreloads[0] = new Image;
 	aFlipPreloads[0].src = flipImg_open;
 	aFlipPreloads[1] = new Image;
@@ -339,4 +341,72 @@ function clearMenuState(flipMenuID) {
 cookiePrefix = document.location.pathname + "_";
 
 addEvent(document, "click", toggleFlip);
-if (flipInitOnLoad) addEvent(window, "load", initFlip);
+
+if (flipInitOnLoad) {
+	addEvent(window, "load", initFlip);
+	}
+
+function getMenu(filename, menuid) {
+	//alert("left menu");
+	$("#"+menuid).empty();
+	 jQuery.get("getmenuxml.action", function(data){
+		// alert("menuxml from ajax :"+data);
+		 menuxml = data;
+		 createLeftMenu(data,filename, menuid);
+     });
+}
+
+function createLeftMenu(xmldoc,filename, menuid){
+	$(xmldoc).find("tab").each(function(k,tab) {
+		var menufile = $(tab).attr('onclick');
+		if (menufile != "" && menufile != undefined) {
+			if (menufile == filename) {
+				var menulist = $(tab).children("menu");
+				var tabid = $(tab).attr("id");
+				var ele = document.getElementById(menuid);
+				updateMenu(ele,tabid,menulist,"menu");
+			}
+		}
+	});
+	var startele = document.getElementById(menuid);
+	//startele.initialised = false;
+	initFlip(startele);
+//	addEvent(window, "load", initFlip);
+}
+
+function updateMenu(ele,liid,list,type) {
+	if(list.length > 0){
+		var ulele;
+		if(type == "menu"){
+			ulele = ele;
+		}else{
+			var ulid = liid+"_s";
+			$(ele).append("<ul id='"+ulid+"'></ul>");
+			ulele = document.getElementById(ulid);
+		}
+		$(list).each(function(i,menu) {
+			var name = $(menu).attr("name");
+			var id = $(menu).attr("id");
+			var onclick = $(menu).attr("onclick");
+			var key = $(menu).attr("key");
+			if (key != null && key.trim() != "" && key != undefined) {
+				$(ulele).append("<li id='"+id+"'><a href='"+onclick+"' target='mainFrame'>"+key+"</a></li>");
+			} else {
+				$(ulele).append("<li id='"+id+"'><a href='"+onclick+"' target='mainFrame'>"+name+"</a></li>");
+			}
+			var liele = document.getElementById(id);
+			var childlist = $(menu).children("submenu");
+			//alert(childlist.toString());
+			if(childlist.length > 0){
+				updateMenu(liele,id,childlist,"submenu");
+			}
+		});
+	}
+	
+}
+
+$(document).ready(function(){
+ 	var url = window.location.pathname;
+	var filename = url.substring(url.lastIndexOf('/')+1);
+ 	getMenu(filename,'leftmenu');
+});

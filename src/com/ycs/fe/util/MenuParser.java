@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.struts2.ServletActionContext;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -16,13 +19,14 @@ import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.jsoup.Jsoup;
 
-import com.ycs.fe.cache.AppCacheManager;
+import com.opensymphony.xwork2.ActionContext;
 import com.ycs.user.RoleRightsMap;
 import com.ycs.user.Task;
 
 public class MenuParser {
 	public static final String menuXml = "MenuXML";
 	public String sourceMenuXml = "SourceMenuXml";
+	public Map<String,Object> menuDTO = new HashedMap();
 //	 static {
 //		 AppCacheManager.createCache(menuXml);
 //	}
@@ -45,45 +49,48 @@ public class MenuParser {
 //					}
 //				}
 			}
-			System.out.println("tasklist Length : " + tasklist.size());
 			Document doc = getMenuXML();
 			Element root = doc.getRootElement();
 			for (Iterator tabItr = root.elementIterator("tab"); tabItr.hasNext();) {
 				Element tab = (Element) tabItr.next();
 				String tabId = tab.attributeValue("id");
 				if (contains(tasklist, tabId)) {
-					System.out.println("Role comtains :" + tabId);
 				} else {
 					root.remove(tab);
-					System.out.println("Remove from xml :" + tabId);
 				}
 
 				for (Iterator menuItr = tab.elementIterator("menu"); menuItr.hasNext();) {
 					Element menu = (Element) menuItr.next();
 					String menuId = menu.attributeValue("id");
 					if (contains(tasklist, menuId)) {
-						System.out.println("Role comtains :" + menuId);
 					} else {
 						tab.remove(menu);
-						System.out.println("Remove from xml :" + menuId);
 					}
 
 					for (Iterator submenuItr = menu.elementIterator("submenu"); submenuItr.hasNext();) {
 						Element submenu = (Element) submenuItr.next();
 						String submenuId = submenu.attributeValue("id");
 						if (contains(tasklist, submenuId)) {
-							System.out.println("Role comtains :" + submenuId);
 						} else {
 							menu.remove(submenu);
-							System.out.println("Remove from xml :" + submenuId);
 						}
 					}
 
 				}
 
 			}
+			String resourceBundle = (String) ActionContext.getContext().getSession().get("resourceBundle");
+			ResourceBundle labels = null;
+			if (resourceBundle != null) {
+				labels = ResourceBundle.getBundle(resourceBundle, ActionContext.getContext().getLocale());
+			}
+			if (labels != null) {
+				populateKeyvalue(root, labels);
+			}else{
+				removeKeyValue(root);
+			}
 			menuXml = doc.asXML();
-			createMenuFiles(doc);
+			//createMenuFiles(doc);
 			System.out.println(doc.asXML());
 		} catch (DocumentException e) {
 			e.printStackTrace();
@@ -92,6 +99,29 @@ public class MenuParser {
 		return menuXml;
 	}
 
+
+	
+	protected void populateKeyvalue(Element root, ResourceBundle labels) {
+		for (Iterator itr = root.elementIterator(); itr.hasNext();) {
+			Element ele = (Element) itr.next();
+			String prop = ele.attributeValue("key");
+			if (prop != null && prop.trim() != "") {
+				ele.setAttributeValue("key", labels.getString(prop));
+			}
+			populateKeyvalue(ele,labels);
+		}
+	}
+
+	protected void removeKeyValue(Element root) {
+		for (Iterator itr = root.elementIterator(); itr.hasNext();) {
+			Element ele = (Element) itr.next();
+			String prop = ele.attributeValue("key");
+			if (prop != null && prop.trim() != "") {
+				ele.setAttributeValue("key", null);
+			}
+			removeKeyValue(ele);
+		}
+	}
 	private Document getMenuXML() throws DocumentException {
 		String xmlpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
 		xmlpath = xmlpath + "\\menu.xml";
@@ -121,11 +151,15 @@ public class MenuParser {
 //			Document menuxmlDoc = new SAXReader().read(xmlpath);
 			List<Node> tablist = menuxmlDoc.selectNodes("//tab");
 
-			String menutempPath = ServletActionContext.getServletContext().getRealPath("/cms/menu_template.html"); //"C:\\Eclipse\\workspace\\FEtranslator1\\WebContent\\cms\\menu_template.html"
+			String menutempPath = ServletActionContext.getServletContext().getRealPath("/cms/menu_template.html");
+			menutempPath = "C:\\Eclipse\\workspace\\FEtranslator1\\WebContent\\cms\\menu_template.html";
+			org.jsoup.nodes.Document tempDoc = Jsoup.parse(new File(menutempPath), "UTF-8", "");
 			//org.jsoup.nodes.Document menuTemplate = Jsoup.parse(new File(menutempPath), "UTF-8", "");
 			
-			String menuDir = ServletActionContext.getServletContext().getRealPath("/cms");//"C:\\Eclipse\\workspace\\FEtranslator1\\WebContent\\cms"
-			String tophtmlpath = ServletActionContext.getServletContext().getRealPath("/cms/top.html");//"C:\\Eclipse\\workspace\\FEtranslator1\\WebContent\\cms\\top.html";
+			String menuDir = ServletActionContext.getServletContext().getRealPath("/cms");
+			menuDir = "C:\\Eclipse\\workspace\\FEtranslator1\\WebContent\\cms";
+			String tophtmlpath = ServletActionContext.getServletContext().getRealPath("/cms/top.html");
+			tophtmlpath = "C:\\Eclipse\\workspace\\FEtranslator1\\WebContent\\cms\\top.html";
 			File topfile = new File(tophtmlpath);
 			org.jsoup.nodes.Document tophtml = Jsoup.parse(topfile, "UTF-8", "");
 			org.jsoup.nodes.Element tabhtml = tophtml.getElementById("tabmenu");
@@ -141,21 +175,21 @@ public class MenuParser {
 				String menufilename = id+"_menu.html";
 				li.append("<a href='"+onclick+"' target='mainframe' id='"+id+"' onclick=\"fun(this.id);MM_goToURL('"+menufilename+"');return false\" >"+name+" </a>");
 				File menufile = new File(menuDir+"\\"+menufilename);
-				//if(!menufile.exists()){
+				if(!menufile.exists()){
 					menufile.createNewFile();
-//				}
-				org.jsoup.nodes.Document tempDoc = Jsoup.parse(new File(menutempPath), "UTF-8", "");
-				org.jsoup.nodes.Element flipmenu = tempDoc.getElementById("flipmenu");
+					DataOutputStream dos = new DataOutputStream(new FileOutputStream(menufile));
+					dos.write(tempDoc.toString().getBytes());
+				}
+				org.jsoup.nodes.Document menuDoc = Jsoup.parse(menufile, "UTF-8", "");
+				org.jsoup.nodes.Element flipmenu = menuDoc.getElementById("flipmenu");
 				updateMenu(flipmenu, id, menulist,"menu");
-				
-				DataOutputStream dos = new DataOutputStream(new FileOutputStream(menufile));
-				dos.write(tempDoc.toString().getBytes());
+				menuDTO.put(menufilename, menuDoc);
 				System.out.println(li.toString());
 			}
-			
-			DataOutputStream dos = new DataOutputStream(new FileOutputStream(topfile));
-			dos.write(tophtml.toString().getBytes());
-			
+			menuDTO.put("tophtml", tophtml);
+			ActionContext.getContext().getValueStack().set("menuDTO", menuDTO);
+//			DataOutputStream dos = new DataOutputStream(new FileOutputStream(topfile));
+//			dos.write(tophtml.toString().getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

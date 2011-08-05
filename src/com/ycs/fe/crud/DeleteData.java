@@ -28,7 +28,7 @@ private Logger logger = Logger.getLogger(getClass());
 		return delete(screenName, panelname,"sqldelete", jsonObject);
 	}
 	public String delete(String screenName, String panelname,String querynode, JSONObject jsonObject) {	 
-		String xmlconfigfile =  ScreenMapRepo.findMapXML(screenName);
+		String xmlconfigfile =  ScreenMapRepo.findMapXMLPath(screenName);
 		String parsedquery = "";
 			try {
 				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);
