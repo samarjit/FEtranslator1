@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 
 import net.sf.json.JSONObject;
 
+import com.ycs.fe.businesslogic.BaseBL;
+import com.ycs.fe.cache.BusinessLogicFactory;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 
@@ -13,6 +15,8 @@ public class BlCommandProcessor implements BaseCommandProcessor {
 	@Override
 	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO inputDTO, ResultDTO resultDTO) {
 		logger.debug("Currently processing record:"+jsonRecord.toString());
+		BaseBL bl = BusinessLogicFactory.getBusinessLogic(screenName);
+		
 		return null;
 	}
 
