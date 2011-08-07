@@ -61,7 +61,7 @@ public class QueryParser{
 	public static String parseQuery(String updatequery,String panelname,JSONObject jsonObject, PrepstmtDTOArray  arparam, HashMap<String, DataType> hmfielddbtype) throws DataTypeException, QueryParseException {
 		//Where
 //		String updatewhere = crudnode.selectSingleNode("sqlwhere").getText();
-		String PATTERN = "\\:(inp|res|vs)?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";//"\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
+		String PATTERN = "\\:(inp|res|vs|ses)?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";//"\\:(\\w*)\\[?(\\d*)\\]?\\.?([^,\\s\\|]*)\\|?([^,\\s]*)";
 		
 		Pattern   pattern = Pattern.compile(PATTERN,Pattern.DOTALL|Pattern.MULTILINE);
 		updatequery = updatequery.trim();
@@ -142,6 +142,25 @@ public class QueryParser{
 	        		  parsedquery += updatequery.substring(end,m1.start());//
 	        		  parsedquery += "?";
 	        		  end = m1.end();  
+	        	  }else if("ses".equals(m1.group(1))){
+	        		  logger.debug("Process with session");
+	        		  String expr = m1.group(2);
+	        		  //expr = expr.substring(4); //remove ':ses' in :vs.xxe[].xp
+	        		  String propval = (String) ActionContext.getContext().getSession().get(expr);
+	        		  logger.debug("Ognl Expression result="+propval);
+	        		  String propname;
+	        		  propname = expr.substring(expr.lastIndexOf('.')+1, expr.length());
+	        		  logger.debug("property name="+propname);
+
+	        		  if(!"".equals(m1.group(3)) ){
+        				  arparam.add(PrepstmtDTO.getDataTypeFrmStr(m1.group(3)),propval);
+        			  }else{
+        				  arparam.add(hmfielddbtype.get(propname),propval);
+        			  }
+	        		  
+	        		  parsedquery += updatequery.substring(end,m1.start());//
+	        		  parsedquery += "?";
+	        		  end = m1.end();
 	        	  }else{
 	        		  parsedquery += updatequery.substring(end,m1.start());//adding expression for easy error debuggin
 	        		  parsedquery += m1.group()+"[ERROR]";

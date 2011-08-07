@@ -11,6 +11,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
  
@@ -67,11 +69,11 @@ private Logger logger = Logger.getLogger(getClass());
 		InputDTO inputDTO = new InputDTO();
 		inputDTO.setData((JSONObject) jobj1);
 		ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
-		
-		
+		ServletActionContext.getContext().getSession().put("mysessionkey", "MY session val");
+		System.out.println(ServletActionContext.getContext().getSession().get("mysessionkey"));
 		try{
 			CommandProcessor cmdpr = new CommandProcessor();
-			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName, inputDTO); 
+			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName); 
 			JSONObject resObj = JSONObject.fromObject(resDTO);
 			resultHtml = resObj.toString();
 		}catch(Exception e){

@@ -26,7 +26,7 @@ private Logger logger = Logger.getLogger(getClass());
 		 return selectList(screenName, panelname,"sqlselect", jsonObject);
 	}
 	public String selectList(String screenName, String panelname,String querynode, JSONObject jsonObject) {
-		 	String xmlconfigfile =  ScreenMapRepo.findMapXML(screenName);
+		 	String xmlconfigfile =  ScreenMapRepo.findMapXMLPath(screenName);
 			String parsedquery = "";
 			try {
 				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);

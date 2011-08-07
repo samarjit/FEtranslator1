@@ -14,10 +14,10 @@ public class BlCommandProcessor implements BaseCommandProcessor {
 	
 	@Override
 	public ResultDTO processCommand(String screenName, String querynodeXpath, JSONObject jsonRecord, InputDTO inputDTO, ResultDTO resultDTO) {
-		logger.debug("Currently processing record:"+jsonRecord.toString());
+		logger.debug("Currently processing record:");
 		BaseBL bl = BusinessLogicFactory.getBusinessLogic(screenName);
-		
-		return null;
+		ResultDTO resDTO = bl.executeCommand(screenName, querynodeXpath, jsonRecord, inputDTO, resultDTO /*previous result*/);
+		return resDTO;
 	}
 
 }

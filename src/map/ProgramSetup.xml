@@ -29,6 +29,9 @@
 			</text>
 			<styleinclude>some2.css</styleinclude>
 		</stylesheets>
+		<sessionvars>
+			mysessionkey|STRING
+		</sessionvars>
 		<crud>
 			<jsonrpc id="rpc1" outstack="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM
 				PROGRAMDETAILS
@@ -61,7 +64,7 @@
 			<txnproc id="TRANSCODE"></txnproc>
 		</dm>
 		<bl>
-			<buslogic id="ArbritrarySelect" > </buslogic>
+			<buslogic id="ArbritrarySelect" method="testMethod1"> </buslogic>
 		</bl>
 		<anyprocs >
 				<proc id="upd2" xml="input.xml" ><![CDATA[
@@ -77,6 +80,7 @@
 		   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud" />
 		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud" />
 		   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc" />
+		   <bulkcmd name="blTest" opt="buslogic#ArbritrarySelect"  result="ajax"/>
 		</commands>
 	</screen>
 

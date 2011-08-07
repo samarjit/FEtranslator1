@@ -31,7 +31,7 @@ private Logger logger = Logger.getLogger(getClass());
 	
 	public ResultDTO insert(String screenName, String panelname,String querynode, JSONObject jsonObject) {
 		
-			String xmlconfigfile =  ScreenMapRepo.findMapXML(screenName);
+			String xmlconfigfile =  ScreenMapRepo.findMapXMLPath(screenName);
 			String parsedquery = "";
 			ResultDTO resultDTO = new ResultDTO();
 			try {
