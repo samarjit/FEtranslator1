@@ -16,6 +16,7 @@
 			<xs:element ref="callbackclass" />
 			<xs:element ref="scripts" />
 			<xs:element ref="stylesheets" />
+			<xs:element name="sessionvars" type="xs:string" minOccurs="0" maxOccurs="1"/>
 			<xs:element ref="crud" />
 			<xs:element ref="dm" />
 			<xs:element ref="bl" />
@@ -259,19 +260,6 @@
   					<xs:attribute name="opt" use="required"
   						type="xs:string" />
   					<xs:attribute name="processor" use="required"
-  						type="xs:string" />
-  					<xs:attribute name="result" use="required" />
-  				</xs:complexType>
-  			</xs:element>
-  			<!-- this is bulkcmd -->
-  			<xs:element name="bulkcmd" minOccurs="0" maxOccurs="unbounded">
-			<xs:annotation>
-			      <xs:documentation>Tooltip: bulkcmd will get executed once per request</xs:documentation>
-			     </xs:annotation>
-  				<xs:complexType>
-  					<xs:attribute name="name" use="required"
-  						type="xs:string" />
-  					<xs:attribute name="opt" use="required"
   						type="xs:string" />
   					<xs:attribute name="result" use="required" />
   				</xs:complexType>

@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -25,7 +27,7 @@ public class BlCommandProcessor implements BaseCommandProcessor {
 		BaseBL bl = BusinessLogicFactory.getBusinessLogic(screenName);
 		ResultDTO resDTO = bl.executeCommand(screenName, querynodeXpath, jsonRecord, inputDTO, resultDTO /*previous result*/);
 		return resDTO;
-	
+	}
 	public static void main(String[] args){
 		BlCommandProcessor bl =  new BlCommandProcessor();
 		bl.processCommand("cardOrder", "buslogic[@id='plasticDetails']", null , null , null);

@@ -1,5 +1,5 @@
 <%@taglib uri="/struts-tags" prefix="s" %>
-<h2>An unexpected error has occurred</h2>
+<h2>Front End application had encountered an unexpected error</h2>
   <p>
     Please report this error to your system administrator
     or appropriate technical support personnel.

@@ -77,7 +77,7 @@ public class JqgridRpc extends ActionSupport {
 				Element root = doc.getRootElement();
 				 
 				logger.debug("JsonRPC with submitdata="+submitdata);
-				JSON submitdataObj = JSONObject.fromObject(submitdata);
+				JSONObject submitdataObj = JSONObject.fromObject(submitdata);
 			
 				InputDTO inputDTO = new InputDTO();
 				inputDTO.setData((JSONObject) submitdataObj);
@@ -88,7 +88,7 @@ public class JqgridRpc extends ActionSupport {
 				ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
 				
 				CommandProcessor cmdpr = new CommandProcessor();
-				resDTO = cmdpr.commandProcessor(submitdataObj, screenName, inputDTO);  
+				resDTO = cmdpr.commandProcessor(submitdataObj, screenName);  
 			 
 		} catch (DocumentException e) {
 			resDTO.addError("ERROR:"+e);

@@ -35,7 +35,10 @@ public class CommandProcessor {
 	 * {"row":1,"programname":"TRACARD","txtnewprogname":"TRACARD","txtprogramdesc":"Travel Card Program","issuername":"HSBC Bank","countryofissue":"SINGAPORE",
 	 * "txtstatus":"Modify",
 	 * command:"jrpcCmd1"}],
-	 * “txnrec”:{single:””,multiple:[{aaa:’’},{aaa:’’}]}, bulkcmd:''}
+	 * “txnrec”:{single:””,multiple:[{aaa:’’},{aaa:’’}]}, 
+	 * bulkcmd:'',
+	 * sessionvars: {key:'value',sessionkey:'sessiondata'} //This part is dynamically inserted
+	 * }
 	 * 
 	 * default bulk process is true
 	 * 
@@ -84,7 +87,7 @@ public class CommandProcessor {
 		}
 		InputDTO inputDTO = new InputDTO();
 		inputDTO.setData((JSONObject) submitdataObj);
-		
+		System.out.println("about to process commands...");
 		if(Constants.CMD_PROCESSOR == Constants.APP_LAYER){
 			
 			Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
@@ -112,7 +115,10 @@ public class CommandProcessor {
 	    		
 		    }else{
 		    	
-			    for (String dataSetkey : itr) { //form1, form2 ...
+			    for (String dataSetkey : itr) { //form1, form2 ...skip txnrec,sessionvars
+			    	//skip bulkcmd should be processed earlier, txnrec and sessionvars are just data groups
+			    	if(dataSetkey.equals("bulkcmd") || dataSetkey.equals("txnrec")   ||  dataSetkey.equals("sessionvars"))continue;
+			    	
 			    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
 			    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction
 			    		String cmd = ((JSONObject) jsonRecord).getString("command");

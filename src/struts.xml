@@ -11,7 +11,11 @@
 		 <package name="debug-default" abstract="true" extends="struts-default"> 
         <interceptors> 
             <interceptor-stack name="debug-stack"> 
-                <interceptor-ref name="exception"/> 
+                <interceptor-ref name="exception">
+                    <param name="exception.logEnabled">true</param>
+      				<param name="exception.logLevel">ERROR</param>
+      				<param name="exception.logCategory">com.ycs.exception</param>
+      			</interceptor-ref> 
                 <interceptor-ref name="alias"/> 
                 <interceptor-ref name="servletConfig"/> 
                 <interceptor-ref name="i18n"/> 
@@ -37,7 +41,16 @@
                 <interceptor-ref name="debugging"/> 
             </interceptor-stack> 
         </interceptors> 
-        <default-interceptor-ref name="debug-stack"/> 
+        <default-interceptor-ref name="debug-stack"/>
+        
+         <global-results>
+             <result name="error" type="dispatcher">/pages/globalerror.jsp</result>
+         </global-results>
+
+         <global-exception-mappings>
+             <exception-mapping exception="java.lang.Exception" result="error"/>
+         </global-exception-mappings>
+          
     </package> 
 	<package name="jaxbtest" extends="debug-default" namespace="">
 	    <action name="jaxbtest" class="com.ycs.fe.actions.JaxbTestAC"
@@ -56,7 +69,7 @@
 			<interceptor name="menugenerator" class="actionclass.MenuGeneratorInterceptor" />
 			<interceptor name="decorator" class="actionclass.DecoratorInterceptor" />
 			<interceptor-stack name="myCustomStack">
-				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="defaultStack" />	
 				<interceptor-ref name="decorator" />
 			</interceptor-stack>
 		</interceptors>
@@ -66,7 +79,7 @@
 	
 	    <global-exception-mappings>
 	        <exception-mapping exception="java.lang.Exception"
-	            result="exception" />
+	            result="exception"  />
 	    </global-exception-mappings>
 	</package>
     

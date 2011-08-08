@@ -84,7 +84,7 @@
             </txnproc>
         </dm>
         <bl>
-            <buslogic id="ArbritrarySelect" outstack="frmUpd1">
+            <buslogic id="ArbritrarySelect" >
             </buslogic>
         </bl>
         <anyprocs>

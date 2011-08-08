@@ -4,31 +4,26 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
-import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
- 
 import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 
 import repo.txnmap.generated.Root;
 import repo.txnmap.generated.Txn;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.ycs.exception.BackendException;
 import com.ycs.fe.commandprocessor.ReturnCommandProcessor;
 import com.ycs.fe.crud.CommandProcessor;
-import com.ycs.fe.crud.InsertData;
-import com.ycs.fe.crud.UpdateData;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.PageReturnType;
 import com.ycs.fe.dto.ResultDTO;
@@ -80,6 +75,7 @@ private Logger logger = Logger.getLogger(getClass());
 			resultHtml = resObj.toString();
 		}catch(Exception e){
 			logger.debug("ActionClass Exception occured",e);
+			throw new BackendException("Exception during CommandProcessing:",e);
 		}
 		/*for (Iterator itr = jobj1.keys();itr.hasNext();) {
 			String name = (String) itr.next();
