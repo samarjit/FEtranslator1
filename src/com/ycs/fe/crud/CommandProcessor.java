@@ -50,8 +50,9 @@ public class CommandProcessor {
 	 * @param screenName 
 	 * @param inputDTO 
 	 * @return
+	 * @throws Exception 
 	 */
-	public ResultDTO commandProcessor( JSONObject submitdataObj, String screenName){
+	public ResultDTO commandProcessor( JSONObject submitdataObj, String screenName) throws Exception{
 //		JsrpcPojo rpc = new JsrpcPojo();
 		
 		ResultDTO resDTO = null;
@@ -87,7 +88,7 @@ public class CommandProcessor {
 		}
 		InputDTO inputDTO = new InputDTO();
 		inputDTO.setData((JSONObject) submitdataObj);
-		System.out.println("about to process commands...");
+		
 		if(Constants.CMD_PROCESSOR == Constants.APP_LAYER){
 			
 			Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
@@ -126,13 +127,14 @@ public class CommandProcessor {
 			    		System.out.println("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
 	//		    		String instack = elmCmd.attributeValue("instack");
 			    		String operation = elmCmd.attributeValue("opt");
-			    		String strProcessor = elmCmd.attributeValue("processor");
-			    		logger  .debug("Command Processor:"+strProcessor+" operation:"+operation);
+//			    		String strProcessor = elmCmd.attributeValue("processor");
+//			    		logger  .debug("Command Processor:"+strProcessor+" operation:"+operation);
 			    		String[] opts = operation.split("\\|"); //get chained commands
 			    		for (String opt : opts) {
 			    			String[] sqlcmd = opt.split("\\:"); //get Id of query 
 			    			String querynodeXpath =  sqlcmd[0]+"[@id='"+sqlcmd[1]+"']"; //Query node xpath
-				    			
+			    			Element processorElm = (Element) rootXml.selectSingleNode("/root/screen/*/"+querynodeXpath+" ");
+			    			String strProcessor = processorElm.getParent().getName();
 			    		    BaseCommandProcessor cmdProcessor =  CommandProcessorResolver.getCommandProcessor(strProcessor);
 			    		    resDTO = cmdProcessor.processCommand(screenName, querynodeXpath, (JSONObject) jsonRecord, inputDTO, resDTO);				
 			    		    //resDTO = rpc.selectData(  screenName,   null, querynodeXpath ,   (JSONObject)jsonRecord);
@@ -150,6 +152,7 @@ public class CommandProcessor {
 			List<String> errors = resDTO.getErrors();
 			if(errors == null)errors = new ArrayList<String>();
 			errors.add("command.processing.feerror");
+			throw new Exception(errors.toString(),e);
 		}
 		return resDTO;
 	}

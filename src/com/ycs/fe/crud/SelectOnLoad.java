@@ -11,13 +11,17 @@ import net.sf.json.JSONSerializer;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.json.JSONException;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.sun.corba.se.impl.orbutil.closure.Constant;
+import com.ycs.fe.commandprocessor.BaseCommandProcessor;
+import com.ycs.fe.commandprocessor.CommandProcessorResolver;
 import com.ycs.fe.dao.FETranslatorDAO;
+import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.PrepstmtDTOArray;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
@@ -57,7 +61,7 @@ public class SelectOnLoad {
 					String type = ((org.dom4j.Element) node).attributeValue("type");
 					String sqlquery = node.getText();
 					FETranslatorDAO feDAO = new FETranslatorDAO();
-					feDAO.executequery(sqlquery,stackid,type);
+					feDAO.executequery(sqlquery,stackid,type); //outputs in different stack ids
 					org.dom4j.Element e = (org.dom4j.Element) node;
 				
 				}
@@ -66,6 +70,29 @@ public class SelectOnLoad {
 				Element elm = (Element) root.selectSingleNode("/root/screen");
 				String screenName = elm.attributeValue("name");
 				logger.debug("query selectonload list size:"+selonloadnl.size());
+				
+				/////command onload ////
+				Element onloadElm = (Element) root.selectSingleNode("/root/screen/commands/onload");
+				String commandChain = onloadElm.attributeValue("opt");
+				String[] opts = commandChain.split("\\|");
+				ResultDTO resultDTO = new ResultDTO();
+				InputDTO inputDTO = new InputDTO();
+				inputDTO.setData(jsonsubmitdata);
+				////TODO populate session vars here in inputDTO///
+				
+				for (String opt : opts) {
+	    			String[] sqlcmd = opt.split("\\:"); //get Id of query 
+	    			String querynodeXpath =  sqlcmd[0]+"[@id='"+sqlcmd[1]+"']"; //Query node xpath
+	    			Element processorElm = (Element) root.selectSingleNode("/root/screen/*/"+querynodeXpath+" ");
+	    			String strProcessor = processorElm.getParent().getName();
+	    		    BaseCommandProcessor cmdProcessor =  CommandProcessorResolver.getCommandProcessor(strProcessor);
+					resultDTO = cmdProcessor.processCommand(screenName, querynodeXpath, null, inputDTO, resultDTO);				
+	    		    //resDTO = rpc.selectData(  screenName,   null, querynodeXpath ,   (JSONObject)jsonRecord);
+	    		}
+				ActionContext.getContext().getValueStack().set("resultDTO",new Gson().toJson(resultDTO).toString());
+				/////end command onload ////
+				
+				
 				for (Iterator queryList = selonloadnl.iterator(); queryList.hasNext();) {
 					org.dom4j.Node queryNode = (org.dom4j.Node) queryList.next();
 					logger.debug("Query Node:"+queryNode.getText());

@@ -259,7 +259,7 @@
   						type="xs:string" />
   					<xs:attribute name="opt" use="required"
   						type="xs:string" />
-  					<xs:attribute name="processor" use="required"
+  					<xs:attribute name="processor" use="optional"
   						type="xs:string" />
   					<xs:attribute name="result" use="required" />
   				</xs:complexType>
