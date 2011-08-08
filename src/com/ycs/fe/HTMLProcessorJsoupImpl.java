@@ -174,7 +174,7 @@ private boolean templateprocessed = false;
 			
 		}
 	}
-	public void processDisplayField(Node xmlelmNode, org.jsoup.nodes.Document dochtml, org.jsoup.nodes.Element headNode){
+	public void processLabelField(Node xmlelmNode, org.jsoup.nodes.Document dochtml, org.jsoup.nodes.Element headNode){
 		@SuppressWarnings("unchecked")
 		List<Node> nl = xmlelmNode.selectNodes("//fields/field/label");//(List) xp.evaluate("//fields/field/display", xmlelmNode, XPathConstants.NODESET);
 		for (int i = 0; i < nl.size(); i++) {
@@ -216,6 +216,28 @@ private boolean templateprocessed = false;
 		}
 	}
 	
+	public void processDisplayField(Node xmlelmNode, org.jsoup.nodes.Document dochtml, org.jsoup.nodes.Element headNode){
+		@SuppressWarnings("unchecked")
+		List<Node> nl = xmlelmNode.selectNodes("//fields/field/display");//(List) xp.evaluate("//fields/field/display", xmlelmNode, XPathConstants.NODESET);
+		for (int i = 0; i < nl.size(); i++) {
+			Element inputElm = (Element) nl.get(i);
+			String htmlid = inputElm.attributeValue("forid");
+			org.jsoup.nodes.Element n =  dochtml.getElementById(htmlid);//.selectSingleNode("//*[@id=\""+htmlid+"\"]");//(Element) xp.evaluate("//*[@id=\""+htmlid+"\"]", dochtml, XPathConstants.NODE);
+			String replace=inputElm.attributeValue("replace");
+			logger.debug("setting values forid:"+"//*[@id=\""+htmlid+"\"]");
+			if(n != null  ){
+				if( replace.equals("append"))
+				n.appendText(inputElm.attributeValue("value"));
+				else{
+					n.getAllElements().remove();
+					n.appendText(inputElm.attributeValue("value"));
+				}
+			}else{
+				//TODO: We need to insert in custom fields
+			}
+			
+		}
+	}
 	/**
 	 * Processes &lt;select/>. 
 	 * @param xmlelmNode
@@ -698,6 +720,7 @@ private boolean templateprocessed = false;
 			//Processing panel specific nodes
 			processInputElm(xmlelmNode, dochtml, headNode);
 			processCustomElm(xmlelmNode, dochtml, headNode);
+			processLabelField(xmlelmNode, dochtml, headNode);
 			processDisplayField(xmlelmNode, dochtml, headNode);
 			processSelectElm(xmlelmNode, dochtml, headNode);
 			processScripts(xmlelmNode, dochtml, headNode);

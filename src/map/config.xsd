@@ -258,6 +258,19 @@
 		      <xs:attribute name="result" use="required"/>
 		    </xs:complexType>
 		  </xs:element>
+  			<!-- this is bulkcmd -->
+  			<xs:element name="bulkcmd" minOccurs="0" maxOccurs="unbounded">
+			<xs:annotation>
+			      <xs:documentation>Tooltip: bulkcmd will get executed once per request</xs:documentation>
+			     </xs:annotation>
+  				<xs:complexType>
+  					<xs:attribute name="name" use="required"
+  						type="xs:string" />
+  					<xs:attribute name="opt" use="required"
+  						type="xs:string" />
+  					<xs:attribute name="result" use="required" />
+  				</xs:complexType>
+  			</xs:element>
   		</xs:sequence>
   	</xs:complexType>
   </xs:element>

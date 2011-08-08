@@ -89,6 +89,7 @@ public class ParseSentenceOgnl {
 
 		} catch (OgnlException e) {
 			e.printStackTrace();
+			throw new SentenceParseException("OgnlException...",e); //This line was removed in a later version, why?
 		}
 
 		return parsedresult;

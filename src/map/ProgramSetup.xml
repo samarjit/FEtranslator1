@@ -29,6 +29,9 @@
 			</text>
 			<styleinclude>some2.css</styleinclude>
 		</stylesheets>
+		<sessionvars>
+			mysessionkey|STRING
+		</sessionvars>
 		<crud>
 			
 			<jsonrpc id="rpc1" outstack="form1">SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername", COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM
@@ -65,7 +68,7 @@
 			<txnproc id="pmdetails" outstack="frmUpd1">{'transcode':'STUCAP','single': :inp.single ,'multiple'::inp.multiple }</txnproc>
 		</dm>
 		<bl>
-			<buslogic id="ArbritrarySelect" outstack="frmUpd1"> </buslogic>
+			<buslogic id="ArbritrarySelect" method="testMethod1"> </buslogic>
 		</bl>
 		<anyprocs>
 				<proc id="upd2" outstack="frmUpd1">{'procname':'WS_TEST_PROC','inputparam':[[{'NAME':'sam','EMAIL':'sam@yl.com'},{'NAME':'samarjit','EMAIL':'samarjit@yl.com'}],{'data1':'param2'}],'outputparam':'param3'}</proc>
@@ -82,7 +85,7 @@
 		   <cmd name="merge" opt="jsonrpc:rpc1|selectonload:selqry1" instack="form1" result="ajax|{screenName}"  processor="crud" />
 		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud" />
 		   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc" />
-		   <cmd name="RedirectPage" opt="buslogic:ArbritrarySelect"  instack="formChild"  result="TutCrud1.html"  processor="bl" />
+		   <bulkcmd name="blTest" opt="buslogic#ArbritrarySelect"  result="ajax"/>
 		</commands>
 	</screen>
 
