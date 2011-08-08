@@ -11,6 +11,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
  

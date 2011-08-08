@@ -210,7 +210,7 @@
        	<xs:element name="buslogic" minOccurs="0" maxOccurs="unbounded" >
        		<xs:complexType mixed="true">
        		 <xs:attribute name="id" type="xs:string"></xs:attribute>	
-       		  <xs:attribute name="outstack" type="xs:string"></xs:attribute>
+       		 <xs:attribute name="method" type="xs:string"></xs:attribute>	
        		</xs:complexType>
        	</xs:element>
        </xs:sequence>
@@ -249,15 +249,33 @@
   <xs:element name="commands">
   	<xs:complexType>
   		<xs:sequence>
-  			<xs:element name="cmd" minOccurs="0" maxOccurs="unbounded">
-		    <xs:complexType>
-		      <xs:attribute name="instack" use="required" type="xs:string"/>
-		      <xs:attribute name="name" use="required" type="xs:string"/>
-		      <xs:attribute name="opt" use="required" type="xs:string"/>
-		      <xs:attribute name="processor" use="required" type="xs:string"/>
-		      <xs:attribute name="result" use="required"/>
-		    </xs:complexType>
-		  </xs:element>
+  			<xs:element name="cmd" minOccurs="0"
+  				maxOccurs="unbounded">
+  				<xs:complexType>
+  					<xs:attribute name="instack" use="required"
+  						type="xs:string" />
+  					<xs:attribute name="name" use="required"
+  						type="xs:string" />
+  					<xs:attribute name="opt" use="required"
+  						type="xs:string" />
+  					<xs:attribute name="processor" use="required"
+  						type="xs:string" />
+  					<xs:attribute name="result" use="required" />
+  				</xs:complexType>
+  			</xs:element>
+  			<!-- this is bulkcmd -->
+  			<xs:element name="bulkcmd" minOccurs="0" maxOccurs="unbounded">
+			<xs:annotation>
+			      <xs:documentation>Tooltip: bulkcmd will get executed once per request</xs:documentation>
+			     </xs:annotation>
+  				<xs:complexType>
+  					<xs:attribute name="name" use="required"
+  						type="xs:string" />
+  					<xs:attribute name="opt" use="required"
+  						type="xs:string" />
+  					<xs:attribute name="result" use="required" />
+  				</xs:complexType>
+  			</xs:element>
   			<!-- this is bulkcmd -->
   			<xs:element name="bulkcmd" minOccurs="0" maxOccurs="unbounded">
 			<xs:annotation>
