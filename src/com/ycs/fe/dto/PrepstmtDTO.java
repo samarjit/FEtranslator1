@@ -22,22 +22,28 @@ import com.ycs.fe.DataTypeException;
  } 
   
  public static enum DataType { 
-         STRING,INT,DATE,FLOAT,DOUBLE 
+         STRING,INT,DATEDDMMYYYY,FLOAT,DOUBLE, TIMESTAMP, DATE_NS, LONG 
  } 
  public DataType getType() { 
          return type; 
  } 
  public String getTypeString() { 
+	 if(type == DataType.TIMESTAMP)
+		 return "TIMESTAMP"; 
+	 if(type == DataType.DATE_NS)
+		 return "DATE_NS"; 
      if(type == DataType.STRING)
     	 return "STRING"; 
      if(type == DataType.INT)
     	 return "INT"; 
-     if(type == DataType.DATE)
-    	 return "DATE"; 
+     if(type == DataType.DATEDDMMYYYY)
+    	 return "DATEDDMMYYYY"; 
      if(type == DataType.FLOAT)
     	 return "FLOAT";
      if(type == DataType.DOUBLE)
     	 return "DOUBLE"; 
+     if(type == DataType.LONG)
+    	 return "LONG"; 
      else
     	 return "INVALID_TYPE";
  }
@@ -46,12 +52,18 @@ import com.ycs.fe.DataTypeException;
     	 return DataType.STRING; 
 	 if(type.equals("INT") )
     	 return DataType.INT; 
-	 if(type.equals("DATE") )
-    	 return DataType.DATE; 
+	 if(type.equals("DATEDDMMYYYY") )
+    	 return DataType.DATEDDMMYYYY; 
+	 if(type.equals("DATE_NS") )
+		 return DataType.DATE_NS; 
+	 if(type.equals("TIMESTAMP") )
+		 return DataType.TIMESTAMP; 
 	 if(type.equals("FLOAT") )
     	 return DataType.FLOAT;
 	 if(type.equals("DOUBLE") )
     	 return DataType.DOUBLE; 
+	 if(type.equals("LONG") )
+		 return DataType.LONG; 
      else
     	 throw new DataTypeException("DataType undefined");
  }

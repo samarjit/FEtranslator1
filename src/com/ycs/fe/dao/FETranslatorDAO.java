@@ -107,7 +107,8 @@ public class FETranslatorDAO {
 				}
 			}
 			context.put(stackid, values);
-	    	stack.push(context);	
+//	    	stack.push(context);
+			stack.set(stackid, values);
 	    }
 	    
 	}

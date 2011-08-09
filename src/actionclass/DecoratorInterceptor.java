@@ -57,7 +57,7 @@ public class DecoratorInterceptor implements Interceptor {
 		 
 		 String result =  invocation.invoke();
 		       
-			logger.debug( "DecoratorInterceptor:request.getContentLength() expecting first element <root>:"+wrapper.toString());
+//			logger.debug( "DecoratorInterceptor:request.getContentLength() expecting first element <root>:"+wrapper.toString());
 			String resulthtml = null;
 			if(XMLResult.class.getName().equals(invocation.getResult().getClass().getCanonicalName()))
 			resulthtml = processor.process(wrapper.toString(), invocation);

@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
@@ -40,7 +41,7 @@ private static String DBUSER = "test";
 private static String DBPASSWORD = "test";
 private boolean isRuninServerContext;
 
-
+private final String SIMPLE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS"; 
 
 
 
@@ -244,7 +245,15 @@ public CachedRowSet executePreparedQuery(String qry,PrepstmtDTOArray arPrepstmt)
         int count = 1; 
         while(itr.hasNext()){ 
                 PrepstmtDTO pd = (PrepstmtDTO)itr.next(); 
-                if(pd.getType() == PrepstmtDTO.DataType.DATE){ 
+                if(pd.getType() == PrepstmtDTO.DataType.TIMESTAMP){ 
+                    Timestamp newDate = new Timestamp(new SimpleDateFormat(SIMPLE_DATE_FORMAT).parse(pd.getData()).getTime()); 
+                    stmt.setTimestamp(count,  newDate); 
+                }else
+            	if(pd.getType() == PrepstmtDTO.DataType.DATE_NS){ 
+                    Date newDate = new Date( ( new SimpleDateFormat(SIMPLE_DATE_FORMAT)).parse(pd.getData()).getTime()); 
+                    stmt.setDate(count,  newDate); 
+            	}else
+                if(pd.getType() == PrepstmtDTO.DataType.DATEDDMMYYYY){ 
                         Date newDate = new Date( ( new SimpleDateFormat("DD/MM/yyyy")).parse(pd.getData()).getTime()); 
                         stmt.setDate(count,  newDate); 
                 }else if(pd.getType() == PrepstmtDTO.DataType.DOUBLE){ 
@@ -261,6 +270,10 @@ public CachedRowSet executePreparedQuery(String qry,PrepstmtDTOArray arPrepstmt)
                                 stmt.setInt(count, Integer.parseInt(in)); 
                         }else if(pd.getType() == PrepstmtDTO.DataType.STRING){ 
                                 stmt.setString(count, pd.getData()); 
+                        }else if(pd.getType() == PrepstmtDTO.DataType.LONG){ 
+                            String in = pd.getData(); 
+                            if(in == null || "".equals(in))in = "0"; 
+                            stmt.setLong(count, Long.parseLong(in)); 
                         } 
                 count ++; 
         } 
@@ -319,7 +332,16 @@ public int executePreparedUpdate(String qry,PrepstmtDTOArray arPrepstmt) throws 
         int count = 1; 
         while(itr.hasNext()){ 
                 PrepstmtDTO pd = (PrepstmtDTO)itr.next(); 
-                if(pd.getType() == PrepstmtDTO.DataType.DATE){ 
+                
+                if(pd.getType() == PrepstmtDTO.DataType.TIMESTAMP){ 
+                    Timestamp newDate = new Timestamp(new SimpleDateFormat(SIMPLE_DATE_FORMAT).parse(pd.getData()).getTime()); 
+                    stmt.setTimestamp(count,  newDate); 
+                }else
+            	if(pd.getType() == PrepstmtDTO.DataType.DATE_NS){ 
+                    Date newDate = new Date( ( new SimpleDateFormat(SIMPLE_DATE_FORMAT)).parse(pd.getData()).getTime()); 
+                    stmt.setDate(count,  newDate); 
+            	}else
+                if(pd.getType() == PrepstmtDTO.DataType.DATEDDMMYYYY){ 
                         Date newDate = new Date( ( new SimpleDateFormat("DD/MM/yyyy")).parse(pd.getData()).getTime()); 
                         stmt.setDate(count,  newDate); 
                 }else if(pd.getType() == PrepstmtDTO.DataType.DOUBLE){ 
@@ -336,6 +358,10 @@ public int executePreparedUpdate(String qry,PrepstmtDTOArray arPrepstmt) throws 
                                 stmt.setInt(count, Integer.parseInt(in)); 
                         }else if(pd.getType() == PrepstmtDTO.DataType.STRING){ 
                                 stmt.setString(count, pd.getData()); 
+                        }else if(pd.getType() == PrepstmtDTO.DataType.LONG){ 
+                            String in = pd.getData(); 
+                            if(in == null || "".equals(in))in = "0"; 
+                            stmt.setLong(count, Long.parseLong(in)); 
                         } 
                 count ++; 
         } 

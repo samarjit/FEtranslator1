@@ -1,33 +1,31 @@
 package com.ycs.fe.actions;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 
-import net.sf.json.JSON;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.util.ValueStack;
+import com.ycs.exception.ValidationException;
 import com.ycs.fe.businesslogic.BaseBL;
 import com.ycs.fe.cache.BusinessLogicFactory;
 import com.ycs.fe.crud.CommandProcessor;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.FEValidator;
 import com.ycs.fe.util.ScreenMapRepo;
 
-
+@ParentPackage(value = "debug-default")
 public class JavascriptRpc extends ActionSupport {
 	 
 	private static final long serialVersionUID = -623830420192157346L;
@@ -63,18 +61,23 @@ public class JavascriptRpc extends ActionSupport {
 		if(bl != null)
 		  bl.preJsRPCListerner(ActionContext.getContext().getActionInvocation());
 		
-		String path = ScreenMapRepo.findMapXMLPath(screenName);
 		String parsedquery = "";
 		ResultDTO resDTO = new ResultDTO();
 		
 		ValueStack stack = ActionContext.getContext().getValueStack();
 		try {
-			 logger.debug(path);
-				Document doc = new SAXReader().read(path);
-				Element root = doc.getRootElement();
-				 
+				Element root = ScreenMapRepo.findMapXMLRoot(screenName);
+				FEValidator validator = new FEValidator();
 				logger.debug("JsonRPC with submitdata="+submitdata);
 				JSONObject submitdataObj = JSONObject.fromObject(submitdata);
+				
+				ResultDTO validatorDTO = validator.validate(screenName,submitdataObj);
+				if(validatorDTO!=null && validatorDTO.getErrors() != null){
+					if(validatorDTO.getErrors().size() >0){
+						throw new ValidationException();
+					}
+				}
+		
 				InputDTO inputDTO = new InputDTO();
 				inputDTO.setData((JSONObject) submitdataObj);
 				ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
@@ -89,6 +92,8 @@ public class JavascriptRpc extends ActionSupport {
 		} catch (DocumentException e) {
 			resDTO.addError("ERROR:"+e);
 			e.printStackTrace();
+		} catch (ValidationException e) {
+			resDTO.addError("ERROR:"+e);
 		} catch (Exception e) {
 			resDTO.addError("ERROR:"+e);
 			e.printStackTrace();

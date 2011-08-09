@@ -86,7 +86,7 @@
 		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud" />
 		   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc" />
 		   <bulkcmd name="blTest" opt="buslogic#ArbritrarySelect"  result="ajax"/>
-		   <onload name="blTest" opt="buslogic#ArbritrarySelect"  />
+		   <onload name="blTest" opt="selectonload:selqry2|selectonload:selqry1|selectonload:countryofissue|selectonload:programname"  />
 		</commands>
 	</screen>
 

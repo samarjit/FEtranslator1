@@ -75,7 +75,7 @@ public class CommandProcessor {
 								System.out.println("sessionData:"+sessionData);
 								if(sessionField[1].equals("INT")){
 									sessionData.matches("0-9");
-									
+									//TODO some data validation	
 	
 								}
 							}
@@ -95,6 +95,7 @@ public class CommandProcessor {
 			
 		    @SuppressWarnings("unchecked")
 			Set<String>  itr =  ( (JSONObject) submitdataObj).keySet(); 
+		    
 		    if(( (JSONObject) submitdataObj).get("bulkcmd") !=null){
 		    	String bulkcmd = ((JSONObject) submitdataObj).getString("bulkcmd");
 		    	Element elmBulkCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/bulkcmd[@name='"+bulkcmd+"' ] ");

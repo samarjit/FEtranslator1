@@ -241,7 +241,7 @@
 	<dependency>
 		<groupId>org.mybatis</groupId>
 		<artifactId>mybatis</artifactId>
-		<version>3.0.5-20110511.212624-26</version>
+		<version>3.0.5</version>
 		<scope>compile</scope>
 	</dependency>
 	<dependency>

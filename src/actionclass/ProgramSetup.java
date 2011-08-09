@@ -22,11 +22,13 @@ import repo.txnmap.generated.Txn;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.ycs.exception.BackendException;
+import com.ycs.exception.ValidationException;
 import com.ycs.fe.commandprocessor.ReturnCommandProcessor;
 import com.ycs.fe.crud.CommandProcessor;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.PageReturnType;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.util.FEValidator;
 
 public class ProgramSetup extends ActionSupport {
 private Logger logger = Logger.getLogger(getClass());
@@ -68,6 +70,16 @@ private Logger logger = Logger.getLogger(getClass());
 		ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
 		ServletActionContext.getContext().getSession().put("mysessionkey", "MY session val");
 		System.out.println(ServletActionContext.getContext().getSession().get("mysessionkey"));
+		
+		FEValidator validator = new FEValidator();
+		ResultDTO validatorDTO = validator.validate(screenName,jobj1);
+		if(validatorDTO!=null && validatorDTO.getErrors() != null){
+			if(validatorDTO.getErrors().size() >0){
+				throw new ValidationException();
+			}
+		}
+		
+		
 		try{
 			CommandProcessor cmdpr = new CommandProcessor();
 			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName); 
