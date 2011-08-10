@@ -69,8 +69,10 @@ public class DecoratorInterceptor implements Interceptor {
 			logger.debug("Processing Error in HTMLProcessor last result(false means not processed):"+processor.getLastResult());
 			if(resulthtml!= null && processor.getLastResult())
 				car.write(resulthtml);
-			else
-				car.write(wrapper.toString());	//fallthrough for other than custom result types
+			else{
+//				car.write(wrapper.toString());
+				car.write("<h3>Error</h3><p>Some errors in creating result page</p>");	//fallthrough for other than custom result types
+			}
 			
 			car.write("TODO: hello from DecoratorInterceptor <a href='index.jsp'>index</a>");
 					    

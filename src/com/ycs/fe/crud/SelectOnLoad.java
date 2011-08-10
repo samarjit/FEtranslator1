@@ -1,36 +1,32 @@
 package com.ycs.fe.crud;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import org.json.JSONException;
 
-import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
-import com.sun.corba.se.impl.orbutil.closure.Constant;
 import com.ycs.fe.commandprocessor.BaseCommandProcessor;
 import com.ycs.fe.commandprocessor.CommandProcessorResolver;
 import com.ycs.fe.dao.FETranslatorDAO;
 import com.ycs.fe.dto.InputDTO;
-import com.ycs.fe.dto.PrepstmtDTOArray;
 import com.ycs.fe.dto.ResultDTO;
-import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.util.Constants;
 import com.ycs.fe.util.ScreenMapRepo;
+import com.ycs.ws.beclient.QueryService;
+import com.ycs.ws.beclient.QueryServiceService;
 
 /**
  * Used for prepopulating data onto value stack for. It can be called from any Action class or Interceptor. 
@@ -74,8 +70,9 @@ public class SelectOnLoad {
 							}
 						}
 					}
-					if(jsonsubmitdata == null)jsonsubmitdata = new JSONObject();
-					jsonsubmitdata.put("sessionvars", sessionMap);
+					if(jsonsubmitdata == null || jsonsubmitdata.isNullObject())jsonsubmitdata = new JSONObject();
+					logger.debug("output session data:"+JSONObject.fromObject(sessionMap));
+					jsonsubmitdata.put("sessionvars", JSONObject.fromObject(sessionMap));
 				}
 			}
 		} catch (Exception e) {
@@ -96,25 +93,37 @@ public class SelectOnLoad {
 				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);
 				org.dom4j.Element root = document1.getRootElement();
 				HashMap<String, Object> adhocstackids = new HashMap<String, Object>();
+				List<String> outstackList = new ArrayList<String>();
 				//preload select queries
 				List nodeList = root.selectNodes("//query");
 				logger.debug("query list size:"+nodeList.size());
 				for (Iterator queryList = nodeList.iterator(); queryList.hasNext();) {
 					org.dom4j.Node node = (org.dom4j.Node) queryList.next();
-					logger.debug("Query Node:"+node.getText());
 					String stackid = ((org.dom4j.Element) node).attributeValue("stackid");
+					logger.debug("Query Node:"+node.getText()+" stackid:"+stackid);
 					String type = ((org.dom4j.Element) node).attributeValue("type");
 					String sqlquery = node.getText();
 					FETranslatorDAO feDAO = new FETranslatorDAO();
 					feDAO.executequery(sqlquery,stackid,type); //outputs in different stack ids
 					org.dom4j.Element e = (org.dom4j.Element) node;
-					adhocstackids.put("adhocstackids",stackid);
+					
+					if(stackid != null && !"".equals(stackid))
+						outstackList.add(stackid);
 				}
 				//preload selectonload queries
 			/*	List selonloadnl = root.selectNodes("//selectonload");
 				Element elm = (Element) root.selectSingleNode("/root/screen");
 				String screenName = elm.attributeValue("name");
 				logger.debug("query selectonload list size:"+selonloadnl.size());*/
+				
+				ResultDTO resDTO = new ResultDTO();
+				for (String vstackkey : outstackList) {
+					ResultDTO tempDTO = new ResultDTO();
+					HashMap<String,Object> valueStack = new HashMap<String, Object>();
+					valueStack.put(vstackkey, ActionContext.getContext().getValueStack().getContext().get(vstackkey));
+					tempDTO.setData(valueStack);
+					resDTO.merge(tempDTO);
+				}
 				
 				/////command onload ////
 				Element onloadElm = (Element) root.selectSingleNode("/root/screen/commands/onload");
@@ -124,19 +133,32 @@ public class SelectOnLoad {
 				InputDTO inputDTO = new InputDTO();
 				inputDTO.setData(jsonsubmitdata);
 				
-				resultDTO.setData(adhocstackids);
+				
 				
 				for (String opt : opts) {
 	    			String[] sqlcmd = opt.split("\\:"); //get Id of query 
 	    			String querynodeXpath =  sqlcmd[0]+"[@id='"+sqlcmd[1]+"']"; //Query node xpath
 	    			Element processorElm = (Element) root.selectSingleNode("/root/screen/*/"+querynodeXpath+" ");
 	    			String strProcessor = processorElm.getParent().getName();
+	    			String outstack = processorElm.attributeValue("outstack");
 	    		    BaseCommandProcessor cmdProcessor =  CommandProcessorResolver.getCommandProcessor(strProcessor);
 					resultDTO = cmdProcessor.processCommand(screenName1, querynodeXpath, null, inputDTO, resultDTO);				
+					if(outstack != null && !"".equals(outstack))
+						outstackList.add(outstack);
 	    		    //resDTO = rpc.selectData(  screenName,   null, querynodeXpath ,   (JSONObject)jsonRecord);
 	    		}
-				ActionContext.getContext().getValueStack().set("resDTO",new Gson().toJson(resultDTO).toString());
-				System.out.println("SelectOnLoad::"+ new Gson().toJson(resultDTO).toString());
+				resultDTO.merge(resDTO);
+				
+				
+				adhocstackids.put("adhocstackids", outstackList);
+				resDTO.setData(adhocstackids);
+
+				resultDTO.merge(resDTO);
+
+				ActionContext.getContext().getValueStack().set("resDTO",JSONSerializer.toJSON(resultDTO).toString());
+				System.out.println("SelectOnLoad::"+ JSONSerializer.toJSON(resultDTO).toString());
+				System.out.println("SelectOnLoad::adhocstackids"+ JSONSerializer.toJSON(resultDTO.getData().get("adhocstackids")).toString());
+				logger.debug("SelectOnLoad::programname:"+ActionContext.getContext().getValueStack().findString("programname"));
 				/////end command onload ////
 				
 				/*
@@ -167,7 +189,7 @@ public class SelectOnLoad {
 					resDTO.merge(resultDTO);
 					logger.debug("resDTO (gson converter)= "+new Gson().toJson(resDTO).toString());
 					logger.debug("resDTO (JSONSerializer converter)= "+JSONSerializer.toJSON(resDTO).toString());
-					ActionContext.getContext().getValueStack().set("resDTO",new Gson().toJson(resDTO).toString());
+					ActionContext.getContext().getValueStack().set("resDTO", JSONSerializer.toJSON(resDTO).toString());
 					ActionContext.getContext().getValueStack().getContext().put("ZHello", "World");
 					ActionContext.getContext().getValueStack().set("ZHello2", "World2");
 					org.dom4j.Element e = (org.dom4j.Element) queryNode;
@@ -192,6 +214,22 @@ public class SelectOnLoad {
 	}
 	
 	public void remoteSelectOnLoad(String screenName1, String jsonsubmitdata ){
-		throw new NotImplementedException();
+		logger.debug("Sent to BE:"+jsonsubmitdata);
+		 QueryServiceService qss = new QueryServiceService();
+		 QueryService queryServicePort = qss.getQueryServicePort();
+		 String strResDTO = queryServicePort.selectOnLoad(screenName1, jsonsubmitdata);
+		 JSONObject data = JSONObject.fromObject(strResDTO).getJSONObject("data");
+		 logger.debug("returned result from select on load:"+strResDTO);
+		 try {
+			JSONArray adhocstackids = data.getJSONArray("adhocstackids");
+			for (Iterator outstackItr = adhocstackids.iterator(); outstackItr.hasNext();) {
+				String outstackid = (String) outstackItr.next();
+				System.out.println("outstackid:" + outstackid);
+							if(data.get(outstackid) != null )
+							   ActionContext.getContext().getValueStack().set(outstackid, data.get(outstackid));
+			}
+		} catch (Exception e) {
+			logger.error("Result of select onload processing exception",e);
+		}
 	}
 }

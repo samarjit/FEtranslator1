@@ -109,6 +109,7 @@ public class FEValidator  implements LocaleProvider{
 			String strdbdatatype = fieldNode.attributeValue("dbdatatype");
 			String strdbcolsize = fieldNode.attributeValue("dbcolsize");
 			String strmandatory = fieldNode.attributeValue("mandatory");
+			String strLabel = fieldNode.attributeValue(keystr);
 			int colsize = -1;
 			
 			if(overrideDatatype != null && !"".equals(overrideDatatype)){
@@ -122,20 +123,20 @@ public class FEValidator  implements LocaleProvider{
 			if (dbdatatype == DataType.STRING) {
 				System.out.println("Validating string.....");
 				addError("error.numberformat", keystr,
-						singlerec.getString(keystr));
+						strLabel, singlerec.getString(keystr));
 				//filtering criterion required?
 			} else if (dbdatatype == DataType.INT) {
 				try {
 					Integer.parseInt(singlerec.getString(keystr));
 				} catch (NumberFormatException e) {
 					addError("error.numberformat", keystr,
-							singlerec.getString(keystr));
+							strLabel, singlerec.getString(keystr));
 				}
 			} else if (dbdatatype == DataType.FLOAT) {
 				try {
 					Float.parseFloat(singlerec.getString(keystr));
 				} catch (NumberFormatException e) {
-					addError("error.float", keystr, singlerec.getString(keystr));
+					addError("error.float", keystr, strLabel, singlerec.getString(keystr));
 				}
 			} else if (dbdatatype == DataType.DOUBLE) {
 				try {
@@ -143,7 +144,7 @@ public class FEValidator  implements LocaleProvider{
 						Double.parseDouble(singlerec.getString(keystr));
 				} catch (NumberFormatException e) {
 					addError("error.double", keystr,
-							singlerec.getString(keystr));
+							strLabel, singlerec.getString(keystr));
 				}
 			} else if (dbdatatype == DataType.DATEDDMMYYYY) {
 				try {
@@ -152,7 +153,7 @@ public class FEValidator  implements LocaleProvider{
 								.getString(keystr));
 				} catch (ParseException e) {
 					addError("error.dateDDMMyyyy", keystr,
-							singlerec.getString(keystr));
+							strLabel, singlerec.getString(keystr));
 				}
 			} else if (dbdatatype == DataType.DATE_NS) {
 				try {
@@ -161,7 +162,7 @@ public class FEValidator  implements LocaleProvider{
 								.parse(singlerec.getString(keystr));
 				} catch (ParseException e) {
 					addError("error.date_ns", keystr,
-							singlerec.getString(keystr));
+							strLabel, singlerec.getString(keystr));
 				}
 			} else if (dbdatatype == DataType.TIMESTAMP) {
 				try {
@@ -170,7 +171,7 @@ public class FEValidator  implements LocaleProvider{
 								.parse(singlerec.getString(keystr));
 				} catch (ParseException e) {
 					addError("error.timestamp", keystr,
-							singlerec.getString(keystr));
+							strLabel, singlerec.getString(keystr));
 				}
 			}
 			if (strmandatory != null
@@ -178,11 +179,11 @@ public class FEValidator  implements LocaleProvider{
 							.equals(strmandatory))) {
 				if (singlerec.getString(keystr).length() < 1) {
 					addError("error.mandatory", keystr,
-							singlerec.getString(keystr));
+							strLabel, singlerec.getString(keystr));
 				}
 			}
 			if (colsize != -1 && singlerec.getString(keystr).length() > colsize) {
-				addError("error.colsize", keystr, singlerec.getString(keystr));
+				addError("error.colsize", keystr, strLabel, singlerec.getString(keystr));
 			}
 		}//field not is not defined for this key like 'command' 
 		else{
@@ -191,9 +192,11 @@ public class FEValidator  implements LocaleProvider{
 		}
 	}
 	
-	private void addError(String messageKey, String fieldName, String fieldValue) {
+	private void addError(String messageKey, String fieldName, String fieldLabel, String fieldValue) {
+		if(fieldLabel != null && !"".equals(fieldLabel))fieldName = fieldLabel;
+		
 		String [] str2 = new String[]{ fieldName, fieldValue };
-		System.out.println(getTextProvider().getText("error.testkey",str2 ));
+		logger.error(getTextProvider().getText("error.testkey",str2 ));
 	}
 
 	private TextProvider getTextProvider()

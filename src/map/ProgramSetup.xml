@@ -49,7 +49,7 @@
 			<selectonload outstack="form2" id="selqry1">SELECT 'LOYCARD' "txtnewprogname" from DUAL </selectonload>
 			<selectonload outstack="form1" id="selqry2">
 				SELECT PROGNAME "txtnewprogname",PROGDESC "txtprogramdesc",ISSUERNAME "issuername" ,COUNTRY_ISSUE "countryofissue", STATUS "txtstatus" FROM PROGRAMDETAILS
-				where PROGNAME is not :inp.form2[0].txtnewprogname order by 1
+				where PROGNAME is not :res.form2[0].txtnewprogname order by 1
 				<countquery pagesize="3">SELECT count('x') from PROGRAMDETAILS where PROGNAME=:form2[0].txtnewprogname </countquery>
 			</selectonload>
 			<selectonload outstack="countryofissue" id="countryofissue">select country_code "txtccode",country_name "txtcname" from country</selectonload>
@@ -86,7 +86,7 @@
 		   <cmd name="selectlist" opt="sqlupdate:ins2|sqlupdate:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="crud" />
 		   <cmd name="CallAayProc" opt="proc:upd2"  instack="formChild"  result="ajax|{screenName}"  processor="anyproc" />
 		   <bulkcmd name="blTest" opt="buslogic#ArbritrarySelect"  result="ajax"/>
-		   <onload name="blTest" opt="selectonload:selqry2|selectonload:selqry1|selectonload:countryofissue|selectonload:programname"  />
+		   <onload name="blTest" opt="selectonload:selqry1|selectonload:selqry2|selectonload:programname"  />
 		</commands>
 	</screen>
 

@@ -2,6 +2,8 @@ package com.ycs.exception;
 
 public class ValidationException extends Exception {
 
+	private static final long serialVersionUID = 1L;
+
 	public ValidationException() {
 		super("unknown validation error");
 	}
@@ -18,9 +20,5 @@ public class ValidationException extends Exception {
 		super(message, cause);
 	}
 
-	public ValidationException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
 
 }

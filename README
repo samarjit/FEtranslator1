@@ -23,4 +23,6 @@ There are 4 types of evaluating query paramters.
 current request scope.
 3. :vs.form1[0].txtempid - vs means value stack. Ognl expression is evaluated against
  `ValueStack`. 
-4. :txtempid - Is evaluated from current record json object.
+4. :ses.form1[0].txtempid - Session data, this must have an entry in the page xml so that it gets sent to backend
+ `ValueStack`. 
+5. :txtempid - Is evaluated from current record json object.

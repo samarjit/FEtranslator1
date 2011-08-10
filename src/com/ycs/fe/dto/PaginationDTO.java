@@ -2,10 +2,10 @@ package com.ycs.fe.dto;
 
 public class PaginationDTO {
 
-	private int page;
-	private int rows;
-	private String sidx;
-	private String sord;
+	private int page; //pageno
+	private int rows; //number of rows per page
+	private String sidx; //order by sidx
+	private String sord; //asc or desc
 	
 	public PaginationDTO(){
 		
