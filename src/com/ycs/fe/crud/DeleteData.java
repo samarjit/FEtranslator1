@@ -10,21 +10,24 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
+import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
+import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.util.ScreenMapRepo;
 
 public class DeleteData {
 private Logger logger = Logger.getLogger(getClass()); 
-	public String delete(String screenName, String panelname, JSONObject jsonObject) {
+	public String delete(String screenName, String panelname, JSONObject jsonObject,  InputDTO jsonInput, ResultDTO prevResultDTO) {
 		logger.debug("calling first default(first) sqldelete query");
-		return delete(screenName, panelname,"sqldelete", jsonObject);
+		return delete(screenName, panelname,"sqldelete", jsonObject, jsonInput, prevResultDTO);
 	}
-	public String delete(String screenName, String panelname,String querynode, JSONObject jsonObject) {	 
-		String xmlconfigfile =  ScreenMapRepo.findMapXMLPath(screenName);
+	public String delete(String screenName, String panelname,String querynode, JSONObject jsonObject,  InputDTO jsonInput, ResultDTO prevResultDTO) {	 
+		
 		String parsedquery = "";
 			try {
+				String xmlconfigfile =  ScreenMapRepo.findMapXMLPath(screenName);
 				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);
 				org.dom4j.Element root = document1.getRootElement();
 				Node crudnode = root.selectSingleNode("//crud");
@@ -56,7 +59,7 @@ private Logger logger = Logger.getLogger(getClass());
 				List<Element> primarykeys = crudnode.selectNodes("../fields/field/*[@primarykey]");
 				
 				PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
-				parsedquery = QueryParser.parseQuery(updatequery, panelname, jsonObject, arparam, hmfielddbtype);
+				parsedquery = QueryParser.parseQuery(updatequery, panelname, jsonObject, arparam, hmfielddbtype, jsonInput, prevResultDTO);
 			       
 			       logger.debug("UPDATE query:"+parsedquery+"\n Expanded prep:"+arparam.toString(updatequery));
 			}catch(Exception e){

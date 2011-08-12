@@ -3,7 +3,6 @@ package com.ycs.fe.actions;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
@@ -60,63 +59,63 @@ public class JqgridRpc extends ActionSupport {
 //	results={@Result(name="success",location="/test.jsp")}
 	)
 	public String execute(){
-		System.out.println("js RPC called with command:"+command+" for screen:"+screenName);
-		BaseBL bl = BusinessLogicFactory.getBusinessLogic(screenName);
-		
-		if(bl != null)
-		  bl.preJsRPCListerner(ActionContext.getContext().getActionInvocation());
-		
-		String path = ScreenMapRepo.findMapXMLPath(screenName);
-		String parsedquery = "";
-		ResultDTO resDTO = new ResultDTO();
-		
-		ValueStack stack = ActionContext.getContext().getValueStack();
-		try {
-			 logger.debug(path);
-				Document doc = new SAXReader().read(path);
-				Element root = doc.getRootElement();
-				 
-				logger.debug("JsonRPC with submitdata="+submitdata);
-				JSONObject submitdataObj = JSONObject.fromObject(submitdata);
-			
-				InputDTO inputDTO = new InputDTO();
-				inputDTO.setData((JSONObject) submitdataObj);
-				
-				PaginationDTO pageDetails = new PaginationDTO(page,rows,sidx,sord);
-				inputDTO.setPagination(pageDetails);
-				
-				ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
-				
-				CommandProcessor cmdpr = new CommandProcessor();
-				resDTO = cmdpr.commandProcessor(submitdataObj, screenName);  
-			 
-		} catch (DocumentException e) {
-			resDTO.addError("ERROR:"+e);
-			e.printStackTrace();
-		} catch (Exception e) {
-			resDTO.addError("ERROR:"+e);
-			e.printStackTrace();
-		}
-		
-				
-		logger.debug(stack.getContext().get("resultDTO"));
-		
-		if(bl !=null)
-		 bl.postJsRPCListerner(ActionContext.getContext().getActionInvocation());
-		
-		Gson gson = new Gson();
-		String json1 = gson.toJson(stack.getContext().get("resultDTO"));
-		logger.debug("Gson result(not sent back to client):"+json1);
-//		setResultDTO((ResultDTO)stack.getContext().get("resultDTO"));
-		
+//		System.out.println("js RPC called with command:"+command+" for screen:"+screenName);
+//		BaseBL bl = BusinessLogicFactory.getBusinessLogic(screenName);
+//		
+//		if(bl != null)
+//		  bl.preJsRPCListerner(ActionContext.getContext().getActionInvocation());
+//		
+//		String path = ScreenMapRepo.findMapXMLPath(screenName);
+//		String parsedquery = "";
+//		ResultDTO resDTO = new ResultDTO();
+//		
+//		ValueStack stack = ActionContext.getContext().getValueStack();
 //		try {
-//			OgnlContext context = new OgnlContext();
-//			Object expression = Ognl.parseExpression("resultDTO.data.form1[0].txtnewprogname");
-//			logger.debug(Ognl.getValue(expression,stack.getContext()));
-			logger.debug(stack.findString("#resultDTO.data.form1[0].countryofissue" ));
-//		} catch (OgnlException e1) {
-//			e1.printStackTrace();
+//			 logger.debug(path);
+//				Document doc = new SAXReader().read(path);
+//				Element root = doc.getRootElement();
+//				 
+//				logger.debug("JsonRPC with submitdata="+submitdata);
+//				JSONObject submitdataObj = JSONObject.fromObject(submitdata);
+//			
+//				InputDTO inputDTO = new InputDTO();
+//				inputDTO.setData((JSONObject) submitdataObj);
+//				
+//				PaginationDTO pageDetails = new PaginationDTO(page,rows,sidx,sord);
+//				inputDTO.setPagination(pageDetails);
+//				
+//				ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
+//				
+//				CommandProcessor cmdpr = new CommandProcessor();
+//				resDTO = cmdpr.commandProcessor(submitdataObj, screenName);  
+//			 
+//		} catch (DocumentException e) {
+//			resDTO.addError("ERROR:"+e);
+//			e.printStackTrace();
+//		} catch (Exception e) {
+//			resDTO.addError("ERROR:"+e);
+//			e.printStackTrace();
 //		}
+//		
+//				
+//		logger.debug(stack.getContext().get("resultDTO"));
+//		
+//		if(bl !=null)
+//		 bl.postJsRPCListerner(ActionContext.getContext().getActionInvocation());
+//		
+//		Gson gson = new Gson();
+//		String json1 = gson.toJson(stack.getContext().get("resultDTO"));
+//		logger.debug("Gson result(not sent back to client):"+json1);
+////		setResultDTO((ResultDTO)stack.getContext().get("resultDTO"));
+//		
+////		try {
+////			OgnlContext context = new OgnlContext();
+////			Object expression = Ognl.parseExpression("resultDTO.data.form1[0].txtnewprogname");
+////			logger.debug(Ognl.getValue(expression,stack.getContext()));
+//			logger.debug(stack.findString("#resultDTO.data.form1[0].countryofissue" ));
+////		} catch (OgnlException e1) {
+////			e1.printStackTrace();
+////		}
 		
 			String jj = "{'page':'1','total':2,'records':'13','rows':[{'id':'13','cell':['13','2007-10-06','Client3','1000.00','0.00','1000.00','']}," +
 					"{'id':'12','cell':['12','2007-10-06','Client2','700.00','140.00','840.00','']}," +

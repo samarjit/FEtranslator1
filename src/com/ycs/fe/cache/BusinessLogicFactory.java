@@ -40,6 +40,11 @@ public class BusinessLogicFactory {
 		 if(e != null){
 			 System.out.println(e.getTextTrim());
 			 String classname = e.getTextTrim();
+			 if(classname == null || "".equals(classname)){
+				 		logger.debug("Class name empty for screen:"+screenName);
+				 		throw new ClassNotFoundException("BL not defined for screen ["+screenName+"]");
+				 	}
+			 		
 			 BaseBL  baseBL = (BaseBL) Class.forName(classname).newInstance();
 			 net.sf.ehcache.Element elm = new net.sf.ehcache.Element(screenName, baseBL); 
 			 blcache2.put(elm);
@@ -52,7 +57,7 @@ public class BusinessLogicFactory {
 		} catch (IllegalAccessException e) {
 			logger.error("Exception in BL caching"+e);
 		} catch (ClassNotFoundException e) {
-			logger.error("Exception in BL caching"+e);
+			logger.error("Exception in BL caching",e);
 		}
 	}
 	

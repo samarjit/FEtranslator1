@@ -23,8 +23,8 @@
 			var formdata;			
             $(document).ready(function(){
 				iadt.setFieldlist(fieldlist);
-				jqgridjson();
-				//getJqgridData();
+				//jqgridjson();
+				getJqgridData();
 				//calljqgrid();
 				//getOrderList();				
             });
@@ -67,8 +67,10 @@
 			}
 			function calljqgrid(formdata){
 				jQuery("#list1").jqGrid({
-					url:"jqgrid.action?screenName=authorizeCardList&submitdata={form1:[{command:'orderList'}]}", 
-					datatype: "json",
+					//url:"jqgrid.action?screenName=authorizeCardList&submitdata={form1:[{command:'orderList'}]}", 
+					//url:"http://trirand.com/blog/jqgrid/server.php?q=2&_search=false&nd=1312948814999&rows=10&page=1&sidx=id&sord=desc", 
+					data:formdata,
+					datatype: "local",
 					height:200,
 					colNames:['Inv No','Date', 'Client','Amount','Tax','Total','Notes'], 
 					colModel:[ 	

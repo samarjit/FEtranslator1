@@ -44,10 +44,14 @@
         <default-interceptor-ref name="debug-stack"/>
         
          <global-results>
+             <result name="frontendError" type="dispatcher">/pages/globalerror.jsp</result>
+             <result name="backendError" type="dispatcher">/pages/globalerror.jsp</result>
              <result name="error" type="dispatcher">/pages/globalerror.jsp</result>
          </global-results>
 
          <global-exception-mappings>
+             <exception-mapping exception="com.ycs.exception.FrontendException" result="frontendError"/>
+             <exception-mapping exception="com.ycs.exception.BackendException" result="backendError"/>
              <exception-mapping exception="java.lang.Exception" result="error"/>
          </global-exception-mappings>
           
@@ -66,7 +70,7 @@
 		</result-types>
 		
 		<interceptors>
-			<interceptor name="menugenerator" class="actionclass.MenuGeneratorInterceptor" />
+			
 			<interceptor name="decorator" class="actionclass.DecoratorInterceptor" />
 			<interceptor-stack name="myCustomStack">
 				<interceptor-ref name="defaultStack" />	

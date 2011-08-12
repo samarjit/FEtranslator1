@@ -13,6 +13,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.ycs.exception.BackendException;
+import com.ycs.exception.FrontendException;
 import com.ycs.fe.cache.AppCacheManager;
 
  
@@ -26,8 +28,9 @@ public class ScreenMapRepo {
 	 * This returns the mappings of screenName to XML config
 	 * @param scrName
 	 * @return path of mapping XML
+	 * @throws BackendException 
 	 */
-	public static String findMapXMLPath(String scrName){
+	public static String findMapXMLPath(String scrName) throws FrontendException{
 		String path = null;
 		
 //		InputStream scrxml = ScreenMapRepo.class.getResourceAsStream("/screenmap.xml");
@@ -66,17 +69,19 @@ public class ScreenMapRepo {
 			path = f.getAbsolutePath();
 			
 		} catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error("Reading xmlDocument using SAXReader", e);
+			throw new FrontendException("error.readingScreenMapXML",e);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("ScreenMap. xml file not found.",e);
+			throw new FrontendException("error.readingScreenMapXML",e);
 		}
 
 		return path;
 	}
 	
-	public static Element findMapXMLRoot(String scrName){
-		String path = findMapXMLPath(scrName);
+	public static Element findMapXMLRoot(String scrName) throws FrontendException{
 		Element root = null;
+		String path = findMapXMLPath(scrName);
 		try {
 			net.sf.ehcache.Element scrXmlFromCache = AppCacheManager.getElementFromCache("xmlcache", scrName);
 				
@@ -91,7 +96,8 @@ public class ScreenMapRepo {
 				System.out.println("xmlcache -> "+scrName+" cache hit");
 			}
 		} catch (DocumentException e) {
-			logger.debug("XML Load Exception path="+path+" ScreenName="+scrName);
+			logger.error("XML Load Exception path="+path+" ScreenName="+scrName);
+			throw new FrontendException("error.loadxml",e);
 		}
 		return root;
 	}
@@ -127,7 +133,7 @@ public class ScreenMapRepo {
 		return screenName;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FrontendException {
 		System.out.println(ScreenMapRepo.findMapXMLPath("ProgramSetup"));
 	}
 }

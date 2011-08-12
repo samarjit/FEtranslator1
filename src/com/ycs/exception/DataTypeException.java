@@ -1,4 +1,4 @@
-package com.ycs.fe;
+package com.ycs.exception;
 
 public class DataTypeException extends Exception {
  

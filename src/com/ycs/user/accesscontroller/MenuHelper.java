@@ -14,6 +14,8 @@ import org.dom4j.Document;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import com.ycs.exception.BackendException;
+import com.ycs.exception.FrontendException;
 import com.ycs.fe.dao.UserRoleHelperDAO;
 import com.ycs.fe.util.MenuParser;
 import com.ycs.user.Role;
@@ -24,7 +26,8 @@ public class MenuHelper extends ActionSupport implements SessionAware {
 	private static final long serialVersionUID = 1L;
 	private Map<String, Object> session;
 
-	public String execute() {
+	public String execute() throws FrontendException{
+		try{
 		session = (Map<String, Object>) ActionContext.getContext().getSession();
 		String userid = (String) session.get("userid");
 		UserRoleHelperDAO urh = new UserRoleHelperDAO();
@@ -50,6 +53,9 @@ public class MenuHelper extends ActionSupport implements SessionAware {
 		logger.debug("Menu XML : " + menuXml);
 		session.put("menuXml", menuXml);
 		System.out.println(menuXml);
+		} catch (BackendException e) {
+			throw new FrontendException("error.menunotfound",e);
+		}
 		return SUCCESS;
 	}
 

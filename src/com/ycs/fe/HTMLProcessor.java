@@ -14,6 +14,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.opensymphony.xwork2.ActionInvocation;
+
+import com.ycs.exception.FrontendException;
 import com.ycs.fe.crud.SelectOnLoad;
 
 public abstract class HTMLProcessor {
@@ -37,7 +39,7 @@ public abstract class HTMLProcessor {
 	}
 
 	 
-	public void populateValueStack(ActionInvocation invocation, String resultCode) {
+	public void populateValueStack(ActionInvocation invocation, String resultCode){
 //	ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(resultCode);
 //		logger.debug("Result classname = "+resultConfig.getClassName()); 
 //		
@@ -50,7 +52,11 @@ public abstract class HTMLProcessor {
 //		JSONObject jsonsubmitdata = (JSONObject) invocation.getInvocationContext().getValueStack().findValue("submitdata",JSONObject.class);
 		logger.debug("For screenName:"+screenName1);
 		 
-		new SelectOnLoad().selectOnLoad(screenName1, jsonsubmitdata);
+		try {
+			new SelectOnLoad().selectOnLoad(screenName1, jsonsubmitdata);
+		} catch (FrontendException e) {
+			logger.error("error.selectonload", e);
+		}
 		
 	}
 

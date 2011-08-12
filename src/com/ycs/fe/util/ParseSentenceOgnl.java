@@ -10,6 +10,8 @@ import ognl.OgnlException;
 
 import org.apache.log4j.Logger;
 
+import com.ycs.exception.SentenceParseException;
+
 public class ParseSentenceOgnl {
 	private static Logger logger = Logger.getLogger(ParseSentenceOgnl.class);
 

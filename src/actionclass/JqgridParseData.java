@@ -8,6 +8,7 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.ycs.exception.BackendException;
 import com.ycs.fe.dao.DBConnector;
 import com.ycs.fe.dto.PrepstmtDTOArray;
 
@@ -27,6 +28,9 @@ public class JqgridParseData extends ActionSupport{
 				
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (BackendException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return SUCCESS;

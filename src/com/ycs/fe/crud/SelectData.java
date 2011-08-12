@@ -2,7 +2,6 @@ package com.ycs.fe.crud;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.sf.json.JSONObject;
 
@@ -15,6 +14,7 @@ import org.dom4j.io.SAXReader;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
 import com.ycs.fe.dao.FETranslatorDAO;
+import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
@@ -23,18 +23,18 @@ import com.ycs.fe.util.ScreenMapRepo;
 
 public class SelectData {
 private Logger logger = Logger.getLogger(getClass()); 
-	public ResultDTO selectData(String screenName, String panelname,  JSONObject jsonObject) {
-		return selectData(screenName, panelname,"sqlselect", jsonObject);
+	public ResultDTO selectData(String screenName, String panelname,  JSONObject jsonObject, InputDTO jsonInput, ResultDTO prevResultDTO) {
+		return selectData(screenName, panelname,"sqlselect", jsonObject, jsonInput, prevResultDTO);
 	}
 	
-	public ResultDTO selectData(String screenName, String panelname,String querynode, JSONObject jsonObject) {
+	public ResultDTO selectData(String screenName, String panelname,String querynode, JSONObject jsonObject, InputDTO jsonInput, ResultDTO prevResultDTO) {
 		 
 		 
-		    String pageconfigxml =  ScreenMapRepo.findMapXMLPath(screenName);
 			String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
 			String parsedquery = "";
 			ResultDTO resultDTO = new ResultDTO();
 			try {
+				String pageconfigxml =  ScreenMapRepo.findMapXMLPath(screenName);
 				org.dom4j.Document document1 = new SAXReader().read(pageconfigxml);
 				org.dom4j.Element root = document1.getRootElement();
 				Node crudnode = root.selectSingleNode("//crud");
@@ -85,7 +85,7 @@ private Logger logger = Logger.getLogger(getClass());
 					String countquery = countqrynode.getText();
 					if(countquery != null){
 						PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
-						parsedquery = QueryParser.parseQuery(updatequery, outstack, jsonObject, arparam, hmfielddbtype);
+						parsedquery = QueryParser.parseQuery(updatequery, outstack, jsonObject, arparam, hmfielddbtype, jsonInput, prevResultDTO);
 						int reccount = fetranslatorDAO.executeCountQry(screenName, parsedquery, outstack, arparam);
 						
 						if(reccount > pagesize){
@@ -115,7 +115,7 @@ private Logger logger = Logger.getLogger(getClass());
 				}
 				//pagination end
 				PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
-				parsedquery = QueryParser.parseQuery(updatequery, outstack, jsonObject, arparam, hmfielddbtype);
+				parsedquery = QueryParser.parseQuery(updatequery, outstack, jsonObject, arparam, hmfielddbtype, jsonInput, prevResultDTO);
 			       
 			       logger.debug("INSERT query:"+parsedquery+"\n Expanded prep:"+arparam.toString(parsedquery));
 			       

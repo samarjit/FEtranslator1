@@ -14,6 +14,9 @@ import org.apache.struts2.ServletActionContext;
 import org.dom4j.Element;
 import org.dom4j.Node;
 
+import com.ycs.exception.BackendException;
+import com.ycs.exception.FrontendException;
+import com.ycs.exception.ProcessorNotFoundException;
 import com.ycs.fe.commandprocessor.BaseCommandProcessor;
 import com.ycs.fe.commandprocessor.CommandProcessorResolver;
 import com.ycs.fe.dto.InputDTO;
@@ -52,7 +55,9 @@ public class CommandProcessor {
 	 * @return
 	 * @throws Exception 
 	 */
-	public ResultDTO commandProcessor( JSONObject submitdataObj, String screenName) throws Exception{
+	public ResultDTO commandProcessor( JSONObject submitdataObj, String screenName){
+		
+	
 //		JsrpcPojo rpc = new JsrpcPojo();
 		
 		ResultDTO resDTO = null;
@@ -139,6 +144,7 @@ public class CommandProcessor {
 			    		    BaseCommandProcessor cmdProcessor =  CommandProcessorResolver.getCommandProcessor(strProcessor);
 			    		    resDTO = cmdProcessor.processCommand(screenName, querynodeXpath, (JSONObject) jsonRecord, inputDTO, resDTO);				
 			    		    //resDTO = rpc.selectData(  screenName,   null, querynodeXpath ,   (JSONObject)jsonRecord);
+			    		    if(resDTO.getErrors().size()>0)break;
 			    		}
 			    	}
 				}
@@ -147,14 +153,16 @@ public class CommandProcessor {
 			String resultJson = remoteCommandProcessor (submitdataObj.toString(), screenName);
 			resDTO = (ResultDTO) JSONObject.toBean(JSONObject.fromObject(resultJson), ResultDTO.class);
 		}
-		}catch(Exception e){
-			logger.debug("Unexpected error",e);
+		} catch (FrontendException e) {
 			if(resDTO == null)resDTO= new ResultDTO();
-			List<String> errors = resDTO.getErrors();
-			if(errors == null)errors = new ArrayList<String>();
-			errors.add("command.processing.feerror");
-			throw new Exception(errors.toString(),e);
+			resDTO.addError("error.xmlfileaccess");
+			logger.error("xmlFile access failed",e);
+		} catch (ProcessorNotFoundException e) {
+			logger.error("Processor not found",e);
+			if(resDTO == null)resDTO= new ResultDTO();
+			resDTO.addError("error.processornotfound");
 		}
+		
 		return resDTO;
 	}
 	

@@ -397,8 +397,12 @@ function onSubmit (args) {
 	//document.getElementById("form1").submit();
 	
 	var formdata = getFormData();
-	
-	var submitdata = "screenName=ProgramSetup&submitdata="+JSONstring.make(formdata);
+	var single = "{'FF0151':'aaa','FF0148':'bbb','FF01258':'ccc'}";
+	var multiple = "[{'FF9000':111,'FF0151':222,'FF0152':333},{'FF0151':555},{'FF9000':456,'FF0151':765,'FF0152':877}]";
+//	alert("getProgramDetails");
+	//jQuery.get("jsrpc.action?screenName=ProgramSetup&panelName=form1&submitdata={form1:[{single:"+single+",multiple:"+multiple+", command:'getpmdetails'}]}",function (data){
+
+	var submitdata = "screenName=ProgramSetup&submitdata={form1:[{single:"+single+",multiple:"+multiple+", command:'getpmdetails'}]}";
 	$('#form2')[0].action = "programsetupsave.action";
 //	$('#form2').append("<input type='hidden' id='submitdata' name='submitdata' />");
 //	$('#submitdata').val(submitdata);

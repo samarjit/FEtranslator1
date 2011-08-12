@@ -341,7 +341,7 @@ private boolean templateprocessed = false;
 // from selectonload query
 					}else{ 
 					ResultDTO resultdto = null;
-					ArrayList optlist = null;
+					List optlist = null;
 					if( stack.getContext().containsKey("resultDTO")){
 						 resultdto =  (ResultDTO) stack.getContext().get("resultDTO");
 					}
@@ -349,17 +349,17 @@ private boolean templateprocessed = false;
 						 HashMap<String, Object> datamap = resultdto.getData();
 						 if(datamap.containsKey(id)){
 							 Object data = datamap.get(id);
-							if(data instanceof ArrayList){
-								optlist = (ArrayList)data;
+							if(data instanceof List){
+								optlist = (List)data;
 							}
 						 }
 					}
 					
 					if(optlist != null){
-						logger.debug("Populating <select/> from ValueStack");
+						logger.debug("Populating <select/> from selectonload query");
 						org.jsoup.nodes.Node node2 = dochtml.getElementById(id);//.selectSingleNode("//select[@id=\""+htmlid+"\"]");
 						for(int x=0; x < optlist.size();x++){
-							HashMap<String,String> option = (HashMap<String,String>)optlist.get(x);
+							Map<String,String> option = (Map<String,String>)optlist.get(x);
 							org.jsoup.nodes.Element element = ((org.jsoup.nodes.Element) node2).appendElement("option");
 							element.attr("value", option.get(inputElm.attributeValue("key")));
 							element.text(option.get(inputElm.attributeValue("value")));

@@ -12,12 +12,13 @@ import net.sf.json.JSONSerializer;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
 
 import com.opensymphony.xwork2.ActionContext;
+import com.ycs.exception.BackendException;
+import com.ycs.exception.FrontendException;
+import com.ycs.exception.ProcessorNotFoundException;
 import com.ycs.fe.commandprocessor.BaseCommandProcessor;
 import com.ycs.fe.commandprocessor.CommandProcessorResolver;
 import com.ycs.fe.dao.FETranslatorDAO;
@@ -36,10 +37,10 @@ import com.ycs.ws.beclient.QueryServiceService;
 public class SelectOnLoad {
 	private Logger logger = Logger.getLogger(this.getClass());
 	
-	public void selectOnLoad(String screenName1, JSONObject jsonsubmitdata ){
+	public void selectOnLoad(String screenName1, JSONObject jsonsubmitdata ) throws FrontendException{
 		
-		try {
-			if (Constants.APP_LAYER == Constants.FRONTEND) {
+		if (Constants.APP_LAYER == Constants.FRONTEND) {
+			try {
 				Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName1);
 				Node sessionVar = rootXml
 						.selectSingleNode("/root/screen/sessionvars");
@@ -54,7 +55,7 @@ public class SelectOnLoad {
 										.split("\\|");
 								String sessionData = "";
 								if (sessionField.length > 1) {
-									//datatype is defined and it is required
+									// datatype is defined and it is required
 									sessionData = (String) ServletActionContext
 											.getContext().getSession()
 											.get(sessionField[0]);
@@ -62,7 +63,7 @@ public class SelectOnLoad {
 											+ sessionData);
 									if (sessionField[1].equals("INT")) {
 										sessionData.matches("0-9");
-										//TODO some data validation
+										// TODO some data validation
 
 									}
 								}
@@ -74,9 +75,10 @@ public class SelectOnLoad {
 					logger.debug("output session data:"+JSONObject.fromObject(sessionMap));
 					jsonsubmitdata.put("sessionvars", JSONObject.fromObject(sessionMap));
 				}
+
+			} catch (FrontendException e) {
+				throw new FrontendException("error.selectOnloadFailed");
 			}
-		} catch (Exception e) {
-			logger.debug("error in setting sessionvars",e);
 		}
 		if(Constants.CMD_PROCESSOR == Constants.APP_LAYER){
 			localSelectOnLoad(  screenName1,   jsonsubmitdata );
@@ -86,12 +88,13 @@ public class SelectOnLoad {
 		
 	}
 	
-	public void localSelectOnLoad(String screenName1, JSONObject jsonsubmitdata ){
-		String xmlconfigfile =  ScreenMapRepo.findMapXMLPath(screenName1);
+	public void localSelectOnLoad(String screenName1, JSONObject jsonsubmitdata ) throws FrontendException{
 		if(screenName1 != null && screenName1.length() >0)	{
 			try {
-				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);
-				org.dom4j.Element root = document1.getRootElement();
+//				String xmlconfigfile =  ScreenMapRepo.findMapXMLPath(screenName1);
+//				org.dom4j.Document document1 = new SAXReader().read(xmlconfigfile);
+//				org.dom4j.Element root = document1.getRootElement();
+				Element root = ScreenMapRepo.findMapXMLRoot(screenName1);
 				HashMap<String, Object> adhocstackids = new HashMap<String, Object>();
 				List<String> outstackList = new ArrayList<String>();
 				//preload select queries
@@ -143,8 +146,8 @@ public class SelectOnLoad {
 	    			String outstack = processorElm.attributeValue("outstack");
 	    		    BaseCommandProcessor cmdProcessor =  CommandProcessorResolver.getCommandProcessor(strProcessor);
 					resultDTO = cmdProcessor.processCommand(screenName1, querynodeXpath, null, inputDTO, resultDTO);				
-					if(outstack != null && !"".equals(outstack))
-						outstackList.add(outstack);
+//					if(outstack != null && !"".equals(outstack))
+//						outstackList.add(outstack);
 	    		    //resDTO = rpc.selectData(  screenName,   null, querynodeXpath ,   (JSONObject)jsonRecord);
 	    		}
 				resultDTO.merge(resDTO);
@@ -158,7 +161,6 @@ public class SelectOnLoad {
 				ActionContext.getContext().getValueStack().set("resDTO",JSONSerializer.toJSON(resultDTO).toString());
 				System.out.println("SelectOnLoad::"+ JSONSerializer.toJSON(resultDTO).toString());
 				System.out.println("SelectOnLoad::adhocstackids"+ JSONSerializer.toJSON(resultDTO.getData().get("adhocstackids")).toString());
-				logger.debug("SelectOnLoad::programname:"+ActionContext.getContext().getValueStack().findString("programname"));
 				/////end command onload ////
 				
 				/*
@@ -182,7 +184,9 @@ public class SelectOnLoad {
 					QueryParser.populateFieldDBType(nl, hmfielddbtype);
 					
 					PrepstmtDTOArray arparam = new PrepstmtDTOArray();
-					String parsedquery = QueryParser.parseQuery(sqlquery, null, jsonsubmitdata, arparam, hmfielddbtype);
+					InputDTO inputDTO = new InputDTO();
+					inputDTO.setData(jsonsubmitdata);
+					String parsedquery = QueryParser.parseQuery(sqlquery, null, jsonsubmitdata, arparam, hmfielddbtype, inputDTO, resDTO );
 					logger.debug("selonload Query query:"+parsedquery+"\n Expanded prep:"+arparam.toString(parsedquery));
 					FETranslatorDAO feDAO = new FETranslatorDAO();
 					ResultDTO resDTO = feDAO.executecrud(screenName,parsedquery,stackid,jsonsubmitdata, arparam, errorTemplate, messageTemplate );
@@ -196,15 +200,13 @@ public class SelectOnLoad {
 					System.out.println("HTMLProcessor **************** populating value stack");
 				}
 				*/
-			} catch (DocumentException e) {
-				logger.debug("result xml file not readable --",e);
-				e.printStackTrace();
-//			} catch (JSONException e) {
-//				logger.debug("result xml file not readable --",e);
-//				e.printStackTrace();
-			} catch (Exception e) {
-				logger.debug("result xml file not readable --",e);
-				e.printStackTrace();
+			
+			} catch (FrontendException e) {
+				throw new FrontendException("error.selectOnloadFailed");
+			} catch (BackendException e) {
+				throw new FrontendException("error.selectOnloadFailed");
+			} catch (ProcessorNotFoundException e) {
+				throw new FrontendException("error.selectOnloadFailed");
 			}
 			
 			 
@@ -218,8 +220,15 @@ public class SelectOnLoad {
 		 QueryServiceService qss = new QueryServiceService();
 		 QueryService queryServicePort = qss.getQueryServicePort();
 		 String strResDTO = queryServicePort.selectOnLoad(screenName1, jsonsubmitdata);
-		 JSONObject data = JSONObject.fromObject(strResDTO).getJSONObject("data");
-		 logger.debug("returned result from select on load:"+strResDTO);
+		 JSONObject resDTOjson = JSONObject.fromObject(strResDTO);
+		 JSONObject data = resDTOjson.getJSONObject("data");
+		 logger.debug("returned result from select on load:" + strResDTO);
+		 
+		 ResultDTO tempDTO = ResultDTO.fromJsonString(resDTOjson);
+		 
+		 ActionContext.getContext().getValueStack().getContext().put("resultDTO", tempDTO);
+		  
+		
 		 try {
 			JSONArray adhocstackids = data.getJSONArray("adhocstackids");
 			for (Iterator outstackItr = adhocstackids.iterator(); outstackItr.hasNext();) {

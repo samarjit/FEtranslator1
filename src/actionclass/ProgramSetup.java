@@ -22,6 +22,7 @@ import repo.txnmap.generated.Txn;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.ycs.exception.BackendException;
+import com.ycs.exception.FrontendException;
 import com.ycs.exception.ValidationException;
 import com.ycs.fe.commandprocessor.ReturnCommandProcessor;
 import com.ycs.fe.crud.CommandProcessor;
@@ -58,7 +59,7 @@ private Logger logger = Logger.getLogger(getClass());
 		return "view";
 	}
 	
-	public String save() throws Exception {
+	public String save() throws Exception  {
 		 
 		String resultHtml = "";
 		String formname = "";
@@ -71,67 +72,28 @@ private Logger logger = Logger.getLogger(getClass());
 		ServletActionContext.getContext().getSession().put("mysessionkey", "MY session val");
 		System.out.println(ServletActionContext.getContext().getSession().get("mysessionkey"));
 		
-		FEValidator validator = new FEValidator();
-		ResultDTO validatorDTO = validator.validate(screenName,jobj1);
-		if(validatorDTO!=null && validatorDTO.getErrors() != null){
-			if(validatorDTO.getErrors().size() >0){
-				throw new ValidationException();
+		try {
+			FEValidator validator = new FEValidator();
+			ResultDTO validatorDTO = validator.validate(screenName, jobj1);
+			if (validatorDTO != null && validatorDTO.getErrors() != null) {
+				if (validatorDTO.getErrors().size() > 0) {
+					throw new ValidationException();
+				}
 			}
-		}
-		
-		
-		try{
 			CommandProcessor cmdpr = new CommandProcessor();
-			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName); 
+			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName);
+//			if(resDTO!=null && resDTO.getErrors() != null){
+//				if(resDTO.getErrors().size() >0){
+//					throw new ValidationException();
+//				}
+//			}
 			JSONObject resObj = JSONObject.fromObject(resDTO);
 			resultHtml = resObj.toString();
-		}catch(Exception e){
-			logger.debug("ActionClass Exception occured",e);
-			throw new BackendException("Exception during CommandProcessing:",e);
+		} catch (ValidationException e) {
+			throw new FrontendException("error.pagefailed", e);
+		}catch (Exception e){
+			throw new Exception("error.global");
 		}
-		/*for (Iterator itr = jobj1.keys();itr.hasNext();) {
-			String name = (String) itr.next();
-			formname = name; 
-			logger.debug(name);
-			JSONArray jobj = jobj1.getJSONArray(formname);
-			Gson gson = new Gson();
-			JsonElement jelm = gson.toJsonTree(submitdata);
-			
-			for (int i = 0; i < jobj.size(); i++) {
-				
-				if(jobj.getJSONObject(i).getString("txtstatus").equalsIgnoreCase("Modify")){
-				 
-						logger.debug("Going to Modify Block");
-						UpdateData upd = new UpdateData();
-						result =	upd.update(screenName,formname,jobj.getJSONObject(i));
-						if(result.getMessages().size() > 0)
-							resultHtml += "Records("+result.getMessages().size()+") Modified Successfully<br/>";
-						else
-							resultHtml += "Request failed "+ result.getErrors().size()+"\n";
-				}	 
-				if(jobj.getJSONObject(i).getString("txtstatus").equalsIgnoreCase("new")){
-						logger.debug("Going to Modify Block");
-						InsertData ins = new InsertData();
-						result = ins.insert(screenName,formname,jobj.getJSONObject(i));
-						if(result.getMessages().size() > 0)
-							resultHtml += "Records("+result.getMessages().size()+") Created Successfully<br/>";
-						else
-							resultHtml += "Request failed "+result.getErrors().size()+"\n";
-				}
-				if(jobj.getJSONObject(i).getString("txtstatus").equalsIgnoreCase("close")){
-						logger.debug("Going to Modify Block");
-						UpdateData upd = new UpdateData();
-						result = upd.update(screenName,formname,jobj.getJSONObject(i));
-						if(result.getMessages().size() > 0)
-							resultHtml += "Records("+result.getMessages().size()+") Closed Successfully<br/>";
-						else
-							resultHtml += "Request failed "+result.getErrors().size()+"\n";
-				}
-					
-				
-			}
-			
-		}*/
 		
 		PageReturnType pg = null;
 		try{
@@ -142,11 +104,58 @@ private Logger logger = Logger.getLogger(getClass());
 			if("ajax".equals(pg.resultName)){
 				inputStream = new StringBufferInputStream(resultHtml );
 			}
-		}catch(Exception e){
-			logger.debug("result processing exception for page :"+screenName,e);
+		}catch(FrontendException e){
+			throw new FrontendException("error.nextpagenotfound");
+		}catch (Exception e){
+			throw new Exception("error.global");
 		}
 		System.out.println("resultName = "+pg.resultName);
+		
 		return pg.resultName;
+		
+		/*for (Iterator itr = jobj1.keys();itr.hasNext();) {
+		String name = (String) itr.next();
+		formname = name; 
+		logger.debug(name);
+		JSONArray jobj = jobj1.getJSONArray(formname);
+		Gson gson = new Gson();
+		JsonElement jelm = gson.toJsonTree(submitdata);
+		
+		for (int i = 0; i < jobj.size(); i++) {
+			
+			if(jobj.getJSONObject(i).getString("txtstatus").equalsIgnoreCase("Modify")){
+			 
+					logger.debug("Going to Modify Block");
+					UpdateData upd = new UpdateData();
+					result =	upd.update(screenName,formname,jobj.getJSONObject(i));
+					if(result.getMessages().size() > 0)
+						resultHtml += "Records("+result.getMessages().size()+") Modified Successfully<br/>";
+					else
+						resultHtml += "Request failed "+ result.getErrors().size()+"\n";
+			}	 
+			if(jobj.getJSONObject(i).getString("txtstatus").equalsIgnoreCase("new")){
+					logger.debug("Going to Modify Block");
+					InsertData ins = new InsertData();
+					result = ins.insert(screenName,formname,jobj.getJSONObject(i));
+					if(result.getMessages().size() > 0)
+						resultHtml += "Records("+result.getMessages().size()+") Created Successfully<br/>";
+					else
+						resultHtml += "Request failed "+result.getErrors().size()+"\n";
+			}
+			if(jobj.getJSONObject(i).getString("txtstatus").equalsIgnoreCase("close")){
+					logger.debug("Going to Modify Block");
+					UpdateData upd = new UpdateData();
+					result = upd.update(screenName,formname,jobj.getJSONObject(i));
+					if(result.getMessages().size() > 0)
+						resultHtml += "Records("+result.getMessages().size()+") Closed Successfully<br/>";
+					else
+						resultHtml += "Request failed "+result.getErrors().size()+"\n";
+			}
+				
+			
+		}
+		
+	}*/
 	}
 	
 	public String processTxn(){

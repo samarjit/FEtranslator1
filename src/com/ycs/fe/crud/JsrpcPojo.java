@@ -3,20 +3,20 @@ package com.ycs.fe.crud;
 import java.util.HashMap;
 import java.util.List;
 
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
 import org.apache.log4j.Logger;
 import org.dom4j.Element;
-import org.dom4j.InvalidXPathException;
 import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.util.ValueStack;
-import com.ycs.fe.DataTypeException;
+import com.ycs.exception.BackendException;
+import com.ycs.exception.DataTypeException;
+import com.ycs.exception.FrontendException;
 import com.ycs.fe.dao.FETranslatorDAO;
+import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
@@ -25,24 +25,25 @@ import com.ycs.fe.util.ScreenMapRepo;
 
 public class JsrpcPojo {
 private Logger logger = Logger.getLogger(getClass()); 
-	public ResultDTO selectData(String screenName, String panelname,  JSONObject jsonObject) {
+	public ResultDTO selectData(String screenName, String panelname,  JSONObject jsonObject, InputDTO jsonInput, ResultDTO prevResultDTO) {
 		logger.debug("calling first default(first) sqlselect query");
-		return selectData(screenName, panelname,"sqlselect", jsonObject);
+		return selectData(screenName, panelname,"sqlselect", jsonObject, jsonInput, prevResultDTO);
 	}
 	
-	public ResultDTO selectData(String screenName, String panelname,String querynode, JSONObject jsonRecord) {
+	public ResultDTO selectData(String screenName, String panelname,String querynode, JSONObject jsonRecord, InputDTO jsonInput, ResultDTO prevResultDTO) {
 		 
 		 
-		    String pageconfigxml =  ScreenMapRepo.findMapXMLPath(screenName);
 //			String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
 			String parsedquery = "";
 			ResultDTO resultDTO = new ResultDTO();
 			try {
-				org.dom4j.Document document1 = new SAXReader().read(pageconfigxml);
-				org.dom4j.Element root = document1.getRootElement();
-				Node crudnode = root.selectSingleNode("//crud");
+//				String pageconfigxml =  ScreenMapRepo.findMapXMLPath(screenName);
+//				org.dom4j.Document document1 = new SAXReader().read(pageconfigxml);
+//				org.dom4j.Element root = document1.getRootElement();
+				Element root = ScreenMapRepo.findMapXMLRoot(screenName);
+				Node crudnode = root.selectSingleNode("/root/screen/crud");
 				Node queryNode = crudnode.selectSingleNode(querynode);
-				if(queryNode == null)throw new Exception("<"+querynode+"> node not defined");
+				if(queryNode == null)throw new FrontendException("<"+querynode+"> node not defined");
 				
 				String outstack = ((Element) queryNode).attributeValue("outstack"); 
 				panelname = outstack;
@@ -90,7 +91,7 @@ private Logger logger = Logger.getLogger(getClass());
 					
 					if(countquery != null){
 						PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
-						parsedquery = QueryParser.parseQuery(countquery, outstack, jsonRecord, arparam, hmfielddbtype);
+						parsedquery = QueryParser.parseQuery(countquery, outstack, jsonRecord, arparam, hmfielddbtype,jsonInput, prevResultDTO);
 						int reccount = fetranslatorDAO.executeCountQry(screenName, parsedquery, outstack, arparam);
 						logger.debug("Processing count query"+countquery);
 						if(reccount > pagesize){
@@ -129,22 +130,19 @@ private Logger logger = Logger.getLogger(getClass());
 				//pagination end
 				
 				PrepstmtDTOArray  arparam = new PrepstmtDTOArray();
-				parsedquery = QueryParser.parseQuery(updatequery, panelname, jsonRecord, arparam, hmfielddbtype);
+				parsedquery = QueryParser.parseQuery(updatequery, panelname, jsonRecord, arparam, hmfielddbtype,  jsonInput, prevResultDTO);
 				
 			       logger.debug("JsonRPC query:"+parsedquery+"\n Expanded prep:"+arparam.toString(parsedquery));
 			       fetranslatorDAO = new FETranslatorDAO();
 			       resultDTO = fetranslatorDAO.executecrud(screenName, parsedquery, panelname, jsonRecord, arparam, errorTemplate,messageTemplate);
 			       
-			}catch(InvalidXPathException e){
-				logger.debug("Exception caught in InsertData",e);
-			} catch (DataTypeException e) {
-				logger.debug("Exception caught in InsertData",e);
-			} catch (JSONException e) {
-				logger.debug("Exception caught in InsertData",e);
-				e.printStackTrace();
-			} catch (Exception e) {
-				logger.debug("Exception caught in InsertData",e);
-				e.printStackTrace();
+			}catch (DataTypeException e){
+				logger.error("error.datatypeUndefined", e);
+				resultDTO.addError("error.datatypeundefined");
+			} catch (FrontendException e) {
+				resultDTO.addError("error.readingxml");
+			} catch (BackendException e) {
+				resultDTO.addError("error.queryfailed");
 			}  
 		return resultDTO;
 	}

@@ -9,8 +9,6 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
@@ -23,7 +21,6 @@ import com.ycs.fe.crud.CommandProcessor;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.util.FEValidator;
-import com.ycs.fe.util.ScreenMapRepo;
 
 @ParentPackage(value = "debug-default")
 public class JavascriptRpc extends ActionSupport {
@@ -66,7 +63,7 @@ public class JavascriptRpc extends ActionSupport {
 		
 		ValueStack stack = ActionContext.getContext().getValueStack();
 		try {
-				Element root = ScreenMapRepo.findMapXMLRoot(screenName);
+				//Element root = ScreenMapRepo.findMapXMLRoot(screenName);
 				FEValidator validator = new FEValidator();
 				logger.debug("JsonRPC with submitdata="+submitdata);
 				JSONObject submitdataObj = JSONObject.fromObject(submitdata);
@@ -84,22 +81,20 @@ public class JavascriptRpc extends ActionSupport {
 				
 				CommandProcessor cmdpr = new CommandProcessor();
 				resDTO = cmdpr.commandProcessor(submitdataObj, screenName);  
-					
-					
-				 
-				  
-			 
-		} catch (DocumentException e) {
-			resDTO.addError("ERROR:"+e);
-			e.printStackTrace();
-		} catch (ValidationException e) {
-			resDTO.addError("ERROR:"+e);
-		} catch (Exception e) {
-			resDTO.addError("ERROR:"+e);
-			e.printStackTrace();
-		}
-		
 				
+				if(resDTO!=null && resDTO.getErrors() != null){
+					if(resDTO.getErrors().size() >0){
+						throw new ValidationException();
+					}
+				}
+				
+			 
+		} catch (ValidationException e) {
+			resDTO.addError("error.validation");
+		}catch(Exception e){
+			resDTO.addError("error.global");
+		}
+
 		logger.debug(stack.getContext().get("resultDTO"));
 		
 		if(bl !=null)

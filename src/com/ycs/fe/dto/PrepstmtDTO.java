@@ -1,6 +1,6 @@
 package com.ycs.fe.dto; 
 
-import com.ycs.fe.DataTypeException;
+import com.ycs.exception.DataTypeException;
   
  public class PrepstmtDTO { 
  //public static String STRING="STRING"; 

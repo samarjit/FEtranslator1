@@ -20,8 +20,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
-import com.opensymphony.xwork2.ValidationAwareSupport;
-import com.ycs.fe.DataTypeException;
+import com.ycs.exception.DataTypeException;
+import com.ycs.exception.FrontendException;
+import com.ycs.exception.ValidationException;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.ResultDTO;
@@ -31,7 +32,8 @@ public class FEValidator  implements LocaleProvider{
 	private static Logger logger = Logger.getLogger(FEValidator.class);
 	private TextProvider textProvider;
 
-	public ResultDTO validate(String screenName, JSONObject submitdataObj) throws DataTypeException {
+	public ResultDTO validate(String screenName, JSONObject submitdataObj) throws ValidationException{
+		try{
 		Element rootElm = ScreenMapRepo.findMapXMLRoot(screenName);
 		Map<String,Object> s = (Map<String,Object>)submitdataObj;
 		for (Entry<String, Object> itr : s.entrySet()) { //form1, form2 ...skip txnrec, sessionvars, bulkcmd
@@ -69,10 +71,14 @@ public class FEValidator  implements LocaleProvider{
 		}
 		
 		validateSessionVariables(screenName);
+		}catch(FrontendException e){
+			throw new ValidationException("error.validationfailed",e);
+		}
 		return null;
 	}
 
-	private void validateSessionVariables(String screenName) throws DataTypeException {
+	private void validateSessionVariables(String screenName) throws ValidationException{
+		try{
 		Element rootElm = ScreenMapRepo.findMapXMLRoot(screenName);
 		Node sessionVar = rootElm.selectSingleNode("/root/screen/sessionvars");
 		   if(sessionVar != null){
@@ -100,10 +106,13 @@ public class FEValidator  implements LocaleProvider{
 				}
 			}
 		   }
+		}  catch(FrontendException e){
+			throw new ValidationException("error.validationsessionvar",e);
+		}
 	}
 
 	private void validateNode(Element rootElm, JSONObject singlerec,
-			String keystr, String overrideDatatype) throws DataTypeException {
+			String keystr, String overrideDatatype) {
 		Element fieldNode = (Element) rootElm.selectSingleNode("/root/panels/panel/fields/field/*[@name='"+keystr+"']");
 		if (fieldNode != null) {
 			String strdbdatatype = fieldNode.attributeValue("dbdatatype");
@@ -119,67 +128,74 @@ public class FEValidator  implements LocaleProvider{
 			if (strdbcolsize != null && !"".equals(strdbcolsize)) {
 				colsize = Integer.parseInt(strdbcolsize);
 			}
-			DataType dbdatatype = PrepstmtDTO.getDataTypeFrmStr(strdbdatatype);
-			if (dbdatatype == DataType.STRING) {
-				System.out.println("Validating string.....");
-				addError("error.numberformat", keystr,
-						strLabel, singlerec.getString(keystr));
-				//filtering criterion required?
-			} else if (dbdatatype == DataType.INT) {
-				try {
-					Integer.parseInt(singlerec.getString(keystr));
-				} catch (NumberFormatException e) {
-					addError("error.numberformat", keystr,
-							strLabel, singlerec.getString(keystr));
+			try {
+				DataType dbdatatype = PrepstmtDTO
+						.getDataTypeFrmStr(strdbdatatype);
+				if (dbdatatype == DataType.STRING) {
+					System.out.println("Validating string.....");
+					addError("error.numberformat", keystr, strLabel,
+							singlerec.getString(keystr));
+					// filtering criterion required?
+				} else if (dbdatatype == DataType.INT) {
+					try {
+						Integer.parseInt(singlerec.getString(keystr));
+					} catch (NumberFormatException e) {
+						addError("error.numberformat", keystr, strLabel,
+								singlerec.getString(keystr));
+					}
+				} else if (dbdatatype == DataType.FLOAT) {
+					try {
+						Float.parseFloat(singlerec.getString(keystr));
+					} catch (NumberFormatException e) {
+						addError("error.float", keystr, strLabel,
+								singlerec.getString(keystr));
+					}
+				} else if (dbdatatype == DataType.DOUBLE) {
+					try {
+						if (singlerec.getString(keystr) != null)
+							Double.parseDouble(singlerec.getString(keystr));
+					} catch (NumberFormatException e) {
+						addError("error.double", keystr, strLabel,
+								singlerec.getString(keystr));
+					}
+				} else if (dbdatatype == DataType.DATEDDMMYYYY) {
+					try {
+						if (singlerec.getString(keystr) != null)
+							new SimpleDateFormat("DD/MM/yyyy").parse(singlerec
+									.getString(keystr));
+					} catch (ParseException e) {
+						addError("error.dateDDMMyyyy", keystr, strLabel,
+								singlerec.getString(keystr));
+					}
+				} else if (dbdatatype == DataType.DATE_NS) {
+					try {
+						if (singlerec.getString(keystr) != null)
+							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+									.parse(singlerec.getString(keystr));
+					} catch (ParseException e) {
+						addError("error.date_ns", keystr, strLabel,
+								singlerec.getString(keystr));
+					}
+				} else if (dbdatatype == DataType.TIMESTAMP) {
+					try {
+						if (singlerec.getString(keystr) != null)
+							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+									.parse(singlerec.getString(keystr));
+					} catch (ParseException e) {
+						addError("error.timestamp", keystr, strLabel,
+								singlerec.getString(keystr));
+					}
 				}
-			} else if (dbdatatype == DataType.FLOAT) {
-				try {
-					Float.parseFloat(singlerec.getString(keystr));
-				} catch (NumberFormatException e) {
-					addError("error.float", keystr, strLabel, singlerec.getString(keystr));
-				}
-			} else if (dbdatatype == DataType.DOUBLE) {
-				try {
-					if (singlerec.getString(keystr) != null)
-						Double.parseDouble(singlerec.getString(keystr));
-				} catch (NumberFormatException e) {
-					addError("error.double", keystr,
-							strLabel, singlerec.getString(keystr));
-				}
-			} else if (dbdatatype == DataType.DATEDDMMYYYY) {
-				try {
-					if (singlerec.getString(keystr) != null)
-						new SimpleDateFormat("DD/MM/yyyy").parse(singlerec
-								.getString(keystr));
-				} catch (ParseException e) {
-					addError("error.dateDDMMyyyy", keystr,
-							strLabel, singlerec.getString(keystr));
-				}
-			} else if (dbdatatype == DataType.DATE_NS) {
-				try {
-					if (singlerec.getString(keystr) != null)
-						new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-								.parse(singlerec.getString(keystr));
-				} catch (ParseException e) {
-					addError("error.date_ns", keystr,
-							strLabel, singlerec.getString(keystr));
-				}
-			} else if (dbdatatype == DataType.TIMESTAMP) {
-				try {
-					if (singlerec.getString(keystr) != null)
-						new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-								.parse(singlerec.getString(keystr));
-				} catch (ParseException e) {
-					addError("error.timestamp", keystr,
-							strLabel, singlerec.getString(keystr));
-				}
+			} catch (DataTypeException e) {
+				logger.error("datatype undefined", e);
+				addError("error.datatypeundefined", keystr, strLabel,
+						singlerec.getString(keystr));
 			}
 			if (strmandatory != null
 					&& ("yes".equals(strmandatory) || "true"
 							.equals(strmandatory))) {
 				if (singlerec.getString(keystr).length() < 1) {
-					addError("error.mandatory", keystr,
-							strLabel, singlerec.getString(keystr));
+					addError("error.mandatory", keystr,	strLabel, singlerec.getString(keystr));
 				}
 			}
 			if (colsize != -1 && singlerec.getString(keystr).length() > colsize) {

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.dom4j.Element;
 
+import com.ycs.exception.FrontendException;
 import com.ycs.fe.dto.PageReturnType;
 import com.ycs.fe.util.ScreenMapRepo;
 
@@ -28,22 +29,22 @@ public class ReturnCommandProcessor {
 		}else if(strResult.endsWith("page")){
 			pgReturnType.resultName = "customXMLRes";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 6);
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 5);
 		}else if(strResult.endsWith("ftl")){
 			pgReturnType.resultName = "freemarker";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 5);
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
 		}else if(strResult.endsWith("vm")){
 			pgReturnType.resultName = "velocity";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
 		}else{
 			pgReturnType.resultName = "dispatcher";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.') - 1);
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.'));
 		}
 	}
-	public PageReturnType getReturnType(String screenName, JSONObject submitdataObj){
+	public PageReturnType getReturnType(String screenName, JSONObject submitdataObj) throws FrontendException{
 		PageReturnType pgReturnType = new PageReturnType();
 		
 		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
