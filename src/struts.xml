@@ -109,7 +109,9 @@
 			<result name="input">/index.jsp</result>
 		</action>
 		<action name="programsetupsave" class="actionclass.ProgramSetup" method="save">
+			<interceptor-ref name="myCustomStack" />
 			<param name="pageconfigxml">ProgramSetup.xml</param>
+			<result name="customXMLRes" type="customXMLRes"/>
 			<result name="ajax" type="stream">	
 				<param name="resultxml">ProgramSetup.xml</param>
 				<param name="contentType">text/html</param>
@@ -122,7 +124,23 @@
 			<result name="input">/index.jsp</result>
 		</action>
 	</package>
-	
+	<package name="CommonAction" extends="yidefaultPackage" namespace="/html">
+		<action name="common" class="com.ycs.fe.actions.CommonActionSupport" >
+			<interceptor-ref name="myCustomStack" />
+			<result name="view" type="customXMLRes" />
+			<result name="customXMLRes" type="customXMLRes"/>
+			<result name="ajax" type="stream">	
+				<param name="resultxml">ProgramSetup.xml</param>
+				<param name="contentType">text/html</param>
+				<param name="inputName">inputStream</param>
+			</result>
+			<result name="freemarker" type="freemarker">${resultPage}</result>
+			<result name="dispatcher" >${resultPage}</result>
+			<result name="velocity" >${resultPage}</result>
+			<result name="input">/index.jsp</result>
+			<result name="input">/index.jsp</result>
+		</action>
+	</package>
 	<package name="binGroup" extends="yidefaultPackage" namespace="/html">
 		<action name="binGroupView" class="actionclass.BinGroup" method="view">
 			<interceptor-ref name="myCustomStack" />

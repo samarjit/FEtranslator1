@@ -55,7 +55,7 @@ public class JqgridRpc extends ActionSupport {
 	
 	
 	@Action(value="jqgrid",params={"configxml","ProductSetup.xml"},
-			results={@Result(name="success",type="stream",params={"contentType","text/html","inputName","inputStream","resultxml","ProductSetup.xml"})}
+			results={@Result(name="success",type="stream",params={"contentType","application/json","inputName","inputStream","resultxml","ProductSetup.xml"})}
 //	results={@Result(name="success",location="/test.jsp")}
 	)
 	public String execute(){
@@ -129,7 +129,43 @@ public class JqgridRpc extends ActionSupport {
 					"{'id':'4','cell':['4','2007-10-04','Client3','150.00','0.00','150.00','no tax']}]," +
 					"'userdata':{'amount':3220,'tax':342,'total':3564,'name':'Totals:'}}";
 			
+			jj= "{'page':'1','total':2,'records':'13','rows':[{\"PLASTIC_CODE\":\"FEVCUS-FEVO Customer design\",\"PLASTIC_DESC\":\"FEVO Customer design\",\"PRODUCT_CODE\":\"TEST01\",\"PRODUCT_NAME\":\"TESTING\"}," + 
+					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV083\",\"PRODUCT_NAME\":\"EMV Generic Product\"}," + 
+					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV040\",\"PRODUCT_NAME\":\"EMV Reloadable Generic\"}," + 
+					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV093\",\"PRODUCT_NAME\":\"EMV Reloadable SE OTC\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVCUS-FEVO Customer design\",\"PLASTIC_DESC\":\"FEVO Customer design\",\"PRODUCT_CODE\":\"EMV081\",\"PRODUCT_NAME\":\"EMV081\"}," + 
+					"{\"PLASTIC_CODE\":\"EMVBLK4-EMV RLDB Corporate\",\"PLASTIC_DESC\":\"EMV RLDB Corporate\",\"PRODUCT_CODE\":\"EMV085\",\"PRODUCT_NAME\":\"EMV RLDB Corporate\"}," + 
+					"{\"PLASTIC_CODE\":\"EMVBLK5-RLDB Bulk\",\"PLASTIC_DESC\":\"RLDB Bulk\",\"PRODUCT_CODE\":\"EMV086\",\"PRODUCT_NAME\":\"RLDB Bulk\"}," + 
+					"{\"PLASTIC_CODE\":\"EMV-NFC\",\"PLASTIC_DESC\":\"NFC\",\"PRODUCT_CODE\":\"EMV087\",\"PRODUCT_NAME\":\"NFC\"}," + 
+					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV094\",\"PRODUCT_NAME\":\"EMV GIFT OTC\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVSTD-FEVO Standard design\",\"PLASTIC_DESC\":\"FEVO Standard design\",\"PRODUCT_CODE\":\"FEVO04\",\"PRODUCT_NAME\":\"Standard RoadShow Gift\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVCUS-FEVO Customer design\",\"PLASTIC_DESC\":\"FEVO Customer design\",\"PRODUCT_CODE\":\"FEGTCU\",\"PRODUCT_NAME\":\"FEVO Gift card Customized\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVSTD-FEVO Standard design\",\"PLASTIC_DESC\":\"FEVO Standard design\",\"PRODUCT_CODE\":\"FEGTST\",\"PRODUCT_NAME\":\"FEVO Gift card Standard\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVWHT-FEVO White (unprinted) design\",\"PLASTIC_DESC\":\"FEVO White (unprinted) design\",\"PRODUCT_CODE\":\"FERSCU\",\"PRODUCT_NAME\":\"FEVO Road show Customized\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLSTD-EZL Standard design\",\"PLASTIC_DESC\":\"EZL Standard design\",\"PRODUCT_CODE\":\"FEVOSP\",\"PRODUCT_NAME\":\"FEVO Special Edition\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLWHT-EZL Standard design\",\"PLASTIC_DESC\":\"EZL Standard design\",\"PRODUCT_CODE\":\"EZLCUS\",\"PRODUCT_NAME\":\"Personalised FEVO with ez-link\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLSTD-EZL Standard design\",\"PLASTIC_DESC\":\"EZL Standard design\",\"PRODUCT_CODE\":\"EZLSPS\",\"PRODUCT_NAME\":\"FEVO Special Edition\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLSTD-EZLINK Standard design\",\"PLASTIC_DESC\":\"EZLINK Standard design\",\"PRODUCT_CODE\":\"ECLC52\",\"PRODUCT_NAME\":\"Fevo W EZL customised\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLWHT-EZLINK Custom design\",\"PLASTIC_DESC\":\"EZLINK Custom design\",\"PRODUCT_CODE\":\"EZLS56\",\"PRODUCT_NAME\":\"OTC FEVO w EZL Customized\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVWHT-FEVO White (unprinted) design\",\"PLASTIC_DESC\":\"FEVO White (unprinted) design\",\"PRODUCT_CODE\":\"EZLS21\",\"PRODUCT_NAME\":\"SPECIAL EDITION - FEVO\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLSTD-EZLINK Standard design\",\"PLASTIC_DESC\":\"EZLINK Standard design\",\"PRODUCT_CODE\":\"EZLS53\",\"PRODUCT_NAME\":\"Road show FEVO w EZL Standard\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLWHT-EZLINK Custom design\",\"PLASTIC_DESC\":\"EZLINK Custom design\",\"PRODUCT_CODE\":\"EZLC54\",\"PRODUCT_NAME\":\"Road show FEVO w EZL Customised\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLSTD-EZLINK Standard design\",\"PLASTIC_DESC\":\"EZLINK Standard design\",\"PRODUCT_CODE\":\"FEVO02\",\"PRODUCT_NAME\":\"Customised Online Gift\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVSTD-FEVO Standard design|FEVO White (unprinted) design\",\"PLASTIC_DESC\":\"FEVO Standard design\",\"PRODUCT_CODE\":\"FEVO01\",\"PRODUCT_NAME\":\"Standard Online Gift\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVSTD-FEVO Standard design|FEVO White (unprinted) design\",\"PLASTIC_DESC\":\"FEVO Standard design\",\"PRODUCT_CODE\":\"ECLC51\",\"PRODUCT_NAME\":\"Fevo W EZL standard\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLWHT-EZLINK Custom design\",\"PLASTIC_DESC\":\"EZLINK Custom design\",\"PRODUCT_CODE\":\"EZLS22\",\"PRODUCT_NAME\":\"SPECIAL EDITION - EZL\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVCUS-FEVO Customer design\",\"PLASTIC_DESC\":\"FEVO Customer design\",\"PRODUCT_CODE\":\"FEVO03\",\"PRODUCT_NAME\":\"Customised RoadShow Gift\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLSTD-EZLINK Standard design\",\"PLASTIC_DESC\":\"EZLINK Standard design\",\"PRODUCT_CODE\":\"EZONLI\",\"PRODUCT_NAME\":\"EZONLI\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLSTD-EZLINK Standard design\",\"PLASTIC_DESC\":\"EZLINK Standard design\",\"PRODUCT_CODE\":\"EZLS55\",\"PRODUCT_NAME\":\"OTC FEVO w EZL Standard\"}," + 
+					"{\"PLASTIC_CODE\":\"EZLWHT-EZLINK Custom design\",\"PLASTIC_DESC\":\"EZLINK Custom design\",\"PRODUCT_CODE\":\"EZLS24\",\"PRODUCT_NAME\":\"OTC SPECIAL EDITION - EZL\"}," + 
+					"{\"PLASTIC_CODE\":\"FEVSTD-FEVO Standard design\",\"PLASTIC_DESC\":\"FEVO Standard design\",\"PRODUCT_CODE\":\"EPFEVO\",\"PRODUCT_NAME\":\"EPFEVO MAIN\"}," + 
+					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV082\",\"PRODUCT_NAME\":\"EMV Generic\"}, " + 
+					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV084\",\"PRODUCT_NAME\":\"EMV084 Generic Product Type\"}, " + 
+					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV091\",\"PRODUCT_NAME\":\"EMV Reloadable Generic\"}," + 
+					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV092\",\"PRODUCT_NAME\":\"EMV Reloadable SE\"}]" + 
+					"}";
 		JSONObject jobj = JSONObject.fromObject(jj);
+		System.out.println(jobj.toString());
 //		JSONObject jobj = JSONObject.fromObject(resDTO);
 //		try {
 //			jobj.put("data",resDTO.getData());

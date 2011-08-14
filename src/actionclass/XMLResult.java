@@ -158,6 +158,9 @@ public class XMLResult extends StrutsResultSupport {
              template.process(model, charArrayWriter);
              charArrayWriter.flush();
              charArrayWriter.writeTo(writer);
+         }catch(Exception e){
+        	 logger.error("Freemarker exception",e);
+        	
          } finally {
              if (charArrayWriter != null)
                  charArrayWriter.close();

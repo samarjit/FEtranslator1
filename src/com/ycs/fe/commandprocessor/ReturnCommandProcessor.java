@@ -18,38 +18,25 @@ import net.sf.json.JSONObject;
  * @version 1.0
  */
 public class ReturnCommandProcessor {
-	
 	/**
-	 * @param pgReturnType result is returned by reference
-	 * @param strResult is used to resolve result
+	 * @param screenName
+	 * @param submitdataObj from which the command or bulkcmd will match with &lt;cmd .. result="ajax" /> 
+	 * to resolve a return struts name, nextScreenName (if *.page) and result pages  ajax,  *.ftl, *.vm, custom *.page everything else is dispatcher (*.jsp)
+	 * @return PageReturnType object
+	 * @throws FrontendException
 	 */
-	public void resolveResult(PageReturnType pgReturnType, String strResult){
-		if("".equals(strResult) || "ajax".equals(strResult)){
-			pgReturnType.resultName = strResult;
-		}else if(strResult.endsWith("page")){
-			pgReturnType.resultName = "customXMLRes";
-			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 5);
-		}else if(strResult.endsWith("ftl")){
-			pgReturnType.resultName = "freemarker";
-			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
-		}else if(strResult.endsWith("vm")){
-			pgReturnType.resultName = "velocity";
-			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
-		}else{
-			pgReturnType.resultName = "dispatcher";
-			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.'));
-		}
-	}
 	public PageReturnType getReturnType(String screenName, JSONObject submitdataObj) throws FrontendException{
 		PageReturnType pgReturnType = new PageReturnType();
 		
 		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 		@SuppressWarnings("unchecked")
 		Set<String>  itr =  ( (JSONObject) submitdataObj).keySet(); 
+		
+		if(submitdataObj == null || submitdataObj.isNullObject()){
+			pgReturnType.nextScreenName = screenName;
+			pgReturnType.resultName = "view";
+			pgReturnType.resultPage = screenName;
+		}else{
 		 if(( (JSONObject) submitdataObj).get("bulkcmd") !=null){
 			 String cmd =     submitdataObj.getString("bulkcmd");
 	    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/bulkcmd[@name='"+cmd+"' ] ");
@@ -73,6 +60,34 @@ public class ReturnCommandProcessor {
 		    	}
 		    }
 		 }
+		}
 		return pgReturnType;
 	}
+	
+	/**
+	 * @param pgReturnType result is returned by reference
+	 * @param strResult is used to resolve result ajax,  *.ftl, *.vm, custom *.page everything else is dispatcher (*.jsp) 
+	 */
+	public void resolveResult(PageReturnType pgReturnType, String strResult){
+		if("".equals(strResult) || "ajax".equals(strResult)){
+			pgReturnType.resultName = strResult;
+		}else if(strResult.endsWith("page")){
+			pgReturnType.resultName = "customXMLRes";
+			pgReturnType.resultPage = strResult;
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 5);
+		}else if(strResult.endsWith("ftl")){
+			pgReturnType.resultName = "freemarker";
+			pgReturnType.resultPage = strResult;
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
+		}else if(strResult.endsWith("vm")){
+			pgReturnType.resultName = "velocity";
+			pgReturnType.resultPage = strResult;
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
+		}else{
+			pgReturnType.resultName = "dispatcher";
+			pgReturnType.resultPage = strResult;
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.'));
+		}
+	}
+	
 }

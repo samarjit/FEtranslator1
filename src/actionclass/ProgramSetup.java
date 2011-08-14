@@ -110,6 +110,8 @@ private Logger logger = Logger.getLogger(getClass());
 			throw new Exception("error.global");
 		}
 		System.out.println("resultName = "+pg.resultName);
+		System.out.println("screenName = "+pg.nextScreenName);
+		System.out.println("resultPage = "+pg.resultPage);
 		
 		return pg.resultName;
 		

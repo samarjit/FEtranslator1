@@ -76,7 +76,7 @@
 		</anyprocs>
 		<commands>
 			<cmd name="getpmdetails1" opt="txnproc:pmdetails" instack="form1" result="login.jsp" processor="dm"></cmd>
-			<cmd name="getpmdetails" opt="jsonrpc:progdetails" instack="form1" result="ajax" processor="crud"></cmd>
+			<cmd name="getpmdetails" opt="jsonrpc:progdetails" instack="form1" result="TestPage.page" processor="crud"></cmd>
 		   <cmd name="BusLogic1" opt="buslogic:ArbritrarySelect" instack="form1" result="ajax" processor="bl" />
 		   <cmd name="TXNPROC1" opt="txnproc:TRANSCODE" instack="form1" result="ajax" processor="dm" />
 		   <cmd name="jrpcCmd1" opt="jsonrpc:rpc3" instack="form1" result="ajax"  processor="crud" />

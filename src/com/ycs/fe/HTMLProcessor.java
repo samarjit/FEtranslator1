@@ -56,6 +56,8 @@ public abstract class HTMLProcessor {
 			new SelectOnLoad().selectOnLoad(screenName1, jsonsubmitdata);
 		} catch (FrontendException e) {
 			logger.error("error.selectonload", e);
+		} catch (Exception e) {
+			logger.error("error.selectonload", e);
 		}
 		
 	}
