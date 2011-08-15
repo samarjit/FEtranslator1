@@ -12,6 +12,7 @@ public class ResultDTO {
 
 private List<String> messages;
 private List<String> errors;
+private Map<String, List<String>> fieldErrors;
 private HashMap<String, Object>  data;
 private Map<String,Map<String,Integer>> pagination; //{currentpage:,totalpage:,pagesize:}
  
@@ -82,6 +83,26 @@ private void setPagination(Map<String, Map<String, Integer>> pagination) {
 }
 public Map<String, Map<String, Integer>> getPagination() {
 	return pagination;
+}
+
+public Map<String, List<String>> getFieldErrors() {
+	return fieldErrors;
+}
+
+
+public void setFieldErrors(Map<String, List<String>> fieldErrors) {
+	this.fieldErrors = fieldErrors;
+}
+
+public void addFieldError(String fieldName, String errorText){
+	List<String> tfieldErrors = fieldErrors.get(fieldName);
+	if(tfieldErrors != null && tfieldErrors.size() > 0){
+		tfieldErrors.add(errorText);
+	}else{
+		ArrayList<String> tmpFieldErrors = new ArrayList<String>();
+		tmpFieldErrors.add(errorText);
+		fieldErrors.put(fieldName, tmpFieldErrors);
+	}
 }
 
 /**

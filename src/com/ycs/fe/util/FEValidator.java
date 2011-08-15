@@ -31,10 +31,11 @@ public class FEValidator  implements LocaleProvider{
 
 	private static Logger logger = Logger.getLogger(FEValidator.class);
 	private TextProvider textProvider;
-
+	private ResultDTO resultDTO = null;
 	public ResultDTO validate(String screenName, JSONObject submitdataObj) throws ValidationException{
 		try{
 		Element rootElm = ScreenMapRepo.findMapXMLRoot(screenName);
+		
 		Map<String,Object> s = (Map<String,Object>)submitdataObj;
 		for (Entry<String, Object> itr : s.entrySet()) { //form1, form2 ...skip txnrec, sessionvars, bulkcmd
 			if(itr.getKey().equals("sessionvars")){
@@ -74,7 +75,7 @@ public class FEValidator  implements LocaleProvider{
 		}catch(FrontendException e){
 			throw new ValidationException("error.validationfailed",e);
 		}
-		return null;
+		return resultDTO;
 	}
 
 	private void validateSessionVariables(String screenName) throws ValidationException{
@@ -212,7 +213,11 @@ public class FEValidator  implements LocaleProvider{
 		if(fieldLabel != null && !"".equals(fieldLabel))fieldName = fieldLabel;
 		
 		String [] str2 = new String[]{ fieldName, fieldValue };
-		logger.error(getTextProvider().getText("error.testkey",str2 ));
+		logger.error("validation :"+getTextProvider().getText(messageKey,str2 ));
+		
+		if(resultDTO == null)resultDTO = new ResultDTO();
+		
+		resultDTO.addFieldError(fieldName, getTextProvider().getText(messageKey,str2 ));
 	}
 
 	private TextProvider getTextProvider()

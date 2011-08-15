@@ -1,8 +1,10 @@
 package com.ycs.fe.actions;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sf.json.JSONObject;
 
@@ -17,6 +19,7 @@ import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.PageReturnType;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.util.FEValidator;
+import com.ycs.fe.util.LabelFactory;
 
 
 public class CommonActionSupport extends ActionSupport {
@@ -26,10 +29,12 @@ public class CommonActionSupport extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 	
 	protected String submitdata;
+	@SuppressWarnings("unused")
 	private String desc;
 	protected InputStream inputStream;
 	protected String screenName;
 	protected Map<String, Object> session;
+	@SuppressWarnings("unused")
 	private String submitdatatxncode; 
 	protected String resultPage;
 	
@@ -41,6 +46,7 @@ public class CommonActionSupport extends ActionSupport {
 		String resultHtml = "";
 		logger.debug("submitdata:"+submitdata);
 		JSONObject jsonRecord =   JSONObject.fromObject(submitdata);
+		@SuppressWarnings("unused")
 		InputDTO inputDTO = populateInputDTO(jsonRecord);
 	
 		try {
@@ -67,12 +73,40 @@ public class CommonActionSupport extends ActionSupport {
 	}
 	
 	/**
-	 * @param resDTO
+	 * This method localises error messages. Populates <b>actionErrors</b> and <b>fieldErrors</b>, also modified existing error 
+	 * messages so that proper messages goes in json format response.
+	 * <ol>
+	 * <li>First find the error messages is a key or not, just by searching against existing resource bundle keys getText(error message).</li>
+	 * <li>If the messages is a key(full key must match message), then the error Message is replaced by localised message.</li>
+	 * <li>Some error messages can be KEY|default_message, in this case getText(KEY) is assumed primary, if this fails use default_message.</li> 
+	 * <li>For putting in the fields errors first try to put in field Label if found, or field name</li> 
+	 * </ol>
+	 * @param resultDTO
 	 */
-	protected void populateActionErrors(ResultDTO resDTO) {
-		if(resDTO!=null && resDTO.getErrors() != null && resDTO.getErrors().size() >0){
-			for (String errorStr : resDTO.getErrors()) {
-				addActionError(errorStr);
+	protected void populateActionErrors(ResultDTO resultDTO) {
+		if(resultDTO!=null && resultDTO.getErrors() != null && resultDTO.getErrors().size() >0){
+			for (String errorStr : resultDTO.getErrors()) {
+				String[] key = errorStr.split("\\|");
+				String localisedMsg = getText(key[0]);
+				if(localisedMsg == null && key.length >1)localisedMsg = key[1];
+				if(localisedMsg == null || "".equals(localisedMsg))localisedMsg = errorStr;
+					addActionError(localisedMsg);
+				 
+			}
+		}
+		if(resultDTO!=null && resultDTO.getFieldErrors() != null && resultDTO.getFieldErrors().size() >0){
+			for (Entry<String, List<String>> fieldErrEntry : resultDTO.getFieldErrors().entrySet()) {
+				String fieldName = fieldErrEntry.getKey();
+				List<String> errors = fieldErrEntry.getValue();
+				for (String errorMessage : errors) {
+					String label = LabelFactory.INSTANCE.getLabel(screenName, fieldName);
+					String[] arStr = new String[]{label};
+					String[] key = errorMessage.split("\\|");
+					String localisedMsg = getText(key[0], arStr);
+					if(localisedMsg == null && key.length >1)localisedMsg = key[1];
+					if(localisedMsg == null || "".equals(localisedMsg))localisedMsg = errorMessage ;
+						addFieldError(fieldName, localisedMsg);	
+				}
 			}
 		}
 	}
@@ -112,7 +146,7 @@ public class CommonActionSupport extends ActionSupport {
 	/**
 	 * @param resultHtml to be converted into inputStream for ajax
 	 * @param jsonRecord
-	 * @return nextScreenName *.page, resultName = struts result name, resultPage= *.ftl,*.jsp,*.vm 
+	 * @return nextScreenName *.page, resultName = struts result name to be returned by execute(), resultPage= *.ftl,*.jsp,*.vm 
 	 * @throws FrontendException
 	 * @throws Exception
 	 */
@@ -124,7 +158,7 @@ public class CommonActionSupport extends ActionSupport {
 			resultPage = pg.resultPage;
 		
 			if("ajax".equals(pg.resultName)){
-				inputStream = new StringBufferInputStream(resultHtml );
+				inputStream = new ByteArrayInputStream(resultHtml.getBytes() );
 			}
 		}catch(FrontendException e){
 			logger.error("error.processingresult",e);
