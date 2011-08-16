@@ -41,7 +41,7 @@ public class DBConnector {
 	private static String DBPASSWORD = "test";
 	private boolean isRuninServerContext;
 
-	private final String SIMPLE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+	private final String SIMPLE_DATE_FORMAT = PrepstmtDTO.DATE_NS_FORMAT;//"yyyy-MM-dd HH:mm:ss.SSS";
 
 	public DBConnector() {
 		Properties prop = new Properties();
@@ -250,7 +250,7 @@ public class DBConnector {
 					Date newDate = new Date((new SimpleDateFormat(SIMPLE_DATE_FORMAT)).parse(pd.getData()).getTime());
 					stmt.setDate(count, newDate);
 				} else if (pd.getType() == PrepstmtDTO.DataType.DATEDDMMYYYY) {
-					Date newDate = new Date((new SimpleDateFormat("DD/MM/yyyy")).parse(pd.getData()).getTime());
+					Date newDate = new Date((new SimpleDateFormat(PrepstmtDTO.DATEDDMMYYYY_FORMAT)).parse(pd.getData()).getTime());
 					stmt.setDate(count, newDate);
 				} else if (pd.getType() == PrepstmtDTO.DataType.DOUBLE) {
 					String in = pd.getData();
@@ -335,7 +335,7 @@ public class DBConnector {
 					Date newDate = new Date((new SimpleDateFormat(SIMPLE_DATE_FORMAT)).parse(pd.getData()).getTime());
 					stmt.setDate(count, newDate);
 				} else if (pd.getType() == PrepstmtDTO.DataType.DATEDDMMYYYY) {
-					Date newDate = new Date((new SimpleDateFormat("DD/MM/yyyy")).parse(pd.getData()).getTime());
+					Date newDate = new Date((new SimpleDateFormat(PrepstmtDTO.DATEDDMMYYYY_FORMAT)).parse(pd.getData()).getTime());
 					stmt.setDate(count, newDate);
 				} else if (pd.getType() == PrepstmtDTO.DataType.DOUBLE) {
 					String in = pd.getData();

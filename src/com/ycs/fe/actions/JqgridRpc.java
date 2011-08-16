@@ -13,7 +13,10 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.ycs.fe.crud.CommandProcessor;
+import com.ycs.fe.dto.PaginationDTO;
 import com.ycs.fe.dto.PagingFilters;
+import com.ycs.fe.dto.ResultDTO;
 
 
 public class JqgridRpc extends ActionSupport {
@@ -167,12 +170,37 @@ public class JqgridRpc extends ActionSupport {
 			JSONArray oAllrows = new JSONArray(); 
 			JSONObject jobj2 = JSONObject.fromObject(jj2);
 			JSONArray jrow = jobj2.getJSONArray("rows");
+//http://www.trirand.com/blog/jqgrid/server.php?q=2&_search=false&nd=1313507637422&rows=10&page=1&sidx=id&sord=desc			
+//submitdata={form1:[{row:0,}],pagination:{form1:{currentpage:1,pagecount:200}}, bulkcmd:''...}
+			
+			String stack = "formpagination";
+			JSONObject submitdataObj = JSONObject.fromObject(submitdata);
+			PaginationDTO pageDTO = new PaginationDTO();
+			pageDTO.setPage(page);
+			pageDTO.setRows(rows);
+			pageDTO.setSidx(sidx);
+			pageDTO.setSord(sord);
+			pageDTO.setSearchField(searchField);
+			pageDTO.setSearchOper(searchOper);
+			pageDTO.setSearchString(searchString);
+			
 			  if (filters != null) {
 				PagingFilters filter = new Gson().fromJson(filters, PagingFilters.class);
+				pageDTO.setFilters(filter);
 				System.out.println("filters:" + JSONObject.fromObject(filter).toString() + " sord:" + sord + " sidx:" + sidx);
-				//			CommandProcessor cmdpr = new CommandProcessor();
-				//			ResultDTO resDTO = cmdpr.commandProcessor(submitdataObj, screenName);
-			}
+			  }
+			  
+			  JSONObject pagination = JSONObject.fromObject(pageDTO);
+			  JSONObject pagestack = new JSONObject();
+			  pagestack.put(stack, pagination);
+			  submitdataObj.put("pagination", pagestack);
+			  JSONObject bulkcmd = JSONObject.fromObject("{'bulkcmd':'gridtest'}");
+			  submitdataObj.put("bulkcmd", "prodgrid");
+			  
+			  logger.debug("send to BE :"+submitdataObj.toString());
+			  			CommandProcessor cmdpr = new CommandProcessor();
+			  			ResultDTO resDTO = cmdpr.commandProcessor(submitdataObj, screenName);
+			  System.out.println("back from cmd processor:"+ JSONObject.fromObject(resDTO));
 			//convert back to jqgrid format
 			for (Object row1 : jrow) {
 				JSONObject eachRow = (JSONObject)row1;

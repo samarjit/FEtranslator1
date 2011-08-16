@@ -164,18 +164,63 @@ private Logger logger = Logger.getLogger(getClass());
 								if (wherePart != null){
 									joiner = " AND ";
 								}
-								
+								wherePart += joiner;
+								String wherePart2 = "";
+								boolean first = true;
+								//filter
 								for (PagingFilterRule element : pageDTO.getFilters().getRules()) {
-									wherePart += joiner + " ( "+ element.getField()+ findOp(element.getOp())+element.getData() +" ) ";
+									String data = element.getData();
+									DataType dbtype = hmfielddbtype.get(element.getField());
+									switch(dbtype){
+										case  INT:
+										case  LONG:
+										case  FLOAT:
+										case  DOUBLE: 
+											break;
+										case  DATEDDMMYYYY:  data = " TO_DATE('"+data+"',"+PrepstmtDTO.DATE_NS_FORMAT+") ";
+											break;
+										case  TIMESTAMP:
+										case  DATE_NS: data = " TO_DATE('"+data+"',"+PrepstmtDTO.DATE_NS_FORMAT+") ";
+										    break;
+										case  STRING:
+											  data = "'"+data+"'";
+											break;
+										default: 	
+											data = "'"+data+"'";
+									}
+									wherePart2 += (first)?"":joiner + "   "+ element.getField()+ findOp(element.getOp())+" "+ data +"  ";
 									joiner = " " + pageDTO.getFilters().getGroupOp() + " ";
+									first = false;
 								}
 								
+								DataType dbtype = hmfielddbtype.get(pageDTO.getSearchField());
+								
+								String data = pageDTO.getSearchString();
+								switch(dbtype){
+								case  INT:
+								case  LONG:
+								case  FLOAT:
+								case  DOUBLE: 
+									break;
+								case  DATEDDMMYYYY:  data = " TO_DATE('"+data+"',"+PrepstmtDTO.DATE_NS_FORMAT+") ";
+									break;
+								case  TIMESTAMP:
+								case  DATE_NS: data = " TO_DATE('"+data+"',"+PrepstmtDTO.DATE_NS_FORMAT+") ";
+								    break;
+								case  STRING:
+									  data = "'"+data+"'";
+									break;
+								default: 	
+									data = "'"+data+"'";
+							}
+								
+								wherePart2 += joiner + " "+pageDTO.getSearchField() +findOp(pageDTO.getSearchOper())  + " " +data +" ";  
+										
+								if(wherePart2 != null && !"".equals(wherePart2))
+									wherePart += "( "+ wherePart2 +" )";
+								
 								if (wherePart != null){
-									updatequery += joiner + wherePart;
-								}else{
-									
-									
-									
+									updatequery +=  wherePart;
 								}
 								
 								if(orderByPart!= null){
@@ -184,7 +229,7 @@ private Logger logger = Logger.getLogger(getClass());
 								
 								sql = "select * from (select v.*, ROWNUM rn from ("
 								 + updatequery
-								 + " ) v where rownum < 150) where rn >= 101";
+								 + " ) v where rownum < :recto) where rn >= :recfrom";
 						}
 					}
 				}
