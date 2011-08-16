@@ -101,7 +101,7 @@ private Logger logger = Logger.getLogger(getClass());
 							if(tempresDTO == null){
 								tempresDTO = new ResultDTO();
 							}
-							tempresDTO.setPageDetails(outstack, pageno, pagecount, pagesize);
+							tempresDTO.setPageDetails(outstack, pageno, pagecount, reccount, pagesize);
 							stack.getContext().put("resultDTO",tempresDTO);
 							
 							int recfrom = pageno * pagesize;

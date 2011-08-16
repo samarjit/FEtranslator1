@@ -65,12 +65,13 @@
 	 // jsonData = data1.data.form1;
       jQuery("#list2").jqGrid( {
       	//url: 'jsrpc.action?screenName=TestPage&submitdata={bulkcmd="prodgrid"}&q=2&_search=false&nd=1314263082628&rows=10&page=2&sidx=id&sord=desc',
-      	url: '<%= request.getContextPath() %>/jqgrid.action',
+      	url: '<%= request.getContextPath() %>/jqgrid.action?command=true',
+      	//url: 'http://localhost/jqgrid/server.php?q=2',
    	    datatype: "json",
    	   // data: mydata,
-      	colNames: ['PRODUCT_CODE' ,  'PRODUCT_NAME' ,  'PLASTIC_CODE',   'PLASTIC_DESC' ],
+      	colNames: ['PRODUCT_COD' ,  'PRODUCT_NAME' ,  'PLASTIC_CODE',   'PLASTIC_DESC' ],
       	colModel: [
-      		{name:'PLASTIC_CODE',index:'PLASTIC_CODE', width:55 },
+      		{name:'PLASTIC_CODo',index:'PLASTIC_CODE', width:55 },
       		{name:'PRODUCT_NAME',index:'PRODUCT_NAME', width:90 },
       		{name:'PLASTIC_CODE',index:'PLASTIC_CODE', width:100 },
       		{name:'PLASTIC_DESC',index:'PLASTIC_DESC', width:80 },
@@ -78,14 +79,39 @@
       	rowNum: 10,
       	rowList: [ 10, 20, 30],
       	pager: '#pager2',
-      	//sortname: 'PLASTIC_CODE',
-        //viewrecords: true,
-        //sortorder: "desc",
+      	sortname: 'PLASTIC_CODE',
+        viewrecords: true,
+        sortorder: "desc",
        caption: "JSON Example"
    } );
 
-  // jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false});
+    jQuery("#list2").jqGrid('navGrid','#pager2',{del:false,add:false,edit:false},{},{},{},{multipleSearch:true});
    //  }   );
+}
+
+function fn2(){
+	jQuery("#list3").jqGrid({
+		url: '<%= request.getContextPath() %>/jqgrid.action',
+		datatype: "json",
+	   	colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
+	   	colModel:[
+	   		{name:'id',index:'id', width:55},
+	   		{name:'invdate',index:'invdate', width:90},
+	   		{name:'name',index:'name asc, invdate', width:100},
+	   		{name:'amount',index:'amount', width:80, align:"right"},
+	   		{name:'tax',index:'tax', width:80, align:"right"},		
+	   		{name:'total',index:'total', width:80,align:"right"},		
+	   		{name:'note',index:'note', width:150, sortable:false}		
+	   	],
+	   	rowNum:10,
+	   	rowList:[10,20,30],
+	   	pager: '#pager3',
+	   	sortname: 'id',
+	    viewrecords: true,
+	    sortorder: "desc",
+	    caption:"JSON Example"
+	});
+	jQuery("#list3").jqGrid('navGrid','#pager3',{edit:false,add:false,del:false});
 }
 
    </script>
@@ -94,6 +120,9 @@
    <input type="button" onclick="fn()" value="click" />
    <table id="list2"></table>
    <div id="pager2"></div>
+	
+	<table id="list3"></table>
+<div id="pager3" ></div>
 
 </body>
 </html>

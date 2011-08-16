@@ -2,6 +2,8 @@ package com.ycs.fe.crud;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
@@ -17,6 +19,7 @@ import com.ycs.exception.DataTypeException;
 import com.ycs.exception.FrontendException;
 import com.ycs.fe.dao.FETranslatorDAO;
 import com.ycs.fe.dto.InputDTO;
+import com.ycs.fe.dto.PaginationDTO;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
@@ -95,28 +98,29 @@ private Logger logger = Logger.getLogger(getClass());
 						int reccount = fetranslatorDAO.executeCountQry(screenName, parsedquery, outstack, arparam);
 						logger.debug("Processing count query"+countquery);
 						if(reccount > pagesize){
-							JSONObject jobject = jsonRecord.getJSONObject("pagination");
+							JSONObject jobject = jsonInput.getData().getJSONObject("pagination");
 							int pageno = 0;
-							 
+							PaginationDTO pageDTO= null; 
 							if(jobject.size()>0 ){
 								JSONObject	panel =  jobject.getJSONObject(outstack);
-								pageno =  panel.getInt("currentpage");
+								pageDTO = (PaginationDTO) JSONObject.toBean(panel, PaginationDTO.class);
+								pageno =  pageDTO.getPage();// panel.getInt("currentpage");
 							}else{
 								pageno = 1;
 								logger.debug("Pagination assuming first page as no page data is given" );
 							}
 								int pagecount = (int) Math.ceil((double)reccount / pagesize); 
 								 
-								//pagination:{form1:{currentpage:1,pagecount:200}} 
+								//submitdata={form1:[{row:0,}],pagination:{form1:{currentpage:1,pagecount:200}}, bulkcmd:''...} 
 								ValueStack stack = ActionContext.getContext().getValueStack();
 								ResultDTO tempresDTO = (ResultDTO) stack.getContext().get("resultDTO");
 								if(tempresDTO == null){
 									tempresDTO = new ResultDTO();
 								}
-								tempresDTO.setPageDetails(outstack, pageno, pagecount, pagesize);
+								tempresDTO.setPageDetails(outstack, pageno, pagecount, reccount , pagesize);
 								logger.debug("Now setetting resultDTO in JsonRPC pojo="+JSONSerializer.toJSON(tempresDTO));
 								stack.getContext().put("resultDTO",tempresDTO); 
-								logger.debug("Pagination set with pageno:"+pageno+" pagecount:"+pagecount+" pagesize:"+pagesize);
+								logger.debug("Pagination set with pageno:"+pageno+"totalrec:"+reccount+" pagecount:"+pagecount+" pagesize:"+pagesize);
 								int recfrom = pageno * pagesize;
 								int recto = recfrom + pagesize;
 								jsonRecord.put("recto", recto); //put into current row value the recfrom and recto so that it can be used in count query
@@ -124,6 +128,45 @@ private Logger logger = Logger.getLogger(getClass());
 								hmfielddbtype.put("recto",PrepstmtDTO.getDataTypeFrmStr("INT") );
 								hmfielddbtype.put("recfrom",PrepstmtDTO.getDataTypeFrmStr("INT"));
 							
+								//dynamically modify query for pagination
+								String sql = updatequery;
+								Pattern pattern = Pattern.compile("([\\S\\s]*)(?ims:order)[\\S\\s]*(?ims:by)([\\S\\s]*)");
+								Matcher m1 = pattern.matcher(sql);
+								String selectPart = null;
+								String selectWherePart = null;
+								String secondPart = null;
+								String wherePart  = null;
+								String orderByPart = null;
+								if(m1.find()){
+									selectWherePart = m1.group(1); //before order by
+									orderByPart = m1.group(2); //after order by
+									
+								}else{
+									selectWherePart  = sql;
+								}	
+								
+								//no where clause specified check order by
+								Pattern pattern1 = Pattern.compile("([\\S\\s]*)(?ims:where)([\\S\\s]*)");
+								Matcher m2 = pattern1.matcher(selectWherePart);
+								if(m2.find()){
+									selectPart = m2.group(1); //before where 
+									wherePart = m2.group(2);  //after where
+								}else{
+									selectPart = selectWherePart;
+								}
+									
+								if(pageDTO.getSidx() != null && pageDTO.getSord() != null){
+									orderByPart = pageDTO.getSidx() +" "+pageDTO.getSord();
+								}
+								updatequery = "select " + selectPart;
+								if (wherePart != null)
+									updatequery += "where "+ wherePart;
+								if(orderByPart!= null)
+									updatequery += "order by "+ orderByPart;
+								
+								sql = "select * from (select v.*, ROWNUM rn from ("
+								 + updatequery
+								 + " ) v where rownum < 150) where rn >= 101";
 						}
 					}
 				}
@@ -147,4 +190,39 @@ private Logger logger = Logger.getLogger(getClass());
 		return resultDTO;
 	}
 
+	public static void queryParseCheck(String query){
+		String sql = query;
+		Pattern pattern = Pattern.compile("([\\S\\s]*)(?ims:order)[\\S\\s]*(?ims:by)([\\S\\s]*)");
+		Matcher m1 = pattern.matcher(sql);
+		String selectPart = null;
+		String selectWherePart = null;
+		String secondPart = null;
+		String wherePart = null  ;
+		String orderByPart = null ;
+		if(m1.find()){
+			selectWherePart = m1.group(1); //before order by
+			orderByPart = m1.group(2); //after order by
+			
+		}else{
+			selectWherePart  = sql;
+		}	
+		
+		//no where clause specified check order by
+			Pattern pattern1 = Pattern.compile("([\\S\\s]*)(?ims:where)([\\S\\s]*)");
+			Matcher m2 = pattern1.matcher(selectWherePart);
+			if(m2.find()){
+				selectPart = m2.group(1); //before where 
+				wherePart = m2.group(2);  //after where
+			}else{
+				selectPart = selectWherePart;
+			}
+		System.out.println("select part:"+selectPart);	
+		System.out.println("where part:"+ wherePart);	
+		System.out.println("order by part:"+ orderByPart);
+	}
+	public static void main(String args[]){
+		queryParseCheck("SELECT s,d from table1 where x=1 and sdd='d' order by 1");
+		queryParseCheck("SELECT s,d from table1    order by 1");
+		queryParseCheck("SELECT s,d from table1 where x=1 and sdd='d' ");
+	}
 }

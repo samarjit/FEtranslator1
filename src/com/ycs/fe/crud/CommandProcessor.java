@@ -124,27 +124,31 @@ public class CommandProcessor {
 		    	
 			    for (String dataSetkey : itr) { //form1, form2 ...skip txnrec,sessionvars
 			    	//skip bulkcmd should be processed earlier, txnrec and sessionvars are just data groups
-			    	if(dataSetkey.equals("bulkcmd") || dataSetkey.equals("txnrec")   ||  dataSetkey.equals("sessionvars"))continue;
+			    	if(dataSetkey.equals("bulkcmd") || dataSetkey.equals("txnrec")   ||  dataSetkey.equals("sessionvars")||  dataSetkey.equals("pagination"))continue;
 			    	
 			    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
 			    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction
 			    		String cmd = ((JSONObject) jsonRecord).getString("command");
-			    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
-			    		System.out.println("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
-	//		    		String instack = elmCmd.attributeValue("instack");
-			    		String operation = elmCmd.attributeValue("opt");
-//			    		String strProcessor = elmCmd.attributeValue("processor");
-//			    		logger  .debug("Command Processor:"+strProcessor+" operation:"+operation);
-			    		String[] opts = operation.split("\\|"); //get chained commands
-			    		for (String opt : opts) {
-			    			String[] sqlcmd = opt.split("\\:"); //get Id of query 
-			    			String querynodeXpath =  sqlcmd[0]+"[@id='"+sqlcmd[1]+"']"; //Query node xpath
-			    			Element processorElm = (Element) rootXml.selectSingleNode("/root/screen/*/"+querynodeXpath+" ");
-			    			String strProcessor = processorElm.getParent().getName();
-			    		    BaseCommandProcessor cmdProcessor =  CommandProcessorResolver.getCommandProcessor(strProcessor);
-			    		    resDTO = cmdProcessor.processCommand(screenName, querynodeXpath, (JSONObject) jsonRecord, inputDTO, resDTO);				
-			    		    //resDTO = rpc.selectData(  screenName,   null, querynodeXpath ,   (JSONObject)jsonRecord);
-			    		    if(resDTO.getErrors().size()>0)break;
+			    		if(cmd != null && !"".equals(cmd) ){
+				    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
+				    		System.out.println("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
+		//		    		String instack = elmCmd.attributeValue("instack");
+				    		String operation = elmCmd.attributeValue("opt");
+	//			    		String strProcessor = elmCmd.attributeValue("processor");
+	//			    		logger  .debug("Command Processor:"+strProcessor+" operation:"+operation);
+				    		String[] opts = operation.split("\\|"); //get chained commands
+				    		for (String opt : opts) {
+				    			String[] sqlcmd = opt.split("\\:"); //get Id of query 
+				    			String querynodeXpath =  sqlcmd[0]+"[@id='"+sqlcmd[1]+"']"; //Query node xpath
+				    			Element processorElm = (Element) rootXml.selectSingleNode("/root/screen/*/"+querynodeXpath+" ");
+				    			String strProcessor = processorElm.getParent().getName();
+				    		    BaseCommandProcessor cmdProcessor =  CommandProcessorResolver.getCommandProcessor(strProcessor);
+				    		    resDTO = cmdProcessor.processCommand(screenName, querynodeXpath, (JSONObject) jsonRecord, inputDTO, resDTO);				
+				    		    //resDTO = rpc.selectData(  screenName,   null, querynodeXpath ,   (JSONObject)jsonRecord);
+				    		    if(resDTO.getErrors().size()>0)break;
+				    		}
+			    		}else{
+			    			logger.debug("The record does not contain a valid command. skip");
 			    		}
 			    	}
 				}

@@ -1,15 +1,18 @@
 package com.ycs.fe.dto;
 
+import java.util.regex.Matcher;
+
+
 public class PaginationDTO {
 
 	private int page; //pageno
 	private int rows; //number of rows per page
 	private String sidx; //order by sidx
 	private String sord; //asc or desc
+	private String searchField;
+	private String searchString;
+	private String searchOper;
 	
-	public PaginationDTO(){
-		
-	}
 	public PaginationDTO(int page,int rows,String sidx,String sord){
 		this.page = page;
 		this.rows = rows;
@@ -41,6 +44,30 @@ public class PaginationDTO {
 	public void setSord(String sord) {
 		this.sord = sord;
 	}
+
+	public String getSearchField() {
+		return searchField;
+	}
+	public void setSearchField(String searchField) {
+		this.searchField = searchField;
+	}
+	public String getSearchString() {
+		return searchString;
+	}
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
+	}
+	public String getSearchOper() {
+		return searchOper;
+	}
+	public void setSearchOper(String searchOper) {
+		this.searchOper = searchOper;
+	}
+	public PaginationDTO(){
+		
+	}
 	
-	
+	public static boolean sqlInjectionCheck(String s){
+		return s.matches("[a-zA-Z0-9%]*");
+	}
 }

@@ -2,14 +2,15 @@ package com.ycs.fe.commandprocessor;
 
 import java.util.Set;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
 import com.ycs.exception.FrontendException;
 import com.ycs.fe.dto.PageReturnType;
 import com.ycs.fe.util.ScreenMapRepo;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * The first command of the dataset is processed to resolve result, all the subsequent rows of data-sets are ignored.
@@ -18,6 +19,7 @@ import net.sf.json.JSONObject;
  * @version 1.0
  */
 public class ReturnCommandProcessor {
+	private static Logger logger =   Logger.getLogger(ReturnCommandProcessor.class);
 	/**
 	 * @param screenName
 	 * @param submitdataObj from which the command or bulkcmd will match with &lt;cmd .. result="ajax" /> 
@@ -46,21 +48,27 @@ public class ReturnCommandProcessor {
 		 } else {
 			for (String dataSetkey : itr) { //form1, form2 ...skip txnrec,sessionvars
 		    	//txnrec & sessionvars is just a group of data not a processing command
-		    	if( dataSetkey.equals("txnrec")   || dataSetkey.equals("sessionvars"))continue;
+		    	if( dataSetkey.equals("txnrec")   || dataSetkey.equals("sessionvars")||  dataSetkey.equals("pagination"))continue;
 		    	
 		    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
 		    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction
 		    		String cmd = ((JSONObject) jsonRecord).getString("command");
-		    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
-		    		System.out.println("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
-		    		String strResult  = elmCmd.attributeValue("result");
-		    		
-		    		resolveResult(pgReturnType, strResult);
-		    		break;
+		    		if(cmd !=null && !"".equals(cmd)){
+			    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
+			    		System.out.println("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
+			    		String strResult  = elmCmd.attributeValue("result");
+			    		
+			    		resolveResult(pgReturnType, strResult);
+			    		break;
+		    		}
 		    	}
 		    }
 		 }
 		}
+		
+		if(!(pgReturnType.resultName != null && !"".equals(pgReturnType.resultName)))
+				logger.error("The Result could not be resolved");
+		
 		return pgReturnType;
 	}
 	

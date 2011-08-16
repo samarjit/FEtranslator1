@@ -14,7 +14,7 @@ private List<String> messages;
 private List<String> errors;
 private Map<String, List<String>> fieldErrors;
 private HashMap<String, Object>  data;
-private Map<String,Map<String,Integer>> pagination; //{currentpage:,totalpage:,pagesize:}
+private Map<String,Map<String,Integer>> pagination; //{currentpage:,totalpage:,totalrec:,pagesize:}
  
 
 public ResultDTO() {
@@ -24,6 +24,7 @@ public ResultDTO() {
 	pagination = new HashMap<String, Map<String,Integer>>();
 	HashMap<String, Integer> hm = new HashMap<String, Integer>();
 	hm.put("currentpage",1);
+	hm.put("totalpage",1);
 	hm.put("totalrec",1);
 	hm.put("pagesize",1);
 	pagination.put("formx", hm);
@@ -43,17 +44,26 @@ public void addMessage(String m){
 //}
 
 
-public void setPageDetails(String panelname,int currentpage, int totalpages, int pagesize) {
+/**
+ * @param panelname
+ * @param currentpage
+ * @param totalpages
+ * @param totalrec
+ * @param pagesize
+ */
+public void setPageDetails(String panelname,int currentpage, int totalpages,int totalrec, int pagesize) {
 	 if(pagination ==null)pagination = new HashMap<String, Map<String,Integer>>();
 	 Map<String, Integer> hm = pagination.get(panelname);
 	 if(hm != null ){
 		 hm.put("currentpage",currentpage);
-		 hm.put("totalrec",totalpages);
+		 hm.put("totalpage",totalpages);
+		 hm.put("totalrec",totalrec);
 		 hm.put("pagesize",pagesize);
 	 }else{
 		 hm = new HashMap<String, Integer>();
 		 hm.put("currentpage",currentpage);
-		 hm.put("totalrec",totalpages);
+		 hm.put("totalpage",totalpages);
+		 hm.put("totalrec",totalrec);
 		 hm.put("pagesize",pagesize);
 	 }
 	 pagination.put(panelname, hm);

@@ -2,28 +2,18 @@ package com.ycs.fe.actions;
 
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
+import java.util.Iterator;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 
 import com.google.gson.Gson;
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.util.ValueStack;
-import com.ycs.fe.businesslogic.BaseBL;
-import com.ycs.fe.cache.BusinessLogicFactory;
-import com.ycs.fe.crud.CommandProcessor;
-import com.ycs.fe.dto.InputDTO;
-import com.ycs.fe.dto.PaginationDTO;
-import com.ycs.fe.dto.ResultDTO;
-import com.ycs.fe.util.ScreenMapRepo;
+import com.ycs.fe.dto.PagingFilters;
 
 
 public class JqgridRpc extends ActionSupport {
@@ -44,6 +34,12 @@ public class JqgridRpc extends ActionSupport {
 	private int rows;
 	private String sidx;
 	private String sord;
+
+	private String filters;
+	
+	private String searchField;
+	private String searchString;
+	private String searchOper;
 	
 	public JqgridRpc() {
 		super();
@@ -129,7 +125,7 @@ public class JqgridRpc extends ActionSupport {
 					"{'id':'4','cell':['4','2007-10-04','Client3','150.00','0.00','150.00','no tax']}]," +
 					"'userdata':{'amount':3220,'tax':342,'total':3564,'name':'Totals:'}}";
 			
-			jj= "{'page':'1','total':2,'records':'13','rows':[{\"PLASTIC_CODE\":\"FEVCUS-FEVO Customer design\",\"PLASTIC_DESC\":\"FEVO Customer design\",\"PRODUCT_CODE\":\"TEST01\",\"PRODUCT_NAME\":\"TESTING\"}," + 
+			String jj2= "{'page':'1','total':34,'records':'34','rows':[{\"PLASTIC_CODE\":\"FEVCUS-FEVO Customer design\",\"PLASTIC_DESC\":\"FEVO Customer design\",\"PRODUCT_CODE\":\"TEST01\",\"PRODUCT_NAME\":\"TESTING\"}," + 
 					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV083\",\"PRODUCT_NAME\":\"EMV Generic Product\"}," + 
 					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV040\",\"PRODUCT_NAME\":\"EMV Reloadable Generic\"}," + 
 					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV093\",\"PRODUCT_NAME\":\"EMV Reloadable SE OTC\"}," + 
@@ -164,7 +160,44 @@ public class JqgridRpc extends ActionSupport {
 					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV091\",\"PRODUCT_NAME\":\"EMV Reloadable Generic\"}," + 
 					"{\"PLASTIC_CODE\":\"EMVBLK-EMV Black(unprinted)\",\"PLASTIC_DESC\":\"EMV Black(unprinted)\",\"PRODUCT_CODE\":\"EMV092\",\"PRODUCT_NAME\":\"EMV Reloadable SE\"}]" + 
 					"}";
-		JSONObject jobj = JSONObject.fromObject(jj);
+		JSONObject jobj = null;
+		jobj = JSONObject.fromObject(jj);
+		if(command != null || "true".equals(command)){
+			JSONObject oResult = new JSONObject();
+			JSONArray oAllrows = new JSONArray(); 
+			JSONObject jobj2 = JSONObject.fromObject(jj2);
+			JSONArray jrow = jobj2.getJSONArray("rows");
+			  if (filters != null) {
+				PagingFilters filter = new Gson().fromJson(filters, PagingFilters.class);
+				System.out.println("filters:" + JSONObject.fromObject(filter).toString() + " sord:" + sord + " sidx:" + sidx);
+				//			CommandProcessor cmdpr = new CommandProcessor();
+				//			ResultDTO resDTO = cmdpr.commandProcessor(submitdataObj, screenName);
+			}
+			//convert back to jqgrid format
+			for (Object row1 : jrow) {
+				JSONObject eachRow = (JSONObject)row1;
+				String oid = null;
+				JSONArray ocells = new JSONArray();
+				JSONObject oRow = new JSONObject(); 
+				for (Iterator keyItr = eachRow.keys(); keyItr.hasNext();) {
+					String key = (String) keyItr.next();
+					String value = eachRow.getString(key);
+					
+					if(oid == null)oid = key;
+					ocells.add(value);
+				}
+				oRow.put("id", oid);
+				oRow.put("cell", ocells);
+				oAllrows.add(oRow);
+			}
+			oResult.put("page", 1);
+			oResult.put("total", 34);
+			oResult.put("records", 34);
+			oResult.put("rows", oAllrows );
+			oResult.put("pagesize", 20 );
+			
+			jobj = oResult;
+		}
 		System.out.println(jobj.toString());
 //		JSONObject jobj = JSONObject.fromObject(resDTO);
 //		try {
@@ -245,4 +278,47 @@ public class JqgridRpc extends ActionSupport {
 	public void setSord(String sord) {
 		this.sord = sord;
 	}
+
+ 
+
+ 
+
+
+
+	public String getSearchField() {
+		return searchField;
+	}
+	
+
+	public void setSearchField(String searchField) {
+		this.searchField = searchField;
+	}
+	public String getSearchString() {
+		return searchString;
+	}
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
+	}
+	public String getSearchOper() {
+		return searchOper;
+	}
+	public void setSearchOper(String searchOper) {
+		this.searchOper = searchOper;
+	}
+
+
+
+	public String getFilters() {
+		return filters;
+	}
+
+
+
+	public void setFilters(String filters) {
+		this.filters = filters;
+	}
+	
+	
+ 
+	 
 }
