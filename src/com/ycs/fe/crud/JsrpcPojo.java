@@ -20,6 +20,7 @@ import com.ycs.exception.FrontendException;
 import com.ycs.fe.dao.FETranslatorDAO;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.PaginationDTO;
+import com.ycs.fe.dto.PagingFilterRule;
 import com.ycs.fe.dto.PrepstmtDTO;
 import com.ycs.fe.dto.PrepstmtDTO.DataType;
 import com.ycs.fe.dto.PrepstmtDTOArray;
@@ -159,10 +160,27 @@ private Logger logger = Logger.getLogger(getClass());
 									orderByPart = pageDTO.getSidx() +" "+pageDTO.getSord();
 								}
 								updatequery = "select " + selectPart;
-								if (wherePart != null)
-									updatequery += "where "+ wherePart;
-								if(orderByPart!= null)
-									updatequery += "order by "+ orderByPart;
+								String joiner = " WHERE ";
+								if (wherePart != null){
+									joiner = " AND ";
+								}
+								
+								for (PagingFilterRule element : pageDTO.getFilters().getRules()) {
+									wherePart += joiner + " ( "+ element.getField()+ findOp(element.getOp())+element.getData() +" ) ";
+									joiner = " " + pageDTO.getFilters().getGroupOp() + " ";
+								}
+								
+								if (wherePart != null){
+									updatequery += joiner + wherePart;
+								}else{
+									
+									
+									
+								}
+								
+								if(orderByPart!= null){
+									updatequery += " order by "+ orderByPart ;
+								}
 								
 								sql = "select * from (select v.*, ROWNUM rn from ("
 								 + updatequery
@@ -188,6 +206,17 @@ private Logger logger = Logger.getLogger(getClass());
 				resultDTO.addError("error.queryfailed");
 			}  
 		return resultDTO;
+	}
+
+	private String findOp(String op) {
+		if("eq".equals(op))
+			return "=";
+		if("lt".equals(op))
+			return "<";
+		if("gt".equals(op))
+			return ">";
+		
+		return null;
 	}
 
 	public static void queryParseCheck(String query){

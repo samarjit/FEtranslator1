@@ -1,6 +1,5 @@
 package com.ycs.fe.dto;
 
-import java.util.regex.Matcher;
 
 
 public class PaginationDTO {
@@ -12,6 +11,7 @@ public class PaginationDTO {
 	private String searchField;
 	private String searchString;
 	private String searchOper;
+	private PagingFilters filters;
 	
 	public PaginationDTO(int page,int rows,String sidx,String sord){
 		this.page = page;
@@ -67,6 +67,15 @@ public class PaginationDTO {
 		
 	}
 	
+		
+	public PagingFilters getFilters() {
+		return filters;
+	}
+
+	public void setFilters(PagingFilters filters) {
+		this.filters = filters;
+	}
+
 	public static boolean sqlInjectionCheck(String s){
 		return s.matches("[a-zA-Z0-9%]*");
 	}
