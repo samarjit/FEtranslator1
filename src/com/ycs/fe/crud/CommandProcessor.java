@@ -159,7 +159,7 @@ public class CommandProcessor {
 		    }
 		}else{
 			String resultJson = remoteCommandProcessor (submitdataObj.toString(), screenName);
-			resDTO = (ResultDTO) JSONObject.toBean(JSONObject.fromObject(resultJson), ResultDTO.class);
+			resDTO = ResultDTO.fromJsonString(JSONObject.fromObject(resultJson));
 		}
 		} catch (FrontendException e) {
 			if(resDTO == null)resDTO= new ResultDTO();

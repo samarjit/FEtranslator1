@@ -65,16 +65,16 @@
 	 // jsonData = data1.data.form1;
       jQuery("#list2").jqGrid( {
       	//url: 'jsrpc.action?screenName=TestPage&submitdata={bulkcmd="prodgrid"}&q=2&_search=false&nd=1314263082628&rows=10&page=2&sidx=id&sord=desc',
-      	url: '<%= request.getContextPath() %>/jqgrid.action?command=true',
+      	url: '<%= request.getContextPath() %>/jqgrid.action?command=true&screenName=TestPage&submitdata={bulkcmd="prodgrid"}',
       	//url: 'http://localhost/jqgrid/server.php?q=2',
    	    datatype: "json",
    	   // data: mydata,
-      	colNames: ['PRODUCT_COD' ,  'PRODUCT_NAME' ,  'PLASTIC_CODE',   'PLASTIC_DESC' ],
+      	colNames: [ 'PLASTIC_CODE','PLASTIC_DESC'   , 'PRODUCT_NAME',   'PRODUCT_CODE'  ],
       	colModel: [
-      		{name:'PLASTIC_CODo',index:'PLASTIC_CODE', width:55 },
-      		{name:'PRODUCT_NAME',index:'PRODUCT_NAME', width:90 },
-      		{name:'PLASTIC_CODE',index:'PLASTIC_CODE', width:100 },
-      		{name:'PLASTIC_DESC',index:'PLASTIC_DESC', width:80 },
+      		{name:'PLASTIC_DESC',index:'PLASTIC_DESC', width:200 },
+      		{name:'PLASTIC_CODE',index:'PLASTIC_CODE', width:200 },
+      		{name:'PRODUCT_NAME',index:'PRODUCT_NAME', width:150},
+      		{name:'PRODUCT_CODE',index:'PRODUCT_CODE', width:150 },
       	],
       	rowNum: 10,
       	rowList: [ 10, 20, 30],
@@ -118,7 +118,7 @@ function fn2(){
 </head>
 <body>
    <input type="button" onclick="fn()" value="click" />
-   <table id="list2"></table>
+   <table id="list2" style="width:500px"></table>
    <div id="pager2"></div>
 	
 	<table id="list3"></table>

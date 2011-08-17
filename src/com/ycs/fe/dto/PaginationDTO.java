@@ -11,7 +11,7 @@ public class PaginationDTO {
 	private String searchField;
 	private String searchString;
 	private String searchOper;
-	private PagingFilters filters;
+	private PagingFilters filters = null;
 	
 	public PaginationDTO(int page,int rows,String sidx,String sord){
 		this.page = page;

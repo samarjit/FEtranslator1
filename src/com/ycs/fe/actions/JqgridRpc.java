@@ -3,6 +3,7 @@ package com.ycs.fe.actions;
 import java.io.InputStream;
 import java.io.StringBufferInputStream;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -186,7 +187,10 @@ public class JqgridRpc extends ActionSupport {
 			
 			  if (filters != null) {
 				PagingFilters filter = new Gson().fromJson(filters, PagingFilters.class);
-				pageDTO.setFilters(filter);
+				System.out.println("filter from Gson:"+filter);
+				if(filter != null)
+					pageDTO.setFilters(filter);
+				
 				System.out.println("filters:" + JSONObject.fromObject(filter).toString() + " sord:" + sord + " sidx:" + sidx);
 			  }
 			  
@@ -194,15 +198,18 @@ public class JqgridRpc extends ActionSupport {
 			  JSONObject pagestack = new JSONObject();
 			  pagestack.put(stack, pagination);
 			  submitdataObj.put("pagination", pagestack);
-			  JSONObject bulkcmd = JSONObject.fromObject("{'bulkcmd':'gridtest'}");
-			  submitdataObj.put("bulkcmd", "prodgrid");
+//			  JSONObject bulkcmd = JSONObject.fromObject("{'bulkcmd':'gridtest'}");
+//			  submitdataObj.put("bulkcmd", "prodgrid");
 			  
 			  logger.debug("send to BE :"+submitdataObj.toString());
 			  			CommandProcessor cmdpr = new CommandProcessor();
 			  			ResultDTO resDTO = cmdpr.commandProcessor(submitdataObj, screenName);
 			  System.out.println("back from cmd processor:"+ JSONObject.fromObject(resDTO));
+			  System.out.println("back from cmd processor pagination:"+  resDTO.getPagination());
+			
+			  JSONArray jrow2 = JSONObject.fromObject(resDTO.getData()).getJSONArray(stack);
 			//convert back to jqgrid format
-			for (Object row1 : jrow) {
+			for (Object row1 : jrow2) {
 				JSONObject eachRow = (JSONObject)row1;
 				String oid = null;
 				JSONArray ocells = new JSONArray();
@@ -218,11 +225,14 @@ public class JqgridRpc extends ActionSupport {
 				oRow.put("cell", ocells);
 				oAllrows.add(oRow);
 			}
-			oResult.put("page", 1);
-			oResult.put("total", 34);
-			oResult.put("records", 34);
+			
+			Map<String, Map<String, Integer>> pagingMultiForm = resDTO.getPagination();
+			Map<String, Integer> pageingRet = pagingMultiForm.get(stack);
+			oResult.put("page", pageingRet.get("currentpage"));
+			oResult.put("total", pageingRet.get("totalpage"));
+			oResult.put("records", pageingRet.get("totalrec"));
 			oResult.put("rows", oAllrows );
-			oResult.put("pagesize", 20 );
+			oResult.put("pagesize", pageingRet.get("pagesize") );
 			
 			jobj = oResult;
 		}
