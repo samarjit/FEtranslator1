@@ -2,7 +2,7 @@ package actionclass;
 
 import java.io.File;
 
- 
+@Deprecated
 public class Configuration {
 
 	public void setDirectoryForTemplateLoading(File file) {

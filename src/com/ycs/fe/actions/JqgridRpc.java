@@ -14,7 +14,7 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
-import com.ycs.fe.crud.CommandProcessor;
+import com.ycs.fe.commandprocessor.CommandProcessor;
 import com.ycs.fe.dto.PaginationDTO;
 import com.ycs.fe.dto.PagingFilters;
 import com.ycs.fe.dto.ResultDTO;

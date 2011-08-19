@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.ycs.fe.util.CharResponseWrapper;
+
 /**
  * Servlet Filter implementation class HitCounterFilter
  */

@@ -19,6 +19,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import com.ycs.fe.util.CharResponseWrapper;
+
 /**
  * Servlet Filter implementation class XSLTFilter
  */

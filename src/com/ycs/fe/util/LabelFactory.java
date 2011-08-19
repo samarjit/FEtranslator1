@@ -9,7 +9,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
-import com.ycs.exception.FrontendException;
+import com.ycs.fe.exception.FrontendException;
 
 public class LabelFactory implements LocaleProvider{
 	private static Logger logger = Logger.getLogger(LabelFactory.class);

@@ -65,13 +65,13 @@
 	</package>
 	<package name="yidefaultPackage" extends="debug-default">
 		<result-types>
-			<result-type name="customXMLRes" class="actionclass.XMLResult">
+			<result-type name="customXMLRes" class="com.ycs.fe.strutsresult.XMLResult">
 			</result-type>
 		</result-types>
 		
 		<interceptors>
 			
-			<interceptor name="decorator" class="actionclass.DecoratorInterceptor" />
+			<interceptor name="decorator" class="com.ycs.fe.interceptor.DecoratorInterceptor" />
 			<interceptor-stack name="myCustomStack">
 				<interceptor-ref name="defaultStack" />	
 				<interceptor-ref name="decorator" />
@@ -88,7 +88,7 @@
 	</package>
     
 	<package name="ProductSetup" extends="yidefaultPackage" namespace="/html">
-		<action name="programsetupview" class="actionclass.ProgramSetup" method="view">
+		<action name="programsetupview" class="com.ycs.programsetup.action.ProgramSetup" method="view">
 			<interceptor-ref name="myCustomStack" />
 			<result name="view1" type="freemarker">
 				 ProgramSetup.ftl
@@ -101,14 +101,14 @@
 			<result name="velocity" >${resultPage}</result>
 			<result name="input">/index.jsp</result>
 		</action>
-		<action name="programsetupsave" class="actionclass.ProgramSetup" method="save">
+		<action name="programsetupsave" class="com.ycs.programsetup.action.ProgramSetup" method="save">
 			<interceptor-ref name="myCustomStack" />
 			<result name="save" type="customXMLRes">
 				<param name="resultxml">ProgramSetup.xml</param>
 			</result>
 			<result name="input">/index.jsp</result>
 		</action>
-		<action name="programsetupsave" class="actionclass.ProgramSetup" method="save">
+		<action name="programsetupsave" class="com.ycs.programsetup.action.ProgramSetup" method="save">
 			<interceptor-ref name="myCustomStack" />
 			<param name="pageconfigxml">ProgramSetup.xml</param>
 			<result name="customXMLRes" type="customXMLRes"/>
@@ -186,7 +186,7 @@
 		</interceptors>
 		<default-interceptor-ref name="appDefault" />-->
 		<interceptors>
-			<interceptor name="decorator" class="actionclass.DecoratorInterceptor" />
+			<interceptor name="decorator" class="com.ycs.fe.interceptor.DecoratorInterceptor" />
 		</interceptors>
 
 		<action name="index">
@@ -213,11 +213,11 @@
 	
 	<!--package name="old-xslt-example" extends="struts-default">
 		<result-types>
-			<result-type name="customJSON" class="actionclass.XMLResult">
+			<result-type name="customJSON" class="com.ycs.fe.strutsresult.XMLResult">
 			</result-type>
 		</result-types>
 		<interceptors>
-			<interceptor name="decorator2" class="actionclass.DecoratorInterceptor" />
+			<interceptor name="decorator2" class="com.ycs.fe.interceptor.DecoratorInterceptor" />
 			<interceptor-stack name="myCustomStack2">
 				<interceptor-ref name="defaultStack" />
 				<interceptor-ref name="decorator2" />
@@ -263,7 +263,7 @@
                     /cms/login.jsp
                 </result>
             </action >
-            <action name="menuGen" class="com.ycs.user.accesscontroller.MenuHelper">
+            <action name="menuGen" class="com.ycs.fe.actions.CreateMenuXmlAction">
                 <result name="success" >/cms/home.html
                 </result>
             </action>
@@ -272,7 +272,7 @@
 				<result name="success" >/cms/login.jsp</result>
 			</action>
 			
-			<action name="cmsAction" class="actionclass.CardOrder">
+			<action name="cmsAction" class="com.ycs.programsetup.action.CardOrder">
                 <interceptor-ref name="myCustomStack"/>
                 <result name="success" type="customXMLRes">
                     <param name="resultxml">
