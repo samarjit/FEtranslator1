@@ -113,7 +113,6 @@ function fn2(){
 	});
 	jQuery("#list3").jqGrid('navGrid','#pager3',{edit:false,add:false,del:false});
 }
-
    </script>
 </head>
 <body>
@@ -123,6 +122,5 @@ function fn2(){
 	
 	<table id="list3"></table>
 <div id="pager3" ></div>
-
 </body>
 </html>
