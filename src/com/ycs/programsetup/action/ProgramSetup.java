@@ -54,6 +54,7 @@ private Logger logger = Logger.getLogger(getClass());
 		System.out.println("Program Setup view ****************"); 
 		if(screenName == null || "".equals(screenName))
 		screenName = "ProgramSetup";
+		System.out.println("JS validation rules :::: "+new FEValidator().createJSRule(screenName, null));
 //		ActionContext.getContext().getValueStack().getContext().put("ZHello", "World");
 //		ActionContext.getContext().getValueStack().set("ZHello2", "World2");
 		return "view";
@@ -71,6 +72,7 @@ private Logger logger = Logger.getLogger(getClass());
 		ActionContext.getContext().getValueStack().getContext().put("inputDTO", inputDTO);
 		ServletActionContext.getContext().getSession().put("mysessionkey", "MY session val");
 		System.out.println(ServletActionContext.getContext().getSession().get("mysessionkey"));
+		ResultDTO resDTO = null;
 		
 		try {
 			FEValidator validator = new FEValidator();
@@ -81,7 +83,7 @@ private Logger logger = Logger.getLogger(getClass());
 				}
 			}
 			CommandProcessor cmdpr = new CommandProcessor();
-			ResultDTO resDTO = cmdpr.commandProcessor(jobj1, screenName);
+			resDTO = cmdpr.commandProcessor(jobj1, screenName);
 //			if(resDTO!=null && resDTO.getErrors() != null){
 //				if(resDTO.getErrors().size() >0){
 //					throw new ValidationException();
@@ -97,7 +99,7 @@ private Logger logger = Logger.getLogger(getClass());
 		
 		PageReturnType pg = null;
 		try{
-			pg = new ReturnCommandProcessor().getReturnType(screenName, jobj1);
+			pg = new ReturnCommandProcessor().getReturnType(screenName, jobj1, resDTO);
 			screenName = pg.nextScreenName;
 			resultPage = pg.resultPage;
 		

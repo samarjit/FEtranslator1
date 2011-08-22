@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -49,14 +50,14 @@ public class FEValidator  implements LocaleProvider{
 				JSONObject singlerec = (JSONObject) txnrec.getJSONObject("single");
 				for (Iterator keyitr = singlerec.keys(); keyitr.hasNext();) {
 					String keystr = (String) keyitr.next();
-					validateNode(rootElm, singlerec, keystr, null);
+					validateNode(screenName, rootElm, singlerec, keystr, null);
 				} 
 				JSONArray armultirec = txnrec.getJSONArray("multiple");
 				for (Iterator iterator = armultirec.iterator(); iterator.hasNext();) { //rows
 					JSONObject joMulti = (JSONObject) iterator.next(); //each row
 					for (Iterator keyitr = joMulti.keys(); keyitr.hasNext();) {
 						String keystr = (String) keyitr.next();
-						validateNode(rootElm, joMulti, keystr, null);
+						validateNode(screenName, rootElm, joMulti, keystr, null);
 					} 
 				}  
 			}else{ //form1,form2 ... data vaalidation
@@ -65,7 +66,7 @@ public class FEValidator  implements LocaleProvider{
 					JSONObject joMulti = (JSONObject) iterator.next(); //each row
 					for (Iterator keyitr = joMulti.keys(); keyitr.hasNext();) {
 						String keystr = (String) keyitr.next();
-						validateNode(rootElm, joMulti, keystr, null);
+						validateNode(screenName, rootElm, joMulti, keystr, null);
 					} 
 				}
 			}
@@ -100,7 +101,7 @@ public class FEValidator  implements LocaleProvider{
 //							}
 							JSONObject sessionJson = new JSONObject();
 							sessionJson.put(sessionField[0], sessionData);
-							validateNode(rootElm, sessionJson, sessionField[0], sessionField[1]);
+							validateNode(screenName, rootElm, sessionJson, sessionField[0], sessionField[1]);
 						}
 						sessionMap.put(sessionField[0], sessionData);
 					}
@@ -112,14 +113,16 @@ public class FEValidator  implements LocaleProvider{
 		}
 	}
 
-	private void validateNode(Element rootElm, JSONObject singlerec,
-			String keystr, String overrideDatatype) {
+	private void validateNode(String screenName, Element rootElm,
+			JSONObject singlerec, String keystr, String overrideDatatype) {
 		Element fieldNode = (Element) rootElm.selectSingleNode("/root/panels/panel/fields/field/*[@name='"+keystr+"']");
 		if (fieldNode != null) {
 			String strdbdatatype = fieldNode.attributeValue("dbdatatype");
 			String strdbcolsize = fieldNode.attributeValue("dbcolsize");
 			String strmandatory = fieldNode.attributeValue("mandatory");
-			String strLabel = fieldNode.attributeValue(keystr);
+			String fieldName = fieldNode.attributeValue("name");
+			String strLabel = LabelFactory.INSTANCE.getLabel(screenName, fieldName );
+			
 			int colsize = -1;
 			
 			if(overrideDatatype != null && !"".equals(overrideDatatype)){
@@ -220,6 +223,96 @@ public class FEValidator  implements LocaleProvider{
 		resultDTO.addFieldError(fieldName, getTextProvider().getText(messageKey,str2 ));
 	}
 
+	public String createJSRule(String screenName, JSONObject submitdataObj){
+		String ruleJson = "";
+		String fieldGroupRules = "";
+		String fieldGroupMsg  = "";
+		boolean fieldRulesFirst = true;
+		try{
+			Element rootElm = ScreenMapRepo.findMapXMLRoot(screenName);
+			List<Element> fieldNodeList =   rootElm.selectNodes("/root/panels/panel/fields/field/*[@name]");
+			for (Element fieldNode : fieldNodeList) {
+				
+			
+				if (fieldNode != null) {
+					String strdbdatatype = fieldNode.attributeValue("dbdatatype");
+					String strdbcolsize = fieldNode.attributeValue("dbcolsize");
+					String strmandatory = fieldNode.attributeValue("mandatory");
+					String fieldName = fieldNode.attributeValue("name");
+					String strLabel = LabelFactory.INSTANCE.getLabel(screenName, fieldName );
+					int colsize = -1;
+					if (strdbcolsize != null && !"".equals(strdbcolsize)) {
+						colsize = Integer.parseInt(strdbcolsize);
+					}
+					JSONObject rules = new JSONObject();
+					JSONObject messages = new JSONObject();
+					JSONObject field = new JSONObject();
+					
+					String fldRuleStr = "";
+					String fldMsgStr = "";
+					boolean first1 =  true;
+					if (strmandatory != null
+							&& ("yes".equals(strmandatory) || "true"
+									.equals(strmandatory))) {
+						field.put("mandatory", true);
+						if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
+						fldRuleStr ="mandatory: true";
+						fldMsgStr = "mandatory: 'This field is required'";
+					}
+					if(strdbcolsize != null && !"".equals(strdbcolsize)){
+						if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
+						fldRuleStr += "maxlength:"+strdbcolsize;
+						fldMsgStr += "maxlength: 'The length should be less than {0}'";
+					}
+					if(strdbdatatype != null && !"".equals(strdbdatatype)){
+						DataType type = PrepstmtDTO.getDataTypeFrmStr(strdbdatatype);
+						switch(type){
+					  	case INT: 
+					  	case LONG:
+					  		if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
+					  			fldRuleStr += "integer:true";
+					  			fldMsgStr += "integer: 'Must be integer'";break;
+					  	case FLOAT: 
+					  	case DOUBLE:
+					  		if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
+					  			fldRuleStr += "number:true";
+			  					fldMsgStr += "number: 'Must be decimal'";break;
+					  	case DATEDDMMYYYY:
+					  		if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
+						  		fldRuleStr += "dateITA:true";
+			  					fldMsgStr += "dateITA: 'Must be date'";break;
+					  	case DATE_NS:
+					  	case TIMESTAMP:
+					  		if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
+						  		fldRuleStr += "date:true";
+			  					fldMsgStr += "number: 'Must be date'";break;
+						case STRING:
+							default:
+						}
+					}
+					if(fldRuleStr.length() > 1){
+						if(!fieldRulesFirst){
+						fieldGroupRules += ",";
+						fieldGroupMsg += ",";
+						}
+						fieldRulesFirst = false;
+						fieldGroupRules += ""+fieldName+":{"+fldRuleStr+"}";
+						fieldGroupMsg += ""+fieldName+":{"+fldMsgStr+"}";
+					}
+					
+				}
+			}
+			if(fieldGroupRules.length() > 1){
+				ruleJson += "{rules: {"+fieldGroupRules+"}, messages: {"+fieldGroupMsg+"}}";
+			}
+		} catch (FrontendException e) {
+			logger.error("error.xmlfileaccess",e);
+		} catch (Exception e) {
+			logger.error("error.unknown",e);
+		}
+		return ruleJson;
+	}
+	
 	private TextProvider getTextProvider()
 	{
 	  if (this.textProvider == null) {
@@ -240,5 +333,9 @@ public class FEValidator  implements LocaleProvider{
 		  return null;
 	}
 	
+	public static void main(String[]  args){
+		new FEValidator().createJSRule("ProgramSetup", null);
+		
+	}
 
 }
