@@ -48,10 +48,10 @@ public class CommonActionSupport extends ActionSupport {
 		JSONObject jsonRecord =   JSONObject.fromObject(submitdata);
 		@SuppressWarnings("unused")
 		InputDTO inputDTO = populateInputDTO(jsonRecord);
+		ResultDTO resDTO = null;
 	
 		try {
-			 
-			ResultDTO resDTO = validate(jsonRecord);
+			resDTO = validate(jsonRecord);
 			resDTO = commandProcessor(jsonRecord, resDTO);
 			
 			populateActionErrors(resDTO);
@@ -64,7 +64,7 @@ public class CommonActionSupport extends ActionSupport {
 //			throw new Exception("error.global");
 		}
 		System.out.println("result beginning to process");
-		PageReturnType pg = setResult(resultHtml, jsonRecord);
+		PageReturnType pg = setResult(resultHtml, jsonRecord, resDTO);
 		return pg.resultName;
 	}
 
@@ -146,14 +146,15 @@ public class CommonActionSupport extends ActionSupport {
 	/**
 	 * @param resultHtml to be converted into inputStream for ajax
 	 * @param jsonRecord
+	 * @param resDTO TODO
 	 * @return nextScreenName *.page, resultName = struts result name to be returned by execute(), resultPage= *.ftl,*.jsp,*.vm 
 	 * @throws FrontendException
 	 * @throws Exception
 	 */
-	private PageReturnType setResult(String resultHtml, JSONObject jsonRecord) throws FrontendException, Exception {
+	private PageReturnType setResult(String resultHtml, JSONObject jsonRecord, ResultDTO resDTO) throws FrontendException, Exception {
 		PageReturnType pg = null;
 		try{
-			pg = new ReturnCommandProcessor().getReturnType(screenName, jsonRecord);
+			pg = new ReturnCommandProcessor().getReturnType(screenName, jsonRecord, resDTO);
 			screenName = pg.nextScreenName;
 			resultPage = pg.resultPage;
 		

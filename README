@@ -26,3 +26,32 @@ current request scope.
 4. :ses.form1[0].txtempid - Session data, this must have an entry in the page xml so that it gets sent to backend
  `ValueStack`. 
 5. :txtempid - Is evaluated from current record json object.
+
+
+arbitrary variables can be passes through inputDTO in any key, value pair except for 
+sessionvars, txnrec, bulkcmd.
+if bulkcmd is defined: it is processed as single command.
+if bulkcmd is null or inline then each record is parsed for command (inline). if found it is used to match with 
+//cmd[@name='xxx']  and do respective command processor.
+The form data must start with "form" eg. form1, form2 ...
+
+InputDTO has 
+PaginationDTO is used for jqgrid.
+ResultDTO also has pagination fields.
+
+
+ rules: {
+     name: "required",
+     email: {
+       required: true,
+       email: true
+     }
+   },
+   messages: {
+     name: "Please specify your name",
+     email: {
+       required: "We need your email address to contact you",
+       email: "Your email address must be in the format of name@domain.com"
+     }
+   }
+   

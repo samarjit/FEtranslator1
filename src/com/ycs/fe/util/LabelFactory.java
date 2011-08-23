@@ -30,9 +30,13 @@ public class LabelFactory implements LocaleProvider{
 		try {
 			Element root = ScreenMapRepo.findMapXMLRoot(screenName);
 			Element labelElm = (Element) root.selectSingleNode("/root/panels/panel/fields/field/label[@forname='"+fieldName+"']");
-			String key = labelElm.attributeValue("key");
-			String value = labelElm.attributeValue("value");
-			label = getTextProvider().getText(key);
+			String key;
+			String value = null;
+			if(labelElm!=null){
+				key = labelElm.attributeValue("key");
+				value = labelElm.attributeValue("value");
+				label = getTextProvider().getText(key);
+			}
 			
 //			AppCacheManager.putElementInCache(screenName+"_label", "label", labelList);
 			

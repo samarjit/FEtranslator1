@@ -101,7 +101,7 @@ public class CommandProcessor {
 		    @SuppressWarnings("unchecked")
 			Set<String>  itr =  ( (JSONObject) submitdataObj).keySet(); 
 		    
-		    if(( (JSONObject) submitdataObj).get("bulkcmd") !=null){
+		    if(submitdataObj.get("bulkcmd") !=null && !"inline".equals(submitdataObj.getString("bulkcmd"))){
 		    	String bulkcmd = ((JSONObject) submitdataObj).getString("bulkcmd");
 		    	Element elmBulkCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/bulkcmd[@name='"+bulkcmd+"' ] ");
 		    	logger.debug("/root/screen/commands/bulkcmd[@name='"+bulkcmd+"' ] ");
@@ -109,7 +109,7 @@ public class CommandProcessor {
 		    	if(elmBulkCmd !=null)
 				  operation = elmBulkCmd.attributeValue("opt");
 		    	else
-		    	  throw new ProcessorNotFoundException("bulkcmd resolution error bulkcmd[@name='"+bulkcmd+"']");
+		    	  throw new ProcessorNotFoundException("bulkcmd resolution error /root/screen/commands/bulkcmd[@name='"+bulkcmd+"'] in screen:"+screenName);
 //	    		String strProcessor = elmBulkCmd.attributeValue("processor");
 	    		logger.debug("Command Processor: operation:" + operation);
 	    		String[] opts = operation.split("\\|"); //get chained commands
@@ -125,10 +125,11 @@ public class CommandProcessor {
 	    		}
 	    		
 		    }else{
-		    	
+		    	//inline command processor skip everything other than those, that starts with formXXXX
 			    for (String dataSetkey : itr) { //form1, form2 ...skip txnrec,sessionvars
 			    	//skip bulkcmd should be processed earlier, txnrec and sessionvars are just data groups
-			    	if(dataSetkey.equals("bulkcmd") || dataSetkey.equals("txnrec")   ||  dataSetkey.equals("sessionvars")||  dataSetkey.equals("pagination"))continue;
+//			    	if(dataSetkey.equals("bulkcmd") || dataSetkey.equals("txnrec")   ||  dataSetkey.equals("sessionvars")||  dataSetkey.equals("pagination"))continue;
+			    	if(! dataSetkey.startsWith("form"))continue;
 			    	
 			    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
 			    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction

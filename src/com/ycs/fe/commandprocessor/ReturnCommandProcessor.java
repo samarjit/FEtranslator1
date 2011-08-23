@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.dom4j.Element;
 
 import com.ycs.fe.dto.PageReturnType;
+import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.exception.FrontendException;
 import com.ycs.fe.util.ScreenMapRepo;
 
@@ -24,22 +25,27 @@ public class ReturnCommandProcessor {
 	 * @param screenName
 	 * @param submitdataObj from which the command or bulkcmd will match with &lt;cmd .. result="ajax" /> 
 	 * to resolve a return struts name, nextScreenName (if *.page) and result pages  ajax,  *.ftl, *.vm, custom *.page everything else is dispatcher (*.jsp)
+	 * @param resDTO if result is coming back from Backend then use that result to override the result of mapping XML
 	 * @return PageReturnType object
 	 * @throws FrontendException
 	 */
-	public PageReturnType getReturnType(String screenName, JSONObject submitdataObj) throws FrontendException{
+	public PageReturnType getReturnType(String screenName, JSONObject submitdataObj, ResultDTO resDTO) throws FrontendException{
 		PageReturnType pgReturnType = new PageReturnType();
 		
 		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 		@SuppressWarnings("unchecked")
 		Set<String>  itr =  ( (JSONObject) submitdataObj).keySet(); 
 		
-		if(submitdataObj == null || submitdataObj.isNullObject()){
+		
+		if(submitdataObj == null || submitdataObj.isNullObject()){ //onload assume return type is self
 			pgReturnType.nextScreenName = screenName;
 			pgReturnType.resultName = "view";
 			pgReturnType.resultPage = screenName;
 		}else{
-		 if(( (JSONObject) submitdataObj).get("bulkcmd") !=null){
+		if(resDTO!= null && resDTO.getResult()!=null && !"".equals(resDTO.getResult()))	{
+			resolveResult(pgReturnType, resDTO.getResult());
+		}else
+		 if(submitdataObj.get("bulkcmd") !=null){
 			 String cmd =     submitdataObj.getString("bulkcmd");
 	    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/bulkcmd[@name='"+cmd+"' ] ");
 	    		System.out.println("/root/screen/commands/bulkcmd[@name='"+cmd+"' ] ");
@@ -48,8 +54,9 @@ public class ReturnCommandProcessor {
 		 } else {
 			for (String dataSetkey : itr) { //form1, form2 ...skip txnrec,sessionvars
 		    	//txnrec & sessionvars is just a group of data not a processing command
-		    	if( dataSetkey.equals("txnrec")   || dataSetkey.equals("sessionvars")||  dataSetkey.equals("pagination"))continue;
-		    	
+//		    	if( dataSetkey.equals("txnrec")   || dataSetkey.equals("sessionvars")||  dataSetkey.equals("pagination"))continue;
+				if(! dataSetkey.startsWith("form"))continue;
+				
 		    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
 		    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction
 		    		String cmd = ((JSONObject) jsonRecord).getString("command");

@@ -185,6 +185,8 @@ public static ResultDTO fromJsonString(JSONObject resDTOjson){
 	 System.out.println(pagination);
 	 tempDTO.setPagination(pagination);
 	 tempDTO.setSessionvars(resDTOjson.getJSONObject("sessionvars"));
+	 if(resDTOjson.get("result")!=null)
+	   tempDTO.setResult(resDTOjson.getString("result"));
 	return tempDTO;
 	
 }
