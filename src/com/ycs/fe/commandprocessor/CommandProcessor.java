@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.sf.json.JSONArray;
@@ -14,6 +15,7 @@ import org.apache.struts2.ServletActionContext;
 import org.dom4j.Element;
 import org.dom4j.Node;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.ycs.fe.dto.InputDTO;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.exception.BackendException;
@@ -158,6 +160,12 @@ public class CommandProcessor {
 		}else{
 			String resultJson = remoteCommandProcessor (submitdataObj.toString(), screenName);
 			resDTO = ResultDTO.fromJsonString(JSONObject.fromObject(resultJson));
+		}
+		
+		if(!resDTO.getSessionvars().isEmpty()){
+			for (Entry<String, String> entry : resDTO.getSessionvars().entrySet()) {
+				ActionContext.getContext().getSession().put(entry.getKey(), entry.getValue());
+			}
 		}
 		} catch (FrontendException e) {
 			if(resDTO == null)resDTO= new ResultDTO();
