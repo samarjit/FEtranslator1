@@ -54,4 +54,6 @@ ResultDTO also has pagination fields.
        email: "Your email address must be in the format of name@domain.com"
      }
    }
-   
+
+The ResultDTO will also contain the session variables that needs to be set at the end of this request. Like storing User Name, session_id,
+Role, Menu.   

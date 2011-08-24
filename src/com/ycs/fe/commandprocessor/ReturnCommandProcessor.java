@@ -81,7 +81,8 @@ public class ReturnCommandProcessor {
 	
 	/**
 	 * @param pgReturnType result is returned by reference
-	 * @param strResult is used to resolve result ajax,  *.ftl, *.vm, custom *.page everything else is dispatcher (*.jsp) 
+	 * @param strResult is used to resolve result ajax,  *.ftl, *.vm, custom *.page *.jsp,*.html, *.htm everything else will need explicit 
+	 * result mapping. The returned valuex will be treated as <result name=valuex/>.  
 	 */
 	public void resolveResult(PageReturnType pgReturnType, String strResult){
 		if("".equals(strResult) || "ajax".equals(strResult)){
@@ -98,8 +99,20 @@ public class ReturnCommandProcessor {
 			pgReturnType.resultName = "velocity";
 			pgReturnType.resultPage = strResult;
 			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
-		}else{
+		}else if(strResult.endsWith("jsp")){
 			pgReturnType.resultName = "dispatcher";
+			pgReturnType.resultPage = strResult;
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
+		}else if(strResult.endsWith("html")){
+			pgReturnType.resultName = "dispatcher";
+			pgReturnType.resultPage = strResult;
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
+		}else if(strResult.endsWith("htm")){
+			pgReturnType.resultName = "dispatcher";
+			pgReturnType.resultPage = strResult;
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
+		}else{
+			pgReturnType.resultName = strResult;
 			pgReturnType.resultPage = strResult;
 			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.'));
 		}
