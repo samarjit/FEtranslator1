@@ -8,13 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.opensymphony.xwork2.interceptor.PreResultListener;
 import com.ycs.fe.HTMLProcessor;
-import com.ycs.fe.HTMLProcessorDom4jImpl;
 import com.ycs.fe.HTMLProcessorJsoupImpl;
 import com.ycs.fe.strutsresult.XMLResult;
 import com.ycs.fe.util.CharResponseWrapper;
@@ -42,7 +40,7 @@ public class DecoratorInterceptor implements Interceptor {
 		 invocation.addPreResultListener(new PreResultListener() {
              public void beforeResult(ActionInvocation invocation, String resultCode) {
                  // perform operation necessary before Result execution
-            	 HTMLProcessor preprocess = new HTMLProcessorDom4jImpl();
+            	 HTMLProcessor preprocess = new HTMLProcessorJsoupImpl();
 				
 						preprocess.populateValueStack(invocation, resultCode);
 //            	 try {
@@ -82,7 +80,7 @@ public class DecoratorInterceptor implements Interceptor {
 				car.write(wrapper.toString());  //fallthrough for other than custom result types like freemarker, jsp, vm, html
 			}
 			
-			car.write("TODO: hello from DecoratorInterceptor <a href='index.jsp'>index</a>");
+//			car.write("TODO: hello from DecoratorInterceptor <a href='index.jsp'>index</a>");
 					    
 			responseParent.setContentLength(car.toString().length());
 			out.write(car.toString());

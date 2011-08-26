@@ -57,7 +57,7 @@ public class BusinessLogicFactory {
 		} catch (IllegalAccessException e) {
 			logger.error("Exception in BL caching"+e);
 		} catch (ClassNotFoundException e) {
-			logger.error("Exception in BL caching",e);
+			logger.error("Exception in BL caching"+e.getLocalizedMessage());
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class BusinessLogicFactory {
 			doc = new SAXReader().read(scrxml);
 			Element root = doc.getRootElement();
 			Element nscr = (Element) root.selectSingleNode("screen[@name='"+screenName+"']");
-			 createBL(blcache2,nscr.attributeValue("mappingxml"));
+//			 createBL(blcache2,nscr.attributeValue("mappingxml")); (back end business logic is used)
 		} catch (DocumentException e) {
 			logger.debug("Exception in BL caching"+e);
 		}
@@ -104,7 +104,7 @@ public class BusinessLogicFactory {
 			 for (Element elm : n) {
 				 path = elm.attributeValue("mappingxml");
 				logger.debug("scrren clCache"+path);
-				 createBL(blcache , path);
+//				 createBL(blcache , path);(back end business logic is used)
 			}
 		}
 	}

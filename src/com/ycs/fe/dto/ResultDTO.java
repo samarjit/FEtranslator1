@@ -149,7 +149,12 @@ public void merge(ResultDTO tempDTO){
 	messages.addAll(tempDTO.getMessages());
 	pagination.putAll(tempDTO.getPagination());
 	result = tempDTO.getResult();
+	
+	if(tempDTO.getSessionvars()!=null){
+		if(sessionvars == null)
+			sessionvars = new HashMap<String, String>();
 	sessionvars.putAll(tempDTO.getSessionvars());
+	}
 }
 
 

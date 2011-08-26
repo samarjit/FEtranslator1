@@ -191,7 +191,7 @@ public class JqgridRpc extends ActionSupport {
 				if(filter != null)
 					pageDTO.setFilters(filter);
 				
-				System.out.println("filters:" + JSONObject.fromObject(filter).toString() + " sord:" + sord + " sidx:" + sidx);
+				logger.debug("filters:" + JSONObject.fromObject(filter).toString() + " sord:" + sord + " sidx:" + sidx);
 			  }
 			  
 			  JSONObject pagination = JSONObject.fromObject(pageDTO);
@@ -204,12 +204,12 @@ public class JqgridRpc extends ActionSupport {
 			  logger.debug("send to BE :"+submitdataObj.toString());
 			  			CommandProcessor cmdpr = new CommandProcessor();
 			  			ResultDTO resDTO = cmdpr.commandProcessor(submitdataObj, screenName);
-			  System.out.println("back from cmd processor:"+ JSONObject.fromObject(resDTO));
-			  System.out.println("back from cmd processor pagination:"+  resDTO.getPagination());
+			  			logger.debug("back from cmd processor:"+ JSONObject.fromObject(resDTO));
+			  			logger.debug("back from cmd processor pagination:"+  resDTO.getPagination());
 			
 			  JSONArray jrow2 = JSONObject.fromObject(resDTO.getData()).getJSONArray(stack);
 			//convert back to jqgrid format
-			for (Object row1 : jrow2) {
+			/*for (Object row1 : jrow2) {
 				JSONObject eachRow = (JSONObject)row1;
 				String oid = null;
 				JSONArray ocells = new JSONArray();
@@ -225,18 +225,19 @@ public class JqgridRpc extends ActionSupport {
 				oRow.put("cell", ocells);
 				oAllrows.add(oRow);
 			}
-			
+			*/
 			Map<String, Map<String, Integer>> pagingMultiForm = resDTO.getPagination();
 			Map<String, Integer> pageingRet = pagingMultiForm.get(stack);
 			oResult.put("page", pageingRet.get("currentpage"));
 			oResult.put("total", pageingRet.get("totalpage"));
 			oResult.put("records", pageingRet.get("totalrec"));
-			oResult.put("rows", oAllrows );
+//			oResult.put("rows", oAllrows );
+			oResult.put("rows", jrow2);
 			oResult.put("pagesize", pageingRet.get("pagesize") );
 			
 			jobj = oResult;
 		}
-		System.out.println(jobj.toString());
+		logger.debug(jobj.toString());
 //		JSONObject jobj = JSONObject.fromObject(resDTO);
 //		try {
 //			jobj.put("data",resDTO.getData());

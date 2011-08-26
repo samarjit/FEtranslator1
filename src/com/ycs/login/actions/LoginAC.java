@@ -22,7 +22,7 @@ public class LoginAC extends ActionSupport implements SessionAware{
 	
 	
 	private String userid;
-	private String passwd;
+	private String password;
 	private String resourceBundle;
 	
 	
@@ -35,11 +35,11 @@ public class LoginAC extends ActionSupport implements SessionAware{
 	}
 
 	public String getPasswd() {
-		return passwd;
+		return password;
 	}
 
 	public void setPasswd(String passwd) {
-		this.passwd = passwd;
+		this.password = passwd;
 	}
 
 	@Inject(StrutsConstants.STRUTS_CUSTOM_I18N_RESOURCES)
@@ -60,7 +60,7 @@ public class LoginAC extends ActionSupport implements SessionAware{
 		
 			logger.debug("login action started for user:"+userid);
 			PasswordValidator passv = new PasswordValidator();
-			if(!passv.isValidUser(userid, passwd)){
+			if(!passv.isValidUser(userid, password)){
 				List<String> errorMessages = new ArrayList<String>();
 				errorMessages.add("UserId or Password Invalid");
 				setActionErrors(errorMessages );
@@ -68,7 +68,7 @@ public class LoginAC extends ActionSupport implements SessionAware{
 			}
 		
 			session.put("userid",userid);
-			session.put("passwd",passwd);
+			session.put("passwd",password);
 			
 	// moved to menu helper.
 			

@@ -35,11 +35,12 @@ public class ReturnCommandProcessor {
 		Element rootXml = ScreenMapRepo.findMapXMLRoot(screenName);
 		@SuppressWarnings("unchecked")
 		Set<String>  itr =  ( (JSONObject) submitdataObj).keySet(); 
-		
+		pgReturnType.nextScreenName = screenName;
+		pgReturnType.resultPage = screenName;
 		
 		if(submitdataObj == null || submitdataObj.isNullObject()){ //onload assume return type is self
 			pgReturnType.nextScreenName = screenName;
-			pgReturnType.resultName = "view";
+			pgReturnType.resultName = screenName;
 			pgReturnType.resultPage = screenName;
 		}else{
 		if(resDTO!= null && resDTO.getResult()!=null && !"".equals(resDTO.getResult()))	{
@@ -114,7 +115,11 @@ public class ReturnCommandProcessor {
 		}else{
 			pgReturnType.resultName = strResult;
 			pgReturnType.resultPage = strResult;
+			if(strResult.lastIndexOf('.') >-1){
 			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.'));
+			}else{
+				pgReturnType.nextScreenName = strResult;
+			}
 		}
 	}
 	

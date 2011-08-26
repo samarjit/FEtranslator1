@@ -77,7 +77,7 @@ public class SelectOnLoad {
 				}
 
 			} catch (FrontendException e) {
-				throw new FrontendException("error.selectOnloadFailed");
+				throw new FrontendException("error.selectOnloadFailed",e);
 			}
 		}
 		if(Constants.CMD_PROCESSOR == Constants.APP_LAYER){
@@ -230,6 +230,7 @@ public class SelectOnLoad {
 		  
 		
 		 try {
+			 //Used for select query with adhoc stackids
 			JSONArray adhocstackids = data.getJSONArray("adhocstackids");
 			for (Iterator outstackItr = adhocstackids.iterator(); outstackItr.hasNext();) {
 				String outstackid = (String) outstackItr.next();

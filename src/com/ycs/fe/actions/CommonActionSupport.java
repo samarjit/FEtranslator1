@@ -37,6 +37,8 @@ public class CommonActionSupport extends ActionSupport {
 	@SuppressWarnings("unused")
 	private String submitdatatxncode; 
 	protected String resultPage;
+	private ResultDTO aresDTO;
+	private String  jsrule;
 	
 	public InputStream getInputStream() {
 		return inputStream;
@@ -51,13 +53,17 @@ public class CommonActionSupport extends ActionSupport {
 		ResultDTO resDTO = null;
 	
 		try {
+			
+			jsrule = new FEValidator().createJSRule(screenName);
+			if(submitdata != null && !"".equals(submitdata)){
 			resDTO = validate(jsonRecord);
 			resDTO = commandProcessor(jsonRecord, resDTO);
 			
 			populateActionErrors(resDTO);
-			
+				aresDTO  = resDTO;
 			JSONObject resjsonResult = JSONObject.fromObject(resDTO);
 			resultHtml = resjsonResult.toString();
+			}
 			
 		}catch (Exception e){
 			logger.error("unknown exception",e);
@@ -65,6 +71,7 @@ public class CommonActionSupport extends ActionSupport {
 		}
 		System.out.println("result beginning to process");
 		PageReturnType pg = setResult(resultHtml, jsonRecord, resDTO);
+		logger.error("Result Page:"+ pg.resultName);
 		return pg.resultName;
 	}
 
@@ -151,7 +158,7 @@ public class CommonActionSupport extends ActionSupport {
 	 * @throws FrontendException
 	 * @throws Exception
 	 */
-	private PageReturnType setResult(String resultHtml, JSONObject jsonRecord, ResultDTO resDTO) throws FrontendException, Exception {
+	protected PageReturnType setResult(String resultHtml, JSONObject jsonRecord, ResultDTO resDTO) throws FrontendException, Exception {
 		PageReturnType pg = null;
 		try{
 			pg = new ReturnCommandProcessor().getReturnType(screenName, jsonRecord, resDTO);
@@ -222,5 +229,20 @@ public class CommonActionSupport extends ActionSupport {
 		this.resultPage = resultPage;
 	}
 	
+	public ResultDTO getAresDTO() {
+		return aresDTO;
+	}
+
+	public void setAresDTO(ResultDTO aresDTO) {
+		this.aresDTO = aresDTO;
+	}
+
+	public String getJsrule() {
+		return jsrule;
+	}
+
+	public void setJsrule(String jsrule) {
+		this.jsrule = jsrule;
+	}
 	
 }

@@ -223,7 +223,7 @@ public class FEValidator  implements LocaleProvider{
 		resultDTO.addFieldError(fieldName, getTextProvider().getText(messageKey,str2 ));
 	}
 
-	public String createJSRule(String screenName, JSONObject submitdataObj){
+	public String createJSRule(String screenName ){
 		String ruleJson = "";
 		String fieldGroupRules = "";
 		String fieldGroupMsg  = "";
@@ -334,7 +334,7 @@ public class FEValidator  implements LocaleProvider{
 	}
 	
 	public static void main(String[]  args){
-		new FEValidator().createJSRule("ProgramSetup", null);
+		new FEValidator().createJSRule("ProgramSetup");
 		
 	}
 
