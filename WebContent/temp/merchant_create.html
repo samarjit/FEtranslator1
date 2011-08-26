@@ -1,0 +1,118 @@
+<%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252" %>
+<%@taglib uri="/struts-tags" prefix="s" %>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
+<title>Merchant Create</title>
+<s:head   />
+<%String ctxstr = request.getContextPath(); %>
+<link href="../css/body.css" rel="stylesheet" type="text/css">
+<link href="../css/main.css" rel="stylesheet" type="text/css">
+<link href="../css/jquery.validation.css" rel="stylesheet" type="text/css">
+<link href="../css/jquery-ui-1.8.15.custom.css" rel="stylesheet" type="text/css">
+<link href="../css/ui.jqgrid.css" rel="stylesheet" type="text/css">
+<link href="../css/ui.multiselect.css" rel="stylesheet" type="text/css">
+
+
+<script src="../js/jquery-1.4.4.min.js"></script>
+<%-- <script src="../js/jquery-1.6.2.min.js"></script> --%>
+<script type="text/javascript" src="../js/jquery.validate.js"></script>
+<script type="text/javascript" src="../js/fg.menu.js"></script>
+<script type="text/javascript" src="../js/jquery.tmpl.js"></script>
+<script type="text/javascript" src="../js/jsonStringify.js"></script>
+<script type="text/javascript" src="../js/iadtframework.js"></script>
+<script src="../js/jquery-ui-1.8.15.custom.min.js" type="text/javascript"></script>
+<script src="../js/jquery.layout.js" type="text/javascript"></script>
+<script src="../js/i18n/grid.locale-en.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $.jgrid.no_legacy_api = true;
+    $.jgrid.useJSON = true;
+</script>
+<script src="../js/ui.multiselect.js" type="text/javascript"></script>
+<script src="../js/jquery.jqGrid.min.js" type="text/javascript"></script>
+<script src="../js/jquery.tablednd.js" type="text/javascript"></script>
+<script src="../js/jquery.contextmenu.js" type="text/javascript"></script> 
+<script>
+function search(){
+	  jQuery("#list2").jqGrid( {
+	      	//url: 'jsrpc.action?screenName=TestPage&submitdata={bulkcmd="prodgrid"}&q=2&_search=false&nd=1314263082628&rows=10&page=2&sidx=id&sord=desc',
+	      	url: '<%= request.getContextPath() %>/jqgrid.action?command=true&screenName=merchant_view&submitdata={bulkcmd="search_mer"}',
+	      	//url: 'http://localhost/jqgrid/server.php?q=2',
+	   	    datatype: "json",
+	   	   // data: mydata,
+	      	colNames: [ 'MERCHANT_ID',  'MERCHANT_TYPE','MERCHANT_LOCATION' ,'RN'],
+	      	colModel: [
+	      		{name:'MERCHANT_ID',index:'MERCHANT_ID', width:200 },
+	      		{name:'MERCHANT_TYPE',index:'MERCHANT_TYPE', width:200 },
+	      		{name:'MERCHANT_LOCATION',index:'MERCHANT_LOCATION', width:150},
+	      		{name:'RN',index:'RN', width:150},
+	      	],
+	      	rowNum: 10,
+	      	rowList: [ 10, 20, 30],
+	      	pager: '#pager2',
+	      	sortname: 'MERCHANT_ID',
+	        viewrecords: true,
+	        sortorder: "desc",
+	        jsonReader: {
+	    		repeatitems : false,
+	    		id: "0"
+	    	},
+	    	ondblClickRow: function(id){ alert("You double click row with id: "+id);},
+	       caption: "Merchant List"
+	   } );
+
+	    jQuery("#list2").jqGrid('navGrid','#pager2',{del: false,add: false,edit:false},{},{},{},{multipleSearch:true});
+}
+
+function editMerchant(){
+	var id= jQuery('#list2').jqGrid('getGridParam','selrow'); 
+	if (id)	{
+		var ret = jQuery("#list2").jqGrid('getRowData',id);
+		alert("MERCHANT_ID="+ret.MERCHANT_ID+" MERCHANT_TYPE="+ret.MERCHANT_TYPE+" MERCHANT_LOCATION="+ret.MERCHANT_LOCATION);
+	} else { alert("Please select row");}
+}
+</script>
+</head>
+<body>
+ 
+<s:actionerror/>
+<s:actionmessage/>
+
+<p>
+ 
+<p/>
+<p> 
+ 
+<form>
+<table width="100%"   class="table1">
+<tr><td>New Merchant</td></tr>
+</table>
+<table width="100%" class="listtable">
+
+<tr><td>User ID:</td><td><input type="text" id="userid" name="userid"></tr>
+<tr><td>Role:</td><td><input id="roleid" name="roleid"> </td></tr>
+<tr><td>First Name:</td><td><input id="firstname" name="firstname"></td></tr>
+<tr><td>Last Name:</td><td><input id="lastname" name="lastname"></td></tr>
+<tr><td>Gender:</td><td><input type="radio" id="gender" name="gender" value="M">Male<input type="radio" id="gender" name="gender" value="F">Female</td></tr>
+<tr><td>Mobile:</td><td><input id="mobileno" name="mobileno"></td></tr>
+<tr><td>Email ID:</td><td><input id="emailid" name="emailid"></td></tr>
+<tr><td>Email ID:</td><td><input id="emailid" name="emailid"></td></tr>
+<tr><td>Create Date:</td><td><input id="createdate" name="createdate"></td></tr>
+<tr><td>Last Update Date:</td><td><input id="lastupdatedt" name="lastupdatedt"></td></tr>
+
+<tr><td>Merchant ID:</td><td><input id="createdate" name="createdate"></td></tr>
+<tr><td>Merchant Type:</td><td><input id="createdate" name="createdate"></td></tr>
+<tr><td>Location:</td><td><input id="createdate" name="createdate"></td></tr>
+<tr><td>Status:</td><td><input id="createdate" name="createdate"></td></tr>
+
+</table>
+<input type="hidden" value="" name="isfirstlogin" id="isfirstlogin" />
+
+<button type="button">Save</button> 
+<button type="button">Add Terminal</button> 
+<button type="button">Add Deals</button> 
+ 
+</form>
+</p> 
+</body>
+</html>

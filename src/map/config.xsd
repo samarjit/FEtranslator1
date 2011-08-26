@@ -33,7 +33,7 @@
   <xs:element name="callbackclass" type="xs:string"/>
   <xs:element name="scripts">
     <xs:complexType >
-      <xs:choice maxOccurs="unbounded">
+      <xs:choice maxOccurs="unbounded" minOccurs="0">
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="scriptinclude"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="text"/>
       </xs:choice>
@@ -42,7 +42,7 @@
   <xs:element name="scriptinclude" type="xs:string"/>
   <xs:element name="stylesheets">
     <xs:complexType>
-      <xs:choice  maxOccurs="unbounded"> 
+      <xs:choice  maxOccurs="unbounded" minOccurs="0"> 
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="styleinclude"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="text"/>
       </xs:choice>
@@ -52,7 +52,7 @@
   <xs:element name="panels">
     <xs:complexType>
       <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="panel"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="panel"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

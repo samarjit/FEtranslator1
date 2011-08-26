@@ -1,0 +1,98 @@
+<%@page pageEncoding="Cp1252" contentType="text/html; charset=Cp1252" %>
+<%@taglib uri="/struts-tags" prefix="s" %>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Cp1252"/>
+<title>Merchant View</title>
+<s:head   />
+<%String ctxstr = request.getContextPath(); %>
+<link href="<%=ctxstr%>/css/body.css" rel="stylesheet" type="text/css">
+<link href="<%=ctxstr%>/css/main.css" rel="stylesheet" type="text/css">
+<link href="<%=ctxstr%>/css/jquery.validation.css" rel="stylesheet" type="text/css">
+<link href="<%=ctxstr%>/css/jquery-ui-1.8.15.custom.css" rel="stylesheet" type="text/css">
+<link href="<%=ctxstr%>/css/ui.jqgrid.css" rel="stylesheet" type="text/css">
+<link href="<%=ctxstr%>/css/ui.multiselect.css" rel="stylesheet" type="text/css">
+
+
+<script src="<%=ctxstr%>/js/jquery-1.4.4.min.js"></script>
+<%-- <script src="<%=ctxstr%>/js/jquery-1.6.2.min.js"></script> --%>
+<script type="text/javascript" src="<%=ctxstr%>/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<%=ctxstr%>/js/fg.menu.js"></script>
+<script type="text/javascript" src="<%=ctxstr%>/js/jquery.tmpl.js"></script>
+<script type="text/javascript" src="<%=ctxstr%>/js/jsonStringify.js"></script>
+<script type="text/javascript" src="<%=ctxstr%>/js/iadtframework.js"></script>
+<script src="<%=ctxstr%>/js/jquery-ui-1.8.15.custom.min.js" type="text/javascript"></script>
+<script src="<%=ctxstr%>/js/jquery.layout.js" type="text/javascript"></script>
+<script src="<%=ctxstr%>/js/i18n/grid.locale-en.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $.jgrid.no_legacy_api = true;
+    $.jgrid.useJSON = true;
+</script>
+<script src="<%=ctxstr%>/js/ui.multiselect.js" type="text/javascript"></script>
+<script src="<%=ctxstr%>/js/jquery.jqGrid.min.js" type="text/javascript"></script>
+<script src="<%=ctxstr%>/js/jquery.tablednd.js" type="text/javascript"></script>
+<script src="<%=ctxstr%>/js/jquery.contextmenu.js" type="text/javascript"></script> 
+<script>
+function search(){
+	  jQuery("#list2").jqGrid( {
+	      	//url: 'jsrpc.action?screenName=TestPage&submitdata={bulkcmd="prodgrid"}&q=2&_search=false&nd=1314263082628&rows=10&page=2&sidx=id&sord=desc',
+	      	url: '<%= request.getContextPath() %>/jqgrid.action?command=true&screenName=merchant_view&submitdata={bulkcmd="search_mer"}',
+	      	//url: 'http://localhost/jqgrid/server.php?q=2',
+	   	    datatype: "json",
+	   	   // data: mydata,
+	      	colNames: [ 'MERCHANT_ID',  'MERCHANT_TYPE','MERCHANT_LOCATION' ,'RN'],
+	      	colModel: [
+	      		{name:'MERCHANT_ID',index:'MERCHANT_ID', width:200 },
+	      		{name:'MERCHANT_TYPE',index:'MERCHANT_TYPE', width:200 },
+	      		{name:'MERCHANT_LOCATION',index:'MERCHANT_LOCATION', width:150},
+	      		{name:'RN',index:'RN', width:150},
+	      	],
+	      	rowNum: 10,
+	      	rowList: [ 10, 20, 30],
+	      	pager: '#pager2',
+	      	sortname: 'MERCHANT_ID',
+	        viewrecords: true,
+	        sortorder: "desc",
+	        jsonReader: {
+	    		repeatitems : false,
+	    		id: "0"
+	    	},
+	    	ondblClickRow: function(id){ alert("You double click row with id: "+id);},
+	       caption: "Merchant List"
+	   } );
+
+	    jQuery("#list2").jqGrid('navGrid','#pager2',{del: false,add: false,edit:false},{},{},{},{multipleSearch:true});
+}
+
+function editMerchant(){
+	var id= jQuery('#list2').jqGrid('getGridParam','selrow'); 
+	if (id)	{
+		var ret = jQuery("#list2").jqGrid('getRowData',id);
+		alert("MERCHANT_ID="+ret.MERCHANT_ID+" MERCHANT_TYPE="+ret.MERCHANT_TYPE+" MERCHANT_LOCATION="+ret.MERCHANT_LOCATION);
+	} else { alert("Please select row");}
+}
+</script>
+</head>
+<body>
+<h1>Merchant View</h1>
+${session.NAME}
+${session.ROLE}
+${session.MENU}
+<s:actionerror/>
+<s:actionmessage/>
+
+<p>
+Search:
+<input type="text" name="mearchantid_search" id="mearchantid_search" /><button onclick="search()">Search</button>
+<button onclick="editMerchant()">Edit</button>
+<p/>
+<p> 
+ <table id="list2" style="width:500px"></table>
+ <div id="pager2"></div>
+</p>   
+<s:textfield name="merchantid" id="merchantid"  /> 
+ 
+<s:textfield name="merchantlocation" id="merchantlocation"   /> 
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="config.xsl"?>
+<root xsi:noNamespaceSchemaLocation="../config.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<screen name="ezlinkPage">
+		<htmltemplate>
+		</htmltemplate>
+		<includedjsp>
+		</includedjsp>
+		<callbackclass>
+			com.ycs.ezlink.business.CustomerDetailsBL
+		</callbackclass>
+		<scripts>
+		</scripts>
+		<stylesheets>
+
+		</stylesheets>
+		<crud>
+			<sqlselect outstack="ques" id="loadques">select SECRUITY_QUES_ID "quesid",QUESTION  "ques" from SECURITY_QUES</sqlselect>
+		</crud>
+		<dm>
+		</dm>
+		<bl>
+		<buslogic id="cusreg" method="insertCustomerDetails"> </buslogic>
+		</bl>
+		<anyprocs>
+		</anyprocs>
+		<commands>
+			<cmd name="customerregister" opt="buslogic:cusreg" instack="form1" result="" processor="bl"/>
+			<cmd name="requestVerifiyCode" opt="buslogic:cusreg" instack="form1" result="" processor="bl"/>
+			<cmd name="loadques" opt="sqlselect:loadques" instack="form1" result="registrationPage" processor="crud"/>
+			<cmd name="loadLoginPage" opt="" instack="form1" result="loginPage" processor=""/>
+		</commands>
+	</screen>
+
+	<panels>
+	</panels>
+</root>
