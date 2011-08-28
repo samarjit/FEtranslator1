@@ -74,9 +74,9 @@ public class CommandProcessor {
 						for (String sessVariable : arSessionVar) {
 							String[] sessionField = sessVariable.trim().split("\\|");
 							String sessionData = "";
+							sessionData = (String) ServletActionContext.getContext().getSession().get(sessionField[0]);
 							if(sessionField.length >1){
 								//datatype is defined and it is required
-								sessionData = (String) ServletActionContext.getContext().getSession().get(sessionField[0]);
 								System.out.println("sessionData:"+sessionData);
 								if(sessionField[1].equals("INT")){
 									sessionData.matches("0-9");

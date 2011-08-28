@@ -208,7 +208,6 @@ public class FEValidator  implements LocaleProvider{
 		}//field not is not defined for this key like 'command' 
 		else{
 			logger .debug("xml not defined for key="+keystr);
-			System.out.println(getTextProvider().getText("global.username"));
 		}
 	}
 	

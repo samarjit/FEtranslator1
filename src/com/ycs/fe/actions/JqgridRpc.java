@@ -1,8 +1,8 @@
 package com.ycs.fe.actions;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
@@ -14,12 +14,23 @@ import org.apache.struts2.convention.annotation.Result;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.ycs.fe.cache.ScreenDetails;
 import com.ycs.fe.commandprocessor.CommandProcessor;
 import com.ycs.fe.dto.PaginationDTO;
+import com.ycs.fe.dto.PagingFilterRule;
 import com.ycs.fe.dto.PagingFilters;
 import com.ycs.fe.dto.ResultDTO;
+import com.ycs.fe.exception.FrontendException;
+import com.ycs.fe.util.ScreenMapRepo;
 
 
+/**
+ * The following comment "remove this for strict security" should be removed to prevent from 
+ * COLUMN names being sent in the request to work successfully.
+ * @author Samarjit
+ * @Date 28-Aug-2011
+ *
+ */
 public class JqgridRpc extends ActionSupport {
 	 
 	private static final long serialVersionUID = -623830420192157346L;
@@ -166,14 +177,26 @@ public class JqgridRpc extends ActionSupport {
 					"}";
 		JSONObject jobj = null;
 		jobj = JSONObject.fromObject(jj);
-		if(command != null || "true".equals(command)){
+		if("true".equals(command)){
 			JSONObject oResult = new JSONObject();
 			JSONArray oAllrows = new JSONArray(); 
 			JSONObject jobj2 = JSONObject.fromObject(jj2);
 			JSONArray jrow = jobj2.getJSONArray("rows");
 //http://www.trirand.com/blog/jqgrid/server.php?q=2&_search=false&nd=1313507637422&rows=10&page=1&sidx=id&sord=desc			
 //submitdata={form1:[{row:0,}],pagination:{form1:{currentpage:1,pagecount:200}}, bulkcmd:''...}
-			
+			ScreenDetails screenDetails = null;
+			try {
+				screenDetails = ScreenMapRepo.findScreenDetails(screenName);
+				HashMap<String, String> nameColumnMap = screenDetails.nameColumnMap;
+				if(nameColumnMap.get(sidx)!=null)//remove this for strict security
+					sidx = nameColumnMap.get(sidx);
+				
+				if(nameColumnMap.get(searchField)!=null)//remove this for strict security
+					searchField = nameColumnMap.get(searchField);
+				
+			} catch (FrontendException e) {
+				logger.error("screenDetailsRetrievalError",e);
+			}
 			String stack = "formpagination";
 			JSONObject submitdataObj = JSONObject.fromObject(submitdata);
 			PaginationDTO pageDTO = new PaginationDTO();
@@ -185,8 +208,14 @@ public class JqgridRpc extends ActionSupport {
 			pageDTO.setSearchOper(searchOper);
 			pageDTO.setSearchString(searchString);
 			
-			  if (filters != null) {
+			  if (filters != null && !"".equals(filters)) {
 				PagingFilters filter = new Gson().fromJson(filters, PagingFilters.class);
+				for (PagingFilterRule rule: filter.getRules()) {
+					if(screenDetails.nameColumnMap.get(rule.getField()) !=null){ //remove this for strict security
+						String aliasToColumn = screenDetails.nameColumnMap.get(rule.getField());
+						rule.setField(aliasToColumn);
+					}
+				}
 				System.out.println("filter from Gson:"+filter);
 				if(filter != null)
 					pageDTO.setFilters(filter);
@@ -228,12 +257,14 @@ public class JqgridRpc extends ActionSupport {
 			*/
 			Map<String, Map<String, Integer>> pagingMultiForm = resDTO.getPagination();
 			Map<String, Integer> pageingRet = pagingMultiForm.get(stack);
-			oResult.put("page", pageingRet.get("currentpage"));
-			oResult.put("total", pageingRet.get("totalpage"));
-			oResult.put("records", pageingRet.get("totalrec"));
+			if(pageingRet != null){
+				oResult.put("page", pageingRet.get("currentpage"));
+				oResult.put("total", pageingRet.get("totalpage"));
+				oResult.put("records", pageingRet.get("totalrec"));
+				oResult.put("pagesize", pageingRet.get("pagesize") );
+			}
 //			oResult.put("rows", oAllrows );
 			oResult.put("rows", jrow2);
-			oResult.put("pagesize", pageingRet.get("pagesize") );
 			
 			jobj = oResult;
 		}
@@ -249,7 +280,7 @@ public class JqgridRpc extends ActionSupport {
 		
 		
 		logger.debug("Sent back to client:"+json);
-		inputStream = new StringBufferInputStream(json);
+		inputStream = new ByteArrayInputStream(json.getBytes());
 		 
 		return "success";
 	}

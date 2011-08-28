@@ -58,7 +58,7 @@
 					</input>
 				</field>
 				<field>
-					<select forid="divProgram" id="selProgram" replace="append" >
+					<select name="country" forid="divProgram" id="selProgram" replace="append" >
 					 <text>
 					 <![CDATA[
 					       <select name="country" id="selProgram">
@@ -74,12 +74,12 @@
 					</select>
 				</field>
 				<field>
-					<select forid="divIdappend" id="selIdappend" replace="append" >
+					<select name="selIdappend" forid="divIdappend" id="selIdappend" replace="append" >
 					 <query stackid="selIdappend" type="SQL">select PROGNAME ,PROGNAME  from PROGRAMDETAILS </query>
 					</select>
 				</field>
 				<field>
-					<select forid="selIdmodify" id="selIdmodify" replace="modify" >
+					<select name="selIdmodify" forid="selIdmodify" id="selIdmodify" replace="modify" >
 					 <query stackid="selIdmodify" type="SQL">select PROGNAME ,PROGNAME  from PROGRAMDETAILS </query>
 					</select>
 				</field>

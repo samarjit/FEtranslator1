@@ -34,5 +34,12 @@
 	</screen>
 
 	<panels>
+	 <panel>
+	 <fields>
+	  <field>
+	    <validationfld mandatory="true"  name="location" forid="location" id="location"   column="MERCHANT_LOC" dbcolsize="10" dbdatatype="STRING" />
+	  </field>
+	 </fields>
+	 </panel>
 	</panels>
 </root>

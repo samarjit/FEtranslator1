@@ -126,9 +126,7 @@
 				</field>
 				<field>
 					<input type="text" class="userid" forid="txtprogramdesc" value="" name="txtprogramdesc" id="txtprogramdesc" column="FF0148" dbdatatype="INT" dbcolsize="2" mask="" mandatory=""
-						hidden="" label="" replace="modify">
-						<rule></rule>
-					</input>
+						hidden="" label="" replace="modify"/>
 				</field>
 				<field>
 					<select  type="text" class="userid" forid="countryofissue" value="txtcname" key="txtccode" name="countryofissue" id="countryofissue" column="FF0149" dbdatatype="STRING"  dbcolsize="" mask="" mandatory=""
@@ -146,15 +144,6 @@
 			  
 			<testscriptlet><![CDATA[<@s.property value="selectmonthl"/> ]]></testscriptlet> 
 
-		</panel>
-		<panel id="userpanellist">
-			
-			<fields>
-				<field>
-					<customfield forid="displayuserlist">
-					</customfield>
-				</field>
-			</fields>
 		</panel>
 	</panels>
 </root>

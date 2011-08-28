@@ -14,6 +14,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import com.ycs.fe.cache.AppCacheManager;
+import com.ycs.fe.cache.ScreenDetails;
 import com.ycs.fe.exception.BackendException;
 import com.ycs.fe.exception.FrontendException;
 
@@ -131,6 +132,30 @@ public class ScreenMapRepo {
 			logger.debug("File not found",e);
 		}
 		return screenName;
+	}
+	
+	public static ScreenDetails findScreenDetails(String scrName) throws FrontendException{
+		ScreenDetails screenDetails = null;
+		
+		try {
+			net.sf.ehcache.Element scrDtl = AppCacheManager.getElementFromCache("xmlcache", "SCR_DTL"+scrName);
+				
+			if(scrDtl == null){
+		
+				
+				screenDetails = new ScreenDetails();
+				screenDetails.populateScrDetails(scrName);// doc.getRootElement();
+				System.out.println("xmlcache1 -> "+scrName+" cache miss");
+				AppCacheManager.putElementInCache("xmlcache", "SCR_DTL"+scrName, screenDetails);
+			}else{
+				screenDetails = (ScreenDetails) scrDtl.getObjectValue();	
+				System.out.println("xmlcache1 -> "+scrName+" cache hit");
+			}
+		} catch (FrontendException e) {
+			logger.error("XML Load Exception   ScreenName="+scrName);
+			throw new FrontendException("error.loadxml",e);
+		}
+		return screenDetails;
 	}
 	
 	public static void main(String[] args) throws FrontendException {

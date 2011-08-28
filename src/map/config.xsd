@@ -296,13 +296,15 @@
   
   <xs:element name="field">
     <xs:complexType>
-      <xs:choice minOccurs="0" maxOccurs="2"> 
+      <xs:choice minOccurs="0" maxOccurs="unbounded"> 
         <xs:element ref="compositefield"/>
         <xs:element ref="customfield"/>
         <xs:element ref="div"/>
         <xs:element ref="input"/>
         <xs:element ref="select"/>
         <xs:element ref="sometype"/>
+        <xs:element ref="displayfield"/>
+        <xs:element ref="validationfld"/>
         <xs:element ref="label" maxOccurs="unbounded"/>
       </xs:choice>
     </xs:complexType>
@@ -358,6 +360,7 @@
       <xs:attribute name="column" type="xs:string"/>
       <xs:attribute name="dbcolsize"/>
       <xs:attribute name="forid" use="required" type="xs:string"/>
+      <xs:attribute name="name" use="required" type="xs:string"/>
       <xs:attribute name="mask"/>
       <xs:attribute name="replace" type="xs:string"/>
       <xs:attribute name="type" type="xs:string"/>
@@ -422,6 +425,22 @@
       <xs:attribute name="value" use="required"/>
     </xs:complexType>
   </xs:element>
+  <xs:element name="validationfld">
+    <xs:complexType>
+      <xs:sequence>
+          <xs:element ref="rule" minOccurs="0"/>
+          <xs:element ref="validation" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="column" use="required" type="xs:string"/>
+      <xs:attribute name="dbcolsize" use="required" />
+      <xs:attribute name="dbdatatype" use="required" type="xs:string"/>
+      <xs:attribute name="forid" use="required" type="xs:string"/>
+      <xs:attribute name="id"  type="xs:string"/>
+      <xs:attribute name="mandatory" use="required" />
+      <xs:attribute name="mask"  />
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
   <xs:attribute name="replace">
   <xs:simpleType >
     <xs:restriction  base="xs:string">
@@ -448,7 +467,7 @@
       <xs:attribute name="label"/>
       <xs:attribute name="mandatory"/>
       <xs:attribute name="mask" use="optional"/>
-      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="name"  use="required" type="xs:string"/>
       <xs:attribute use="required" ref="replace"/>
       <xs:attribute name="type" type="xs:string"/>
       <xs:attribute name="validationattr"/>

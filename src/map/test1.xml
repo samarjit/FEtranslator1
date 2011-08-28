@@ -101,7 +101,7 @@
         <panel id="form1">
             <fields>
                <field>
-					<customfield type="input" class=" " forid="textfield" validationattr="" column="PASSWD" dbcolsize="" mask="">
+					<customfield name="" type="input" class=" " forid="textfield" validationattr="" column="PASSWD" dbcolsize="" mask="">
 						<text><![CDATA[
 							<@s.textfield key="global.productCode" name="userid" />
 							]]>
@@ -112,14 +112,14 @@
 					</customfield>
 				</field>
 				<field>
-					<customfield type="datepicker" class=" " forid="jquerydatepicker" validationattr="" column="PASSWD" dbcolsize="" mask="">
+					<customfield name="" type="datepicker" class=" " forid="jquerydatepicker" validationattr="" column="PASSWD" dbcolsize="" mask="">
 						<text><![CDATA[<@sx.datetimepicker name="dateid"  displayFormat="dd-MMM-yyyy" />]]></text>
 						<validation></validation>
 						<query></query>
 					</customfield>
 				</field>
 				<field>
-					<customfield type="datepicker" class=" " forid="prop" validationattr="" column="PASSWD" dbcolsize="" mask="">
+					<customfield name="" type="datepicker" class=" " forid="prop" validationattr="" column="PASSWD" dbcolsize="" mask="">
 						<text><![CDATA[ <@s.property value="getText('global.productCode')" /> <@s.text name="global.productCode" />]]></text>
 						<validation></validation>
 						<query></query>
@@ -136,7 +136,7 @@
             
             <fields>
                 <field>
-                    <customfield forid="displayuserlist">
+                    <customfield forid="displayuserlist" name="">
                     </customfield>
                 </field>
             </fields>

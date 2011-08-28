@@ -223,7 +223,7 @@ private Logger logger = Logger.getLogger(getClass());
 									updatequery +=  wherePart;
 								}
 								
-								if(orderByPart!= null){
+								if(orderByPart!= null && !"".equals(orderByPart)){
 									updatequery += " order by "+ orderByPart ;
 								}
 								

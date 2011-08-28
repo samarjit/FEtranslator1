@@ -9,6 +9,9 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.LocaleProvider;
 import com.opensymphony.xwork2.TextProvider;
 import com.opensymphony.xwork2.TextProviderFactory;
+import com.ycs.fe.cache.ScreenDetails;
+import com.ycs.fe.cache.ScreenDetails.Label;
+
 import com.ycs.fe.exception.FrontendException;
 
 public class LabelFactory implements LocaleProvider{
@@ -22,21 +25,19 @@ public class LabelFactory implements LocaleProvider{
 	
 	/**
 	 * @param screenName
-	 * @param fieldName
+	 * @param fieldName "name" attribute of the FieldElement
 	 * @return label from screen map xml or fieldName if label not found 
 	 */
 	public String getLabel(String screenName, String fieldName){
 		String label = null;
 		try {
-			Element root = ScreenMapRepo.findMapXMLRoot(screenName);
-			Element labelElm = (Element) root.selectSingleNode("/root/panels/panel/fields/field/label[@forname='"+fieldName+"']");
+			ScreenDetails screenDetails = ScreenMapRepo.findScreenDetails(screenName);
+			Label label2 = screenDetails.nameLabelMap.get(fieldName);
 			String key;
 			String value = null;
-			if(labelElm!=null){
-				key = labelElm.attributeValue("key");
-				value = labelElm.attributeValue("value");
+				key = label2.key;
+				value = label2.value;
 				label = getTextProvider().getText(key);
-			}
 			
 //			AppCacheManager.putElementInCache(screenName+"_label", "label", labelList);
 			

@@ -119,14 +119,5 @@
 			<testscriptlet><![CDATA[<@s.property value="selectmonthl"/> ]]></testscriptlet> 
 
 		</panel>
-		<panel id="userpanellist" >
-			
-			<fields>
-				<field>
-					<customfield forid="displayuserlist">
-					</customfield>
-				</field>
-			</fields>
-		</panel>
 	</panels>
 </root>

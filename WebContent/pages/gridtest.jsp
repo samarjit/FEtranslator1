@@ -74,7 +74,7 @@
       		{name:'PLASTIC_DESC',index:'PLASTIC_DESC', width:200 },
       		{name:'PLASTIC_CODE',index:'PLASTIC_CODE', width:200 },
       		{name:'PRODUCT_NAME',index:'PRODUCT_NAME', width:150},
-      		{name:'PRODUCT_CODE',index:'PRODUCT_CODE', width:150 },
+      		{name:'PRODUCT_CODE',index:'PRODUCT_CODE', width:150 }
       	],
       	rowNum: 10,
       	rowList: [ 10, 20, 30],
@@ -82,6 +82,10 @@
       	sortname: 'PLASTIC_CODE',
         viewrecords: true,
         sortorder: "desc",
+        jsonReader: {
+    		repeatitems : false,
+    		id: "0"
+    	},
        caption: "JSON Example"
    } );
 
@@ -95,8 +99,8 @@ function fn2(){
 		datatype: "json",
 	   	colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
 	   	colModel:[
-	   		{name:'id',index:'id', width:55},
-	   		{name:'invdate',index:'invdate', width:90},
+	   		{name:'id',index:'id', width:55,editable: false, editoptions:{readonly:true,size:10}},
+	   		{name:'invdate',index:'invdate', width:90, editable: true},
 	   		{name:'name',index:'name asc, invdate', width:100},
 	   		{name:'amount',index:'amount', width:80, align:"right"},
 	   		{name:'tax',index:'tax', width:80, align:"right"},		
@@ -109,14 +113,16 @@ function fn2(){
 	   	sortname: 'id',
 	    viewrecords: true,
 	    sortorder: "desc",
-	    caption:"JSON Example"
+	    caption:"JSON Example",
+	    editurl: '<%= request.getContextPath() %>/jqgrid.action',
 	});
-	jQuery("#list3").jqGrid('navGrid','#pager3',{edit:false,add:false,del:false});
+	jQuery("#list3").jqGrid('navGrid','#pager3',{edit:true,add:false,del:false});
 }
    </script>
 </head>
 <body>
-   <input type="button" onclick="fn()" value="click" />
+   <input type="button" onclick="fn()" value="grid 1" />
+   <input type="button" onclick="fn2()" value="grid 2" />
    <table id="list2" style="width:500px"></table>
    <div id="pager2"></div>
 	

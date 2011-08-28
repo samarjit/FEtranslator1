@@ -54,7 +54,7 @@ private Logger logger = Logger.getLogger(getClass());
 		System.out.println("Program Setup view ****************"); 
 		if(screenName == null || "".equals(screenName))
 		screenName = "ProgramSetup";
-		System.out.println("JS validation rules :::: "+new FEValidator().createJSRule(screenName, null));
+		System.out.println("JS validation rules :::: "+new FEValidator().createJSRule(screenName));
 //		ActionContext.getContext().getValueStack().getContext().put("ZHello", "World");
 //		ActionContext.getContext().getValueStack().set("ZHello2", "World2");
 		return "view";

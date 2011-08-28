@@ -228,6 +228,20 @@ function createLeftMenu1(xmldoc,filename, menuid){
 }
 
 //Global Variables
+function createXMLDocument(string)
+{
+var browserName = navigator.appName;
+var doc;
+if (browserName == 'Microsoft Internet Explorer')
+{
+doc = new ActiveXObject('Microsoft.XMLDOM');
+doc.async = 'false'
+doc.loadXML(string);
+} else {
+doc = (new DOMParser()).parseFromString(string, 'text/xml');
+}
+return doc;
+}
 
 var menuxml = '<?xml version="1.0" encoding="ISO-8859-1"?><root><tab name="Card Inventory" class="fg-button" id="tab1" onclick="cardinventory.html"><menu name="CardOrder" position="1" class="mi" id="tab1menu1" onclick="cmsAction.action?screenName=cardOrder" ></menu><menu name="Authorize" position="1" class="mi" id="tab1menu2" onclick="cmsAction.action?screenName=authorizeCardList"></menu><menu name="GenerateCard" position="2" class="mi" id="tab1menu3" onclick="cmsAction.action?screenName=generateCardList"></menu><menu name="Emboss" position="2" class="mi" id="tab1menu3" onclick="cmsAction.action?screenName=embossList"></menu><menu name="Card Receipt" position="2" class="mi" id="tab1menu3" onclick="../html/cardReceipt.html"></menu><menu name="Card Order Status" position="2" class="mi" id="tab1menu3" onclick="../html/cardStatus.html"></menu></tab></root>';
 var tabmenuIdlist = [];

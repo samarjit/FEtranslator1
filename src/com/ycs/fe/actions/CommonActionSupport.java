@@ -37,7 +37,7 @@ public class CommonActionSupport extends ActionSupport {
 	@SuppressWarnings("unused")
 	private String submitdatatxncode; 
 	protected String resultPage;
-	private ResultDTO aresDTO;
+	protected ResultDTO aresDTO;
 	private String  jsrule;
 	
 	public InputStream getInputStream() {
@@ -46,7 +46,7 @@ public class CommonActionSupport extends ActionSupport {
 	
 	public String commonExecute() throws Exception{
 		String resultHtml = "";
-		logger.debug("submitdata:"+submitdata);
+		logger.debug("Start common action submitdata:"+submitdata);
 		JSONObject jsonRecord =   JSONObject.fromObject(submitdata);
 		@SuppressWarnings("unused")
 		InputDTO inputDTO = populateInputDTO(jsonRecord);
@@ -188,7 +188,7 @@ public class CommonActionSupport extends ActionSupport {
 	 * @return
 	 * @throws ValidationException
 	 */
-	private ResultDTO validate(JSONObject jsonRecord) throws ValidationException {
+	protected ResultDTO validate(JSONObject jsonRecord) throws ValidationException {
 		FEValidator validator = new FEValidator();
 		ResultDTO validatorDTO = validator.validate(screenName, jsonRecord);
 //		if (validatorDTO != null && validatorDTO.getErrors() != null && validatorDTO.getErrors().size() > 0) {
