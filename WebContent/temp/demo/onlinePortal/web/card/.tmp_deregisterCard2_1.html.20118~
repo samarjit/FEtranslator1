@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>== Ezlink ==</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<link href="../../css/body.css" rel="stylesheet" type="text/css">
+
+
+<script language="Javascript">
+function onAdd(){
+	window.location = "deregisterCard3.html";
+}
+   
+</script>
+
+</head>
+<body>
+<form>
+	<table width="100%" height="20" border="0" cellpadding="0"  cellspacing="0" class="head1">
+    <tr>
+      <td>DE-Register Card </td>
+    </tr>
+  </table>
+  <table width="95%" height="20" border="0" cellpadding="0"  cellspacing="0" class="head2">
+    <tr>
+      <td>De-Register Card</td>
+    </tr>
+  </table>
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  	<tr>
+  		<td>&nbsp;</td>
+  	</tr>
+  	</table>
+  <table width="350px" border="0" cellpadding="1" cellspacing="5" class="table1">
+  	
+ 	<tr>
+  		<td>Are you sure to deregister the following card number from your Ezlink Account ? <br><br>
+		<center><b>Card 1 :1111222233334444 </b></center> <br><br>
+		 You may deregister your only card, however, please note that the card blocking and insurance and other benefits of programme that associated to this card will not apply to you, except for the PA Insurance from G.E.
+		</td>
+  	</tr>
+	<tr>
+  		<td>&nbsp;</td>
+  	</tr>
+	<tr>
+		
+ 		<td align="center">
+ 			<input type="button" value="Cancel" onclick="onAdd()"> &nbsp;
+			<input type="button" value="Confirm" onclick="onAdd()">
+ 		</td>
+ 	</tr>
+	
+  </table>
+</form>
+</body>
+</html>

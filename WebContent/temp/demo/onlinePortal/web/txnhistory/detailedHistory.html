@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jqGrid Demos</title>
+<link rel="stylesheet" type="text/css" media="screen" href="../../css/jquery-ui-1.8.15.custom.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="../../css/ui.jqgrid.css" />
+<link href="../../css/body.css" rel="stylesheet" type="text/css">
+
+
+<script src="../../js/jquery-1.4.2.min.js" type="text/javascript"></script>
+<script src="../../js/jquery-ui-1.8.1.custom.min.js" type="text/javascript"></script>
+<script src="../../js/jquery.layout.js" type="text/javascript"></script>
+<script src="../../js/i18n/grid.locale-en.js" type="text/javascript"></script>
+<script type="text/javascript">
+	//$.jgrid.no_legacy_api = true;
+	//$.jgrid.useJSON = true;
+</script>
+<script src="../../js/ui.multiselect.js" type="text/javascript"></script>
+<script src="../../js/jquery.jqGrid.src.js" type="text/javascript"></script>
+<script src="../../js/jquery.tablednd.js" type="text/javascript"></script>
+<script src="../../js/jquery.contextmenu.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$.jgrid.no_legacy_api = true;
+$.jgrid.useJSON = true;
+</script>
+
+
+<script type="text/javascript">
+		
+
+	
+$(document).ready(function (){
+	var mydata = [
+		
+{time:'17-8-2011 11.59.33 ', type:'Transit', tamount:'10', balamount:'24.73', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.34', type:'Transit', tamount:'20', balamount:'21.49', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.35', type:'Transit', tamount:'10', balamount:'11.36', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.36', type:'Transit', tamount:'10', balamount:'14.16', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.37', type:'Transit', tamount:'10', balamount:'17.48', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.38', type:'Transit', tamount:'-1.75', balamount:'26.11', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.39', type:'Transit', tamount:'1.04', balamount:'27.15', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.40', type:'Transit', tamount:'-1.77', balamount:'4.14', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.41', type:'Transit', tamount:'-1.57', balamount:'2.57', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.42', type:'Transit', tamount:'-1.83', balamount:'5.01', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.43', type:'Transit', tamount:'1.12', balamount:'6.13', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.44', type:'Transit', tamount:'-1.73', balamount:'9.35', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.45', type:'Transit', tamount:'1.02', balamount:'10.37', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.46', type:'Transit', tamount:'-0.62', balamount:'47.79', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.47', type:'Transit', tamount:'0.27', balamount:'48.06', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.48', type:'Transit', tamount:'-1.45', balamount:'7.53', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.49', type:'Transit', tamount:'0.74', balamount:'8.27', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.50', type:'Transit', tamount:'-1.64', balamount:'17.07', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.51', type:'Transit', tamount:'0.73', balamount:'17.8', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.52', type:'Transit', tamount:'-1.79', balamount:'4.63', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.53', type:'Transit', tamount:'1.08', balamount:'5.71', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.54', type:'Transit', tamount:'-1.49', balamount:'22.91', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.55', type:'Transit', tamount:'0.78', balamount:'23.69', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.56', type:'Transit', tamount:'-1.79', balamount:'15.22', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.57', type:'Transit', tamount:'0.64', balamount:'15.86', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.58', type:'Transit', tamount:'-1.75', balamount:'18.12', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.59', type:'Transit', tamount:'1.04', balamount:'19.16', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.60', type:'Transit', tamount:'-1.41', balamount:'2.98', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.61', type:'Transit', tamount:'0.7', balamount:'3.68', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.62', type:'Transit', tamount:'20', balamount:'22.13', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.63', type:'Transit', tamount:'-1.41', balamount:'12.41', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.64', type:'Transit', tamount:'0.6', balamount:'13.01', merchant:'BPLRT SERVICE'},
+{time:'17-8-2011 11.59.65', type:'Transit', tamount:'-1.41', balamount:'29.59', merchant:'BPLRT SERVICE'}
+
+	];
+
+jQuery("#list1").jqGrid({
+   	data:mydata,
+	datatype: "local",
+   	colNames:['Transaction Time','Transaction Type', 'Transaction Amount', 'Balance Amount','Merchant'],
+   	colModel:[
+   		{name:'time',index:'time', width:120},
+   		{name:'type',index:'type', width:120},
+   		{name:'tamount',index:'tamount', width:80,align:"right"},
+   		{name:'balamount',index:'balamount', width:80, align:"right",sorttype:"float"},
+   		{name:'merchant',index:'merchant', width:120,sorttype:"float"}	
+   	],
+   	rowNum:10,
+   	rowList:[10,20,30],
+   	pager: '#pager1',
+   	sortname: 'id',
+    viewrecords: true,
+    sortorder: "desc",
+    loadonce: true,
+	height: 250,
+	width:1000,
+    caption: "Transaction History"
+});
+jQuery("#list1").jqGrid('navGrid','#pager1',{edit:false,add:false,del:false});
+
+});	
+
+</script>
+</head>
+<body>
+	<table width="100%" height="20" border="0" cellpadding="0"  cellspacing="0" class="head1">
+    <tr>
+      <td>Detailed Transaction History</td>
+    </tr>
+  </table>
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  	<tr>
+  		<td>&nbsp;</td>
+  	</tr>
+  	</table>
+<table id="list1"></table> 
+  	 <div id="pager1"></div> 
+</body>
+
+
+</html>

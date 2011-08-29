@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>== Ezlink ==</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<link href="../../css/body.css" rel="stylesheet" type="text/css">
+
+   <link type="text/css" href="../../css/jquery-ui-1.8.15.custom.css" rel="stylesheet" />
+   <link type="text/css" href="../../css/ui.jqgrid.css" rel="stylesheet" />
+
+
+ 
+
+  <script src="../../js/jquery-1.4.2.min.js"></script>
+  <script src="../../js/jquery-ui-1.8.4.custom.min.js"></script>
+ 
+  <script src="../../js/i18n/grid.locale-en.js"></script>
+  <script src="../../js/jquery.jqGrid.min.js"></script>
+  
+<script language="Javascript">
+function onNext(){
+	window.location = "updateProfile2.html";
+}
+   
+function bannerClick (args) {
+	window.open("bannerpopup.html","bannerpopup.html","width=400,height=600");
+}   
+function popPromo(args) {
+	window.open("promo"+args+"big.html","","width=400,height=600")
+}
+
+function createTableGrid(){
+	tableToGrid('#list1');
+	jQuery("#list1").jqGrid('setGridWidth',500);
+	jQuery("#list1").jqGrid('navGrid','#pager2',{del: false,add: false,edit:false});
+}
+</script>
+
+</head>
+<body onload="createTableGrid()">
+<form>
+  <table width="500px" height="20" border="0" cellpadding="0"  cellspacing="0" class="head1">
+    <tr>
+      <td>Card De-Registration History</td>
+    </tr>
+  </table>
+ <br/>
+ <br/> 
+  <table   border="0" cellpadding="0" cellspacing="0">
+  	<tr>
+  		<td>Search: &nbsp;
+		</td>
+		<td><select><option>User ID</option><option>Card No</option></select></td>
+		<td>&nbsp;<input ><button>Go</button></td>
+  	</tr>
+  </table>
+  <br/>
+  <table id="list1" width="400px" border="0" cellpadding="0" cellspacing="0" class="table">
+  	
+ 	<tr>
+ 		<tr >
+ 			<th>User ID</th><th>Card No</th><th>De-Reg date</th><th>De-Reg reason</th>
+		</tr>
+		<tr>
+ 			<td>S9073430G</td><td>1111222233334444</td><td>12/08/2011</td><td>Misplace card</td>
+ 	   </tr><tr>
+ 			<td>S9073430G</td><td>8111225533334445</td><td>19/03/2011</td><td>Lost card</td>
+ 	   </tr>
+  </table>
+  <div id="pager2"></div>
+</form>
+</body>
+</html>
