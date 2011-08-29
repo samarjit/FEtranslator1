@@ -1,0 +1,1 @@
+cmd /C java -cp  %CLASSPATH%  org.h2.tools.Console 
