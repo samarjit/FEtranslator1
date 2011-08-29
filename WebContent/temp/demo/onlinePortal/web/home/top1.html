@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>== Ezlink ==</title>
+<link href="../../css/tabmenu.css" rel="stylesheet" type="text/css">
+<script language="javascript">
+ function frameprint(frame)
+   {
+   parent[frame].focus();
+   parent[frame].print();
+   }
+function prifun()
+	{
+	var print_enab=parent.mainFrame.document.getElementById("print_enab");
+	
+	if(print_enab.value=='Y')
+	{
+	
+        
+	
+	var ele=parent.mainFrame.document.getElementById("template1");
+                       var eleimage=document.getElementById("template2");
+                                       
+	var html="";
+	
+
+	html=eleimage.innerHTML+ele.innerHTML;
+                        
+	
+	var printWin = window.open("","PrintPreview");
+	printWin.document.open();
+    	printWin.document.write("<html><head><scri"  + "pt language='javascript' src='css_script.js'></scr" + "ipt>");
+                      printWin.document.write("<style>Top Margin: 0px;Left Margin:0px;Bottom Margin:0px;Right Margin: 0px;</style></head><body class='body'>");
+         	printWin.document.write("<table width='100%'><tr><td>");
+	printWin.document.write(html);
+	printWin.document.write("</td></tr><tr><td>");
+	printWin.document.write("<table id='printbutton' width='100%'><tr align=center><td><a href='#'><img src='buttons/print.png' border=0 style='cursor:hand;backgroun-color:white' onclick='printfun()'></a></td></tr></table></td></tr></table></body>");
+                     printWin.document.write("<scri" + "pt language='javascript'>");
+                     printWin.document.write("function printfun(){ var printobj=document.getElementById('printbutton'); printobj.style.display='none'; window.print();}</scri" + "pt>");
+                     printWin.document.write("</html>");
+                     printWin.document.close();
+	}
+
+	else
+	{
+	  alert("Sorry : Print option is not enabled to this page....");
+	}
+}
+
+</script>
+<script language="Javascript">
+
+function fun(id)
+{
+	document.getElementById(id).style.background='url(../../images/menu_orange.gif)';
+	var idno = id.substring(2);
+	for(var i = 1;i<10; ++i)
+	{
+		if(i != idno)
+		{
+			var newid = document.getElementById("mm"+i);
+			if(newid != null)
+			{
+				newid.style.background='url(../../images/menu_gray.gif)';
+			}
+		}
+	}
+	//backgroundimage="../../images/menu_orange.gif";
+}
+
+function MM_goToURL() { //v3.0
+  var i, args=MM_goToURL.arguments; document.MM_returnValue = false;
+  for (i=0; i<(args.length-1); i+=2) eval(args[i]+".location='"+args[i+1]+"'");
+}
+
+</script>
+</head>
+<body onload=fun("mm1")>
+<table width="100%" height="115" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="bottom"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="20%"><div align="left"><img src="../../images/logo.jpg" alt="Universal Bank" ></div></td>
+          <td width="80%"><table width="100%" border="0" cellpadding="7" cellspacing="0" class="top" id="top">
+              <tr>
+                <td width="95%"><div align="right">1023040 Rambal | 21-12-2007  10.20 am</div></td>
+                <td width="5%">&nbsp;</td>
+              </tr>
+            </table>
+            <table width="50%" border="0" align="right" cellpadding="0" cellspacing="0" id="topmenu">
+              <tr>
+                <td width="27"><img src="../../images/blackcurvedtop.gif" width="28" height="25"></td>
+                <td bgcolor="#DCDCDC" class="topmenu">
+                	<img src="../../images/yellowarrow.gif" width="4" height="7"> <span class="top"><a href="#">Contact Us</a> &nbsp;&nbsp;
+					<img src="../../images/yellowarrow.gif" width="4" height="7"> <a href="#">About Us</a> &nbsp;&nbsp;
+					<img src="../../images/yellowarrow.gif" width="4" height="7"> <a href="#">Help</a> &nbsp;&nbsp;
+					<img src="../../images/yellowarrow.gif" width="4" height="7"> <a href="#" onclick="prifun()">Print</a> &nbsp;
+					<img src="../../images/yellowarrow.gif" width="4" height="7"> </span></td>
+              </tr>
+            </table></td>
+        </tr>
+      </table>
+      <div class="hbuttons" id="tabbutton">
+        <li class="tabCollection" > 
+            <a href="manageCardmenu.html" target="leftFrame" id="mm1"  onclick="fun(this.id);return document.MM_returnValue">Member <br/>Manage Cards</a> 
+        <a href="historymenu.html" target="leftFrame" id="mm2"  onclick="fun(this.id);return document.MM_returnValue">Mermber<br/>Txn History</a> 
+        <a href="merchantmenu.html" target="leftFrame" id="mm5"  onclick="fun(this.id);return document.MM_returnValue">Merchant</a> 
+        <a href="membermenu.html" target="leftFrame" id="mm4"  onclick="fun(this.id);return document.MM_returnValue">Member Profile </a> 
+        <a href="callcentermenu.html" target="leftFrame" id="mm6"  onclick="fun(this.id);return document.MM_returnValue">Call Center </a> 
+        <a href="customerservicemenu.html" target="leftFrame" id="mm7"  onclick="fun(this.id);return document.MM_returnValue">Customer Service</a> 
+        <a href="reportmenu.html" target="leftFrame" id="mm7"  onclick="fun(this.id);return document.MM_returnValue">Reports</a> 
+			 
+                
+          </li>
+      </div>
+      <div style="clear: left;"></div></td>
+  </tr>
+</table>
+<div id="template2" style="display:none">
+  <table background="../../images/print_bg.gif"  width="100%" >
+    <tr>
+      <td align="left"><img src="../../images/print_logo1.png"  border="0" ></td>
+    </tr>
+  </table>
+  <br>
+</div>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td bgcolor="#DCDCDC"><img src="../../images/topyellowspacer.gif" width="1" height="3"></td>
+  </tr>
+</table>
+</body>
+</html>

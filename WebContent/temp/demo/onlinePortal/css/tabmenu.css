@@ -1,0 +1,99 @@
+
+body
+
+{
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+
+.hbuttons
+ a
+{
+	display: block;
+	text-decoration: none;
+	font: bold 11px Arial;
+	color: black;
+	width: 99px;
+	height: 27px;
+	float: left;
+	display: block;
+	margin-right:2px; /* Width adjust by sunitha */
+	background-image:url(../images/menu_gray.gif);
+	background-repeat: no-repeat;
+	text-align:center;
+	vertical-align: middle;
+	
+}
+
+.hbuttons a:active
+
+{
+
+color:#000000;
+
+}
+
+.hbuttons a:hover
+
+{
+
+	background-image:url(../images/menu_orange.gif);
+	color: #000000;
+}
+
+.top 
+{
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666666;
+	text-decoration: none;
+}
+
+.top a, .top a:visited 
+
+{
+
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666666;
+	text-decoration: none;
+
+}
+
+.top a:hover, .top a:active
+
+{
+
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	text-decoration: underline;
+
+}
+
+li.tabCollection
+
+{
+	padding-left:200px;
+	list-style-type: none;
+	background: none;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+
+}
+
+.logoimage
+
+{
+
+	float:left;
+	padding-left:3px;
+	padding-right:2px;
+	background-image:url(../images/logo.gif);
+	width:235px;
+	height:97px;
+
+}
