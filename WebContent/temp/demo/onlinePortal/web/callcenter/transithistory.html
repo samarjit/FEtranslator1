@@ -35,51 +35,57 @@ function createTableGrid(){
 	jQuery("#list1").jqGrid('setGridWidth',500);
 	jQuery("#list1").jqGrid('navGrid','#pager2',{del: false,add: false,edit:false});
 }
-function editGrid(){
-   
-	var id= jQuery('#list1').jqGrid('getGridParam','selrow'); 
-	if (id)	{
-		//var ret = jQuery("#list1").jqGrid('getRowData',id);
-		//alert("MERCHANT_ID="+ret.User_ID+" MERCHANT_TYPE="+ret.MERCHANT_TYPE+" MERCHANT_LOCATION="+ret.MERCHANT_LOCATION);
-                jQuery("#list1").jqGrid('GridToForm',id ,"#order");
-	} else { alert("Please select row");}
-
-}
 </script>
 
 </head>
 <body onload="createTableGrid()">
-
+<form>
   <table width="500px" height="20" border="0" cellpadding="0"  cellspacing="0" class="head1">
     <tr>
-      <td>Card De-Registration History</td>
+      <td>Card  Transit History</td>
     </tr>
   </table>
  <br/>
  <br/> 
   <table   border="0" cellpadding="0" cellspacing="0">
   	<tr>
-  		<td>Search: &nbsp;
-		</td>
-		<td><select><option>User ID</option><option>Card No</option></select></td>
-		<td>&nbsp;<input ><button>Go</button></td>
-  	</tr>
+  		<td>Select Card No</td></tr>
+        <tr><td><input type="radio" name="can"/></td><td>1234111144445555</td></tr>                
+        <tr><td><input type="radio" name="can"/></td><td>1234111144445555</td></tr>                
+        <tr><td><input type="radio" name="can"/></td><td>1234111144445555</td></tr>                
+
+       
   </table>
   <br/>
-     
-      <table id="list1" width="400px" border="0" cellpadding="0" cellspacing="0" class="table">
-  	
- 	<tr>
- 		<tr >
- 			<th>User ID</th><th>Card No</th><th>De-Reg date</th><th>De-Reg reason</th>
+  <table id="list1" width="400px" border="0" cellpadding="0" cellspacing="0" class="table"><tr >
+ 			<th>
+            Txn no.
+          </th><th>
+            Txn Type
+          </th><th>Txn date</th>
+          <th>
+            Amout
+          </th>
+          <th>
+            Balance
+          </th>
 		</tr>
 		<tr>
- 			<td>S9073430G</td><td>1111222233334444</td><td>12/08/2011</td><td>Misplace card</td>
+ 			<td>167</td><td>TRAIN</td><td>12/08/2011</td>
+          <td>1.7</td>
+          <td>20</td>
  	   </tr><tr>
- 			<td>S9073430G</td><td>8111225533334445</td><td>19/03/2011</td><td>Lost card</td>
+ 			<td>189</td><td>BUS</td><td>19/03/2011</td>
+          <td>1.2</td>
+          <td>19.80</td>
  	   </tr>
   </table>
   <div id="pager2"></div>
- 
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </form>
 </body>
 </html>

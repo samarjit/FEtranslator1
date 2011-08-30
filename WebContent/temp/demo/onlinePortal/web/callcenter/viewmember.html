@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>== Ezlink ==</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style>
+            .table tr:first-child {
+                background-color: #DCDCDC;#color: rgb(222, 184, 135);
+            }
+        </style>
+<link href="../../css/body.css" rel="stylesheet" type="text/css">
+
+   <link type="text/css" href="../../css/jquery-ui-1.8.15.custom.css" rel="stylesheet" />
+   <link type="text/css" href="../../css/ui.jqgrid.css" rel="stylesheet" />
+
+
+ 
+
+  <script src="../../js/jquery-1.4.2.min.js"></script>
+  <script src="../../js/jquery-ui-1.8.4.custom.min.js"></script>
+ 
+  <script src="../../js/i18n/grid.locale-en.js"></script>
+  <script src="../../js/jquery.jqGrid.min.js"></script>
+  
+<script language="Javascript">
+  function onNext() {
+      window.location = "updateProfile2.html";
+  }
+
+  function bannerClick(args) {
+      window.open("bannerpopup.html", "bannerpopup.html", "width=400,height=600");
+  }
+
+  function popPromo(args) {
+      window.open("promo" + args + "big.html", "", "width=400,height=600")
+  }
+
+  function createTableGrid() {
+     // tableToGrid('#list1');
+      //jQuery("#list1").jqGrid('setGridWidth',500);
+      //jQuery("#list1").jqGrid('navGrid','#pager2',{del: false,add: false,edit:false});
+  }
+</script>
+
+</head>
+<body onload="createTableGrid()">
+<form>
+  <table width="500px" height="20" border="0" cellpadding="0"  cellspacing="0" class="head1">
+    <tr>
+      <td>Card De-Registration History</td>
+    </tr>
+  </table>
+ <br/>
+ <br/> 
+  <table   border="0" cellpadding="0" cellspacing="0">
+  	<tr>
+  		<td>Search: &nbsp;
+		</td>
+		<td><select><option>NRIC</option>
+                <option>Membership no.</option>
+                
+                </select></td>
+		<td>&nbsp;<input ><button>Go</button></td>
+  	</tr>
+  </table>
+  <br/>
+      <table class="table" id="list">
+        <tr >
+          <th >User Id</th>
+          <td >Nric</td>
+          <td >Dob</td>
+          <td >First Name</td>
+          <td >Last Name</td>
+          <td >Gender</td>
+          <td >Mobile No</td>
+          <td >Email</td>
+          <td >Postal Code</td>
+          <td >Is Insure Card</td>
+          <td >Is Insure Life</td>
+          <td >Card Insur Used</td>
+          <td >Promo Alert Sms Email</td>
+          <td >Creation Mode</td>
+          <td >Is Firsttime Login</td>
+          <td >User Status</td>
+          <td >Create Date</td>
+          <td >One Time Deal</td>
+          <td >Last Login</td>
+        </tr>
+         
+        <tr >
+          <td >101</td>
+          <td >S2304443G</td>
+          <td >15/4/2001</td>
+          <td >Samar</td>
+          <td >Babu</td>
+          <td >Male</td>
+          <td >&nbsp;</td>
+          <td >sam@google.com</td>
+          <td >&nbsp;</td>
+          <td >&nbsp;</td>
+          <td >&nbsp;</td>
+          <td >&nbsp;</td>
+          <td >&nbsp;</td>
+          <td >&nbsp;</td>
+          <td >&nbsp;</td>
+          <td >&nbsp;</td>
+          <td >29/8/2011</td>
+          <td >&nbsp;</td>
+          <td >&nbsp;</td>
+        </tr>
+      </table>
+      <br/>
+      <table class="table1" id="list2" width="400px" border="0" cellpadding="0" cellspacing="0">
+<tr><td>User Id</td><td>	101	</td></tr>
+<tr><td>Nric</td><td>	S2304443G	</td></tr>
+<tr><td>Dob</td><td>	15/04/2001	</td></tr>
+<tr><td>First Name</td><td>	Samar	</td></tr>
+<tr><td>Last Name</td><td>	Babu	</td></tr>
+<tr><td>Gender</td><td>		</td></tr>
+<tr><td>Mobile No</td><td>		</td></tr>
+<tr><td>Email </td><td>	sam@google.com	</td></tr>
+<tr><td>Postal Code</td><td>		</td></tr>
+<tr><td>Is Insure Card</td><td>		</td></tr>
+<tr><td>Is Insure Life</td><td>		</td></tr>
+<tr><td>Card Insur Used</td><td>		</td></tr>
+<tr><td>Promo Alert Sms Email</td><td>		</td></tr>
+<tr><td>Role Id</td><td>		</td></tr>
+<tr><td>Creation Mode</td><td>		</td></tr>
+<tr><td>Is Firsttime Login</td><td>		</td></tr>
+<tr><td>User Status</td><td>		</td></tr>
+<tr><td>Secruity Ques Id</td><td>	mothers maiden name	</td></tr>
+<tr><td>Custom Secruity Ques</td><td>	NA	</td></tr>
+<tr><td>Answer</td><td>	xxxxxx	</td></tr>
+<tr><td>Create Date</td><td>	29/08/2011	</td></tr>
+<tr><td>Last Updated Date</td><td>		</td></tr>
+<tr><td>One Time Deal</td><td>		</td></tr>
+<tr><td>Last Login</td><td>		</td></tr>
+
+</table> 
+
+  <div id="pager2"></div>
+</form>
+</body>
+</html>

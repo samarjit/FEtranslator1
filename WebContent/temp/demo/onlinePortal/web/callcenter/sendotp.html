@@ -35,21 +35,11 @@ function createTableGrid(){
 	jQuery("#list1").jqGrid('setGridWidth',500);
 	jQuery("#list1").jqGrid('navGrid','#pager2',{del: false,add: false,edit:false});
 }
-function editGrid(){
-   
-	var id= jQuery('#list1').jqGrid('getGridParam','selrow'); 
-	if (id)	{
-		//var ret = jQuery("#list1").jqGrid('getRowData',id);
-		//alert("MERCHANT_ID="+ret.User_ID+" MERCHANT_TYPE="+ret.MERCHANT_TYPE+" MERCHANT_LOCATION="+ret.MERCHANT_LOCATION);
-                jQuery("#list1").jqGrid('GridToForm',id ,"#order");
-	} else { alert("Please select row");}
-
-}
 </script>
 
 </head>
 <body onload="createTableGrid()">
-
+<form>
   <table width="500px" height="20" border="0" cellpadding="0"  cellspacing="0" class="head1">
     <tr>
       <td>Card De-Registration History</td>
@@ -62,24 +52,23 @@ function editGrid(){
   		<td>Search: &nbsp;
 		</td>
 		<td><select><option>User ID</option><option>Card No</option></select></td>
-		<td>&nbsp;<input ><button>Go</button></td>
+		<td>&nbsp;<input ><button>Go</button></td><td><button type="button" onclick="sendOTP()">Send OTP</button>
   	</tr>
   </table>
   <br/>
-     
-      <table id="list1" width="400px" border="0" cellpadding="0" cellspacing="0" class="table">
+  <table id="list1" width="400px" border="0" cellpadding="0" cellspacing="0" class="table">
   	
  	<tr>
  		<tr >
- 			<th>User ID</th><th>Card No</th><th>De-Reg date</th><th>De-Reg reason</th>
+ 			<th>User ID</th><th>Card No</th><th>Mobile no.</th>
 		</tr>
 		<tr>
- 			<td>S9073430G</td><td>1111222233334444</td><td>12/08/2011</td><td>Misplace card</td>
+ 			<td>S9073430G</td><td>1111222233334444</td><td>98678777</td>
  	   </tr><tr>
- 			<td>S9073430G</td><td>8111225533334445</td><td>19/03/2011</td><td>Lost card</td>
+ 			<td>S9073431G</td><td>8111225533334445</td><td>90886009</td>
  	   </tr>
   </table>
   <div id="pager2"></div>
- 
+</form>
 </body>
 </html>

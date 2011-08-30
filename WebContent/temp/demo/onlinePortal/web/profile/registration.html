@@ -54,6 +54,18 @@ function onNext(){
  		</td>
  	</tr>
 	<tr>
+ 		<td>Card CAN Number*</td>
+ 		<td>
+ 			<input type="text">
+ 		</td>
+ 	</tr>
+	<tr>
+ 		<td>Card CAN Number</td>
+ 		<td>
+ 			<input type="text">
+ 		</td>
+ 	</tr>
+	<tr>
  		<td>Card CAN Number</td>
  		<td>
  			<input type="text">
@@ -76,14 +88,14 @@ function onNext(){
   		<td>&nbsp;</td>
   	</tr>
 	<tr>
- 		<td>One Time Password (OTP)</td>
- 		<td>
+ 		<td height="40">One Time Password (OTP)</td>
+ 		<td height="40">
  			<input type="password"> 
  		</td>
  	</tr>
 	<tr>
- 		<td>New Password</td>
- 		<td>
+ 		<td height="15">New Password</td>
+ 		<td height="15">
  			<input type="password"> 
  		</td>
  	</tr>
@@ -104,5 +116,10 @@ function onNext(){
  	</tr>
   </table>
 </form>
+<!-- Validation
+When sending OTP 
+verify none of the 3 CAN#s exists
+verify NRIC does not exist
+-->
 </body>
 </html>

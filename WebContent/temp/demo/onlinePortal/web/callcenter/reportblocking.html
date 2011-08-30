@@ -35,21 +35,11 @@ function createTableGrid(){
 	jQuery("#list1").jqGrid('setGridWidth',500);
 	jQuery("#list1").jqGrid('navGrid','#pager2',{del: false,add: false,edit:false});
 }
-function editGrid(){
-   
-	var id= jQuery('#list1').jqGrid('getGridParam','selrow'); 
-	if (id)	{
-		//var ret = jQuery("#list1").jqGrid('getRowData',id);
-		//alert("MERCHANT_ID="+ret.User_ID+" MERCHANT_TYPE="+ret.MERCHANT_TYPE+" MERCHANT_LOCATION="+ret.MERCHANT_LOCATION);
-                jQuery("#list1").jqGrid('GridToForm',id ,"#order");
-	} else { alert("Please select row");}
-
-}
 </script>
 
 </head>
 <body onload="createTableGrid()">
-
+<form>
   <table width="500px" height="20" border="0" cellpadding="0"  cellspacing="0" class="head1">
     <tr>
       <td>Card De-Registration History</td>
@@ -66,8 +56,7 @@ function editGrid(){
   	</tr>
   </table>
   <br/>
-     
-      <table id="list1" width="400px" border="0" cellpadding="0" cellspacing="0" class="table">
+  <table id="list1" width="400px" border="0" cellpadding="0" cellspacing="0" class="table">
   	
  	<tr>
  		<tr >
@@ -80,6 +69,6 @@ function editGrid(){
  	   </tr>
   </table>
   <div id="pager2"></div>
- 
+</form>
 </body>
 </html>
