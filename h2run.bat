@@ -1,1 +1,1 @@
-cmd /C java -cp  %CLASSPATH%  org.h2.tools.Console 
+java -cp  %USERPROFILE%\.m2\repository\com\h2database\h2\1.3.150\h2-1.3.150.jar org.h2.tools.Console 

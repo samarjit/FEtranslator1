@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Message" elementFormDefault="qualified" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="MessagingGateway">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="UserId" type="xs:string" maxOccurs="1" minOccurs="1" />
+        <xs:element name="Password" type="xs:string" maxOccurs="1" minOccurs="1" />
+        <xs:element name="CampaignId" type="xs:string" maxOccurs="1" minOccurs="1" />
+        <xs:element name="TypeId" type="xs:string" maxOccurs="1" minOccurs="1" />
+        <xs:element name="Destination" type="xs:string" maxOccurs="1" minOccurs="1" />
+        <xs:element name="Body" type="xs:string" maxOccurs="1" minOccurs="1" />
+        <xs:element name="Url" type="xs:string" maxOccurs="1" minOccurs="0" />
+        <xs:element name="Sender" type="xs:string" maxOccurs="1" minOccurs="0" />
+        <xs:element name="Price" type="xs:string" maxOccurs="1" minOccurs="0" />
+      </xs:sequence>
+      <xs:attribute name="messageName" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

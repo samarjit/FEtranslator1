@@ -4,6 +4,7 @@
 target
 build
 bin
+demo
 .externalToolBuilders
 *.settings
 
