@@ -42,6 +42,7 @@ public class DBConnector {
 	private boolean isRuninServerContext;
 
 	private final String SIMPLE_DATE_FORMAT = PrepstmtDTO.DATE_NS_FORMAT;//"yyyy-MM-dd HH:mm:ss.SSS";
+	private final String DATE_TIME = PrepstmtDTO.DATE_TIME_MIN_FORMAT;
 
 	public DBConnector() {
 		Properties prop = new Properties();
@@ -94,7 +95,7 @@ public class DBConnector {
 				initContext = new InitialContext();
 				envContext = (Context) initContext.lookup("java:/comp/env");
 			} catch (NamingException e1) {
-				logger.error("Exception occured in contructing InitialContext", e1);
+				logger.error("Exception occured in contructing InitialContext");
 			}
 
 			boolean fallaback = false;
@@ -249,6 +250,9 @@ public class DBConnector {
 				} else if (pd.getType() == PrepstmtDTO.DataType.DATE_NS) {
 					Date newDate = new Date((new SimpleDateFormat(SIMPLE_DATE_FORMAT)).parse(pd.getData()).getTime());
 					stmt.setDate(count, newDate);
+				} else if (pd.getType() == PrepstmtDTO.DataType.DATE_TIME_MIN_FORMAT) {
+					Date newDate = new Date((new SimpleDateFormat(PrepstmtDTO.DATE_TIME_MIN_FORMAT)).parse(pd.getData()).getTime());
+					stmt.setDate(count, newDate);
 				} else if (pd.getType() == PrepstmtDTO.DataType.DATEDDMMYYYY) {
 					Date newDate = new Date((new SimpleDateFormat(PrepstmtDTO.DATEDDMMYYYY_FORMAT)).parse(pd.getData()).getTime());
 					stmt.setDate(count, newDate);
@@ -337,6 +341,9 @@ public class DBConnector {
 				} else if (pd.getType() == PrepstmtDTO.DataType.DATEDDMMYYYY) {
 					Date newDate = new Date((new SimpleDateFormat(PrepstmtDTO.DATEDDMMYYYY_FORMAT)).parse(pd.getData()).getTime());
 					stmt.setDate(count, newDate);
+				} else if (pd.getType() == PrepstmtDTO.DataType.DATE_TIME_MIN_FORMAT) {
+					Timestamp newDate = new Timestamp((new SimpleDateFormat(PrepstmtDTO.DATE_TIME_MIN_FORMAT)).parse(pd.getData()).getTime());
+					stmt.setTimestamp(count, newDate);
 				} else if (pd.getType() == PrepstmtDTO.DataType.DOUBLE) {
 					String in = pd.getData();
 					if (in == null || "".equals(in))

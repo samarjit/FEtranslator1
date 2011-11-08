@@ -47,8 +47,8 @@ public class FEMapFileSync {
 			
 			String screenpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
 			System.out.println("screenpath="+screenpath);
-			scrxml = new BufferedInputStream(new FileInputStream(screenpath+"\\screenmap.xml"));
-			File file = new File(screenpath+"\\screenmap.xml");
+			scrxml = new BufferedInputStream(new FileInputStream(screenpath+"/screenmap.xml"));
+			File file = new File(screenpath+"/screenmap.xml");
 			returnJson += "'screenmap':"+file.lastModified();
 			returnHm .put("screenmap",file.lastModified());
 			filePaths.put("screenmap", "map/"+file.getName());

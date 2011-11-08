@@ -1,0 +1,514 @@
+CREATE USER IF NOT EXISTS SA SALT '78f65021bd82e20e' HASH '17e1acdaea0fe3f907d6bf540ee08c806e34cbc1e44367fd0b336d76239299b7' ADMIN; 
+CREATE FORCE ALIAS PUBLIC.TO_CHAR AS STRINGDECODE(' \r\nimport java.text.SimpleDateFormat;\r\nimport java.util.Date;\r\n@CODE\r\n  String toChar(String date, String pattern) throws Exception { \r\n\tpattern = pattern.replaceAll(\"YY\",\"yy\");\r\n\tpattern = pattern.replaceAll(\"DD\",\"dd\");\r\n\tpattern = pattern.replaceAll(\"HH24|hh24\",\"HH\");\r\n\tpattern = pattern.replaceAll(\"HH?!24|hh?!24\",\"KK\");\r\n\tpattern = pattern.replaceAll(\"MON|mon\",\"MMM\");\r\n\tpattern = pattern.replaceAll(\"MM|mm\",\"MM\");\r\n\tpattern = pattern.replaceAll(\"MI|mi\",\"mm\");\r\n\tpattern = pattern.replaceAll(\"SS|ss\",\"ss\");\r\n\tpattern = pattern.replaceAll(\"AM|PM\",\"aa\");\r\n\tSystem.out.println(pattern);\r\n\tSimpleDateFormat sm = new SimpleDateFormat(pattern);\r\n\tjava.util.Date dt; \r\n\t\tif(date.length() > 10)dt = java.sql.Timestamp.valueOf(date);\r\n\t\telse\r\n\t\t dt = java.sql.Date.valueOf(date);\r\n\t\treturn sm.format(dt); \r\n }\r\n'); 
+  
+ 
+CREATE CACHED TABLE PUBLIC.USER_ROLE_MAP(
+    USERID VARCHAR2(20),
+    ROLEID VARCHAR2(20)
+); 
+-- 5 +/- SELECT COUNT(*) FROM PUBLIC.USER_ROLE_MAP; 
+INSERT INTO PUBLIC.USER_ROLE_MAP(USERID, ROLEID) VALUES
+('sam_admin', 'ADMIN'),
+('sam_man', 'MANAGER'),
+('sam_user', 'USER'),
+('sam_man_user', 'USER'),
+('sam_man_user', 'MANAGER'); 
+ 
+  
+ 
+ 
+ 
+ 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.CARD_ENTRY; 
+CREATE CACHED TABLE PUBLIC.MERCHANT(
+    MERCHANT_ID VARCHAR2(20),
+    MERCHANT_TYPE VARCHAR2(20),
+    MERCHANT_LOCATION VARCHAR2(30),
+    STATUS VARCHAR2(8)
+); 
+-- 3 +/- SELECT COUNT(*) FROM PUBLIC.MERCHANT; 
+INSERT INTO PUBLIC.MERCHANT(MERCHANT_ID, MERCHANT_TYPE, MERCHANT_LOCATION, STATUS) VALUES
+('10', 'POS', 'Suntec City', 'Active'),
+('11', 'POS', 'Raffles City', 'Active'),
+('12', 'POS2', 'Raffles City2', 'InActive'); 
+CREATE CACHED TABLE PUBLIC.DEAL_MASTER(
+    DEAL_ID VARCHAR2(20) NOT NULL,
+    MERCHANT_ID VARCHAR2(20),
+    OFFERING_QUANTITY NUMBER(6),
+    OFFERING_QTY_LEFT NUMBER(6),
+    OFFERING_ITEM VARCHAR2(20),
+    DEAL_START_DATE DATE,
+    DEAL_END_DATE DATE,
+    SHORT_DESC VARCHAR2(50),
+    DETAILED_DESC VARCHAR2(300),
+    PARTIAL_REG_LIMIT NUMBER(6),
+    FULL_REG_LIMIT NUMBER(6),
+    PARTIAL_REG_LIMIT_LEFT NUMBER(6),
+    FULL_REG_LIMIT_LEFT NUMBER(6),
+    CREATE_DATE DATE,
+    PROMOTION_ID VARCHAR2(20),
+    MIN_TRANSITS_PER_INTERVAL NUMBER(6),
+    TRANSIT_INTERVAL_PERIOD_DAYS NUMBER(6),
+    UNITS_PER_MEMBER_PER_INTERVAL NUMBER(6),
+    UNITS_DEAL_PER_INTERVAL NUMBER(6),
+    DEAL_INTERVAL_DAYS NUMBER(6),
+    TERMS_AND_COND VARCHAR2(300)
+); 
+ALTER TABLE PUBLIC.DEAL_MASTER ADD CONSTRAINT PUBLIC.DEAL_PK PRIMARY KEY(DEAL_ID); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.DEAL_MASTER; 
+CREATE CACHED TABLE PUBLIC.PROMOTION(
+    PROMOTIONID INT,
+    PROMOTIONNAME VARCHAR(255),
+    PROMOTIONCLICKCOUNT INT,
+    PROMOTIONSTARTDATETIME DATETIME,
+    PROMOTIONENDDATETIME DATETIME,
+    PROMOTIONOFFER VARCHAR(255),
+    PROMOTIONOFFERDESCRIPTION VARCHAR(255),
+    PROMOTIONTNC TEXT,
+    PROMOTIONLOCATION TEXT,
+    PROMOTIONQUOTA INT,
+    PROMOTIONIMAGE MEDIUMBLOB,
+    PROMOTIONIMAGEFILENAME VARCHAR(100),
+    PROMOTIONIMAGEFILETYPE VARCHAR(100),
+    PROMOTIONIMAGEFILESIZE VARCHAR(100),
+    PROMOTIONPOPOUTIMAGE MEDIUMBLOB,
+    PROMOTIONPOPOUTIMAGEFILENAME VARCHAR(100),
+    PROMOTIONPOPOUTIMAGEFILETYPE VARCHAR(50),
+    PROMOTIONPOPOUTIMAGEFILESIZE INT,
+    STATUS INT,
+    CREATED DATETIME,
+    MODIFIED DATETIME,
+    WEB_PROMO_IMAGE VARCHAR2(40),
+    WEB_PROMO_POP_IMAGE VARCHAR2(40),
+    DAILY_DEAL VARCHAR2(1)
+); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.PROMOTION; 
+CREATE CACHED TABLE PUBLIC.COUPONREDEMPTION(
+    COUPONREDEEMID INT,
+    DEVICEUID CHAR(40),
+    COUPONID INT,
+    TYPE VARCHAR(10),
+    CREATED DATETIME,
+    MODIFIED DATETIME
+); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.COUPONREDEMPTION; 
+CREATE CACHED TABLE PUBLIC.EZLINKCARDUSERS(
+    CARDID BIGINT,
+    CARDNUMBER BIGINT,
+    NRIC VARCHAR(11),
+    DEVICEUID CHAR(40),
+    TYPE VARCHAR(10),
+    STATUS VARCHAR2(10),
+    CREATED DATETIME,
+    MODIFIED DATETIME
+); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.EZLINKCARDUSERS; 
+CREATE CACHED TABLE PUBLIC.USER(
+    USERID BIGINT,
+    FIRSTNAME VARCHAR(255),
+    LASTNAME VARCHAR(255),
+    NRIC VARCHAR(10),
+    EMAIL VARCHAR(255),
+    CONTACT INT,
+    DOB DATE,
+    DEVICEUID CHAR(40),
+    POSTALCODE INT,
+    GENDER VARCHAR2(6),
+    TYPE VARCHAR2(8),
+    STATUS VARCHAR2(10),
+    CREATED DATETIME,
+    MODIFIED DATETIME
+); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.USER; 
+CREATE CACHED TABLE PUBLIC.APNS_MESSAGES(
+    PID BIGINT,
+    FK_DEVICE INT,
+    MESSAGE VARCHAR(255),
+    DELIVERY DATETIME,
+    STATUS VARCHAR2(10),
+    CREATED DATETIME,
+    MODIFIED TIMESTAMP
+); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.APNS_MESSAGES; 
+CREATE CACHED TABLE PUBLIC.C2DM_DEVICES(
+    PID INT,
+    REGISTRATIONID TEXT,
+    ANDROIDID VARCHAR(50),
+    BRAND VARCHAR(255),
+    MODEL VARCHAR(255),
+    VERSION VARCHAR(255),
+    CREATED DATETIME,
+    MODIFIED DATETIME
+); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.C2DM_DEVICES; 
+CREATE CACHED TABLE PUBLIC.EZLINKTRANSACTION(
+    TRANSACTIONID BIGINT,
+    SERVERTIME BIGINT,
+    DEVICETIME BIGINT,
+    DEVICEUID CHAR(40),
+    HASHCODE BIGINT,
+    CREATED DATETIME,
+    MODIFIED DATETIME
+); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.EZLINKTRANSACTION; 
+CREATE CACHED TABLE PUBLIC.EZDEALSAPP(
+    APPID INT,
+    APPNAME VARCHAR(255),
+    APPVERSION VARCHAR(25),
+    APPAPNSLEFT INT,
+    OWNERID VARCHAR(255),
+    PROMOTIONUPDATEDATE DATETIME,
+    COUPONUPDATEDATE DATETIME,
+    BANNERUPDATEDATE DATETIME,
+    MERCHANTUPDATEDATE DATETIME,
+    CREATED DATETIME,
+    MODIFIED DATETIME
+); 
+-- 0 +/- SELECT COUNT(*) FROM PUBLIC.EZDEALSAPP; 
+CREATE CACHED TABLE PUBLIC.APNS_DEVICES(
+    PID INT,
+    APPNAME VARCHAR(255),
+    APPVERSION VARCHAR(25),
+    DEVICEUID CHAR(40),
+    DEVICETOKEN CHAR(64),
+    DEVICENAME VARCHAR(255),
+    DEVICEMODEL VARCHAR(100),
+    DEVICEVERSION VARCHAR(25),
+    PUSHBADGE VARCHAR2(11),
+    PUSHALERT VARCHAR2(11),
+    PUSHSOUND VARCHAR2(11),
+    DEVELOPMENT VARCHAR2(11),
+    STATUS VARCHAR2(11),
+    CREATED DATETIME,
+    MODIFIED TIMESTAMP
+); 
+  
+create table TERMINAL_DTL(	
+TERMINAL_ID	VARCHAR2(20),
+MERCHANT_ID	VARCHAR2(20));
+
+
+CREATE SEQUENCE PUBLIC.MEMBERSHIP_SEQ START WITH 1;
+
+CREATE  TABLE  TXN_HISTORY(
+    MEMBERSHIP_NO VARCHAR2(16),
+    TXN_ID VARCHAR2(20),
+    CARD_NO NUMBER(20),
+    TXN_TIME DATE,
+    TXN_TYPE VARCHAR2(16),
+    MERCHANT VARCHAR2(16),
+    TXN_AMOUNT NUMBER(4),
+    BAL_AMOUNT NUMBER(4)
+);
+
+CREATE   TABLE  DEREGISTRATION_HST(
+    MEMBERSHIP_NO VARCHAR2(16),
+    CARD_NO NUMBER(20),
+    DEREG_REASON VARCHAR2(50),
+    DEREG_DATE DATE,
+    REG_DATE DATE
+);
+
+
+CREATE CACHED TABLE PUBLIC.SECURITY_QUES(
+    SECRUITY_QUES_ID VARCHAR2(6),
+    QUESTION VARCHAR2(100)
+); 
+-- 3 +/- SELECT COUNT(*) FROM PUBLIC.SECURITY_QUES; 
+INSERT INTO PUBLIC.SECURITY_QUES(SECRUITY_QUES_ID, QUESTION) VALUES
+('SQ001', 'What is the first name of your favorite uncle?'),
+('SQ002', 'Where did you meet your spouse?'),
+('SQ006', 'What is the first name of your oldest niece?'); 
+
+
+
+CREATE CACHED TABLE PUBLIC.TEMP_PASS(
+    NRIC VARCHAR2(10),
+    MOBILE NUMBER,
+    TEMP_PASSWORD VARCHAR2(10),
+    CREATE_DATE DATE
+);
+
+create table VASPOSTER	(
+VASPosterID	int(10),
+sequence	int(10),
+VASPosterImage	mediumblob,
+VASPosterImageFileName	varchar(100),
+VASPosterImageFileType	varchar(100),
+VASPosterImageFileSize	varchar(100),
+created	date,
+modified	date);
+
+create table INSURANCE	(
+insuranceID	int(10),
+name	varchar(255),
+tnc	text,
+url	text,
+imageFileSize	mediumBlob,
+created	date,
+modified	date);
+
+
+--existing tables
+ CREATE TABLE  "USER_MASTER"
+   (    "USER_ID" VARCHAR2(25),
+        "USER_NAME" VARCHAR2(350),
+        "USER_GROUPS" VARCHAR2(200),
+        "USER_STATUS" VARCHAR2(1),
+        "LANGUAGE_CD" VARCHAR2(2),
+        "USER_TYPE" VARCHAR2(5),
+        "LAST_LOGIN_TIME" DATE,
+        "MAKER_ID" VARCHAR2(25),
+        "MAKER_DTTM" DATE,
+        "ADD1" VARCHAR2(100),
+        "ADD2" VARCHAR2(50),
+        "CITY" VARCHAR2(20),
+        "STATE" VARCHAR2(20),
+        "COUNTRY" VARCHAR2(30),
+        "PIN" VARCHAR2(10),
+        "TEL_OFF" VARCHAR2(250),
+        "TEL_RES" VARCHAR2(100),
+        "FAX" VARCHAR2(100),
+        "MOBILE" VARCHAR2(25),
+        "EMAIL" VARCHAR2(50),
+        "REGION" VARCHAR2(50),
+        "EMP_ID" VARCHAR2(25),
+        "DESIGNATION" VARCHAR2(50),
+        "DEPT" VARCHAR2(50),
+        "PASSPORT_NO" VARCHAR2(30),
+        "PAN_NO" VARCHAR2(30),
+        "REMARKS" VARCHAR2(4000),
+        "PREV_USER_STATUS" VARCHAR2(20),
+        "BRANCH_TYPE" VARCHAR2(30),
+        "CVC2CODE" VARCHAR2(1000),
+        "PRINT_NAME" VARCHAR2(100),
+        "REASON_BULK_ORDER" VARCHAR2(1000),
+        "ABN_ACN" VARCHAR2(100),
+        "ENTITY" VARCHAR2(200),
+        "POBOX" VARCHAR2(20),
+        "POSTAL_POBOX" VARCHAR2(50),
+        "POSTAL_CITY" VARCHAR2(50),
+        "POSTAL_POSTCODE" VARCHAR2(50),
+         CONSTRAINT "USER_MASTER_PK" PRIMARY KEY ("USER_ID"));
+ 
+ 
+                                                                                
+  CREATE TABLE  "PIN_MASTER"                                           
+   (	"USER_ID" VARCHAR2(50),                                                    
+	"USER_PASSWORD" VARCHAR2(100),                                                 
+	"CHANNEL" VARCHAR2(20),                                                        
+	"USER_PREV_PASSWD" VARCHAR2(300),                                              
+	"LAST_PASSWD_CHANGE" DATE,                                                     
+	"INCORRECT_PASSWD_CNT" NUMBER,                                                 
+	"PASSWD_CNT_DATE" DATE,                                                        
+	"CUM_PASSWD_CNT" NUMBER,                                                       
+	"MAKER_ID" VARCHAR2(25),                                                       
+	"MAKER_DTTM" DATE,                                                             
+	"REMARKS" VARCHAR2(4000),                                                      
+	"SECRET_CODE" VARCHAR2(50),                                                    
+	 CONSTRAINT "PIN_MASTER_PK" PRIMARY KEY ("USER_ID"));                                                      
+                                                                                
+
+ 
+                                                                                
+  CREATE TABLE  "GROUP_MASTER"                                         
+   (	"APP_CODE" VARCHAR2(10),                                                   
+	"GROUP_ID" VARCHAR2(15),                                                       
+	"GROUP_DESC" VARCHAR2(40),                                                     
+	"MAKER_ID" VARCHAR2(25),                                                       
+	"MAKER_DTTM" DATE,                                                             
+	"CATEGORY" VARCHAR2(25),                                                       
+	"PROD_CODE" VARCHAR2(50),                                                      
+	 CONSTRAINT "GROUP_MASTER_PK" PRIMARY KEY ("GROUP_ID"));                                                      
+                                                                                
+                                                                                
+
+                                                                               
+  CREATE TABLE  "GROUP_RIGHTS"                                         
+   (	"APP_CODE" VARCHAR2(25),                                                   
+	"GROUP_ID" VARCHAR2(15),                                                       
+	"TRANS_CODE" VARCHAR2(20),                                                     
+	"MAKER_ID" VARCHAR2(25),                                                       
+	"MAKER_DTTM" DATE,                                                             
+	"PROD_CODE" VARCHAR2(50)                                                       
+    );                                                       
+                                                                                
+                                                                                
+ 
+                                                                                
+  CREATE TABLE  "USER_ID_MAPPING"                                      
+   (	"LOGIN_USER_ID" VARCHAR2(25),                                              
+	"SYSTEM_USER_ID" VARCHAR2(25),                                                 
+	"CIN_NO" VARCHAR2(20),                                                         
+	"MAKER_ID" VARCHAR2(25),                                                       
+	"MAKER_DTTM" DATE,                                                             
+	 CONSTRAINT "USER_ID_MAPPING_PK" PRIMARY KEY ("LOGIN_USER_ID")                                                  
+   ) ;                                                       
+                                                                                
+                                                                                
+ 
+                                                                                
+  CREATE TABLE  "CARD_MASTER"                                          
+   (	"CARD_NO" VARCHAR2(25) NOT NULL  ,                                    
+	"ACC_NO" VARCHAR2(600),                                                        
+	"ADC_NO" NUMBER(10,0),                                                         
+	"CARD_STATUS" VARCHAR2(2),                                                     
+	"CARD_TYPE" VARCHAR2(10),                                                      
+	"HOT_STATUS" VARCHAR2(200),                                                    
+	"MAKER_ID" VARCHAR2(25),                                                       
+	"AUTH_ID" VARCHAR2(8),                                                         
+	"AUTH_DATE" DATE,                                                              
+	"ISSUE_DATE" DATE,                                                             
+	"MAIL_DATE" DATE,                                                              
+	"V_FROM_DT" DATE,                                                              
+	"V_THRU_DT" DATE,                                                              
+	"RNUMBER" NUMBER(5,0),                                                         
+	"E_STAT" CHAR(1),                                                              
+	"CLOSE_DATE" DATE,                                                             
+	"PROC_DATE" DATE,                                                              
+	"PIN" VARCHAR2(100),                                                           
+	"DESPATCH_STAT" CHAR(1),                                                       
+	"MAKER_DT" DATE,                                                               
+	"REAUTH" VARCHAR2(1),                                                          
+	"S_NO" NUMBER(10,0),                                                           
+	"BR_ID" VARCHAR2(15),                                                          
+	"CIN" VARCHAR2(100),                                                           
+	"REG_ID" VARCHAR2(2),                                                          
+	"TDATE" DATE,                                                                  
+	"TRANS_AMOUNT" NUMBER(12,2),                                                   
+	"TRANS_CYCLE" VARCHAR2(2),                                                     
+	"MAX_AMOUNT" VARCHAR2(10),                                                     
+	"MAX_CYCLE" VARCHAR2(2),                                                       
+	"EMB_DATE" DATE,                                                               
+	"BR_REC_DATE" DATE,                                                            
+	"HOT_DATE" DATE,                                                               
+	"ATM_ID" VARCHAR2(30),                                                         
+	"IT_REC_DATE" DATE,                                                            
+	"IT_EMB_DT" DATE,                                                              
+	"PIN_REQ_DT" DATE,                                                             
+	"OLD_STATUS" VARCHAR2(500),                                                    
+	"GRP_ID" VARCHAR2(2),                                                          
+	"INS_FLAG" VARCHAR2(2) DEFAULT 'I',                                            
+	"CMS_FLAG" CHAR(1),                                                            
+	"LAST_TXN_DATE" DATE,                                                          
+	"REN_FLAG" CHAR(1),                                                            
+	"REN_EMB_STATUS" CHAR(1),                                                      
+	"FETCH_CD" CHAR(1),                                                            
+	"REF_NO" VARCHAR2(20),                                                         
+	"RECVD_BY" VARCHAR2(25),                                                       
+	"CARD_DESP_COURIER" DATE,                                                      
+	"ACCOUNT_TYPE" VARCHAR2(4),                                                    
+	"BALANCE_AMT" NUMBER(12,2),                                                    
+	"AVG_BALANCE" NUMBER(12,2),                                                    
+	"ACCOUNT_NO" VARCHAR2(16),                                                     
+	"BRANCH_CODE" VARCHAR2(6),                                                     
+	"BUSINESS_DATE" DATE,                                                          
+	"INITIAL_AMT" NUMBER(12,2),                                                    
+	"ACTIVATION_FLAG" VARCHAR2(2),                                                 
+	"CLOSING_DATE" DATE,                                                           
+	"AMT_CCY" VARCHAR2(10),                                                        
+	"PACKREFNO" VARCHAR2(20),                                                      
+	"TYPEOFCARD" VARCHAR2(3),                                                      
+	"PARENTCARD" VARCHAR2(20),                                                     
+	"REJECT_CODE" VARCHAR2(256),                                                   
+	"CONV_RATE_REFNO" VARCHAR2(20),                                                
+	"INITIAL_CCY" VARCHAR2(9),                                                     
+	"PRODUCT_TYPE" VARCHAR2(20),                                                   
+	"RE_AMT" NUMBER(12,2),                                                         
+	"RE_FLAG" VARCHAR2(1),                                                         
+	"CARD_RETAINED_FLAG" VARCHAR2(1),                                              
+	"RE_INIT_AMT" NUMBER(12,2),                                                    
+	"SOLD_BY_USERID" VARCHAR2(10),                                                 
+	"FILE_NUMBER" VARCHAR2(25),                                                    
+	"APP_NO" VARCHAR2(25),                                                         
+	"LOAN_NO" VARCHAR2(500),                                                       
+	"STATUS_FLAG" VARCHAR2(30),                                                    
+	"REP_FLAG" VARCHAR2(1),                                                        
+	"SUP_FLAG" VARCHAR2(1),                                                        
+	"PLASTIC_CODE" VARCHAR2(35),                                                   
+	"REC_STATUS" VARCHAR2(10),                                                     
+	"MAKER_DTTM" DATE,                                                             
+	"CHECKER_ID" VARCHAR2(20),                                                     
+	"CHECKER_DTTM" DATE,                                                           
+	"REMARKS" VARCHAR2(20),                                                        
+	"REASON" VARCHAR2(200),                                                        
+	"PROXY_NO" VARCHAR2(20),                                                       
+	"PRIM_FLAG" VARCHAR2(5),                                                       
+	"LANGUAGE" VARCHAR2(10),                                                       
+	"BATCH_NO" VARCHAR2(40),                                                       
+	 CONSTRAINT "CARD_NO_PK" PRIMARY KEY ("CARD_NO"));                                                       
+                                                                                
+                                                                                
+ 
+                                                                                
+  CREATE TABLE  CUSTOMER_MASTER                                     
+   (	"CIN" VARCHAR2(20),                                                        
+	"CIN_STATUS" VARCHAR2(1),                                                      
+	"F_NAME" VARCHAR2(100),                                                        
+	"M_NAME" VARCHAR2(100),                                                        
+	"L_NAME" VARCHAR2(100),                                                        
+	"GENDER" VARCHAR2(10),                                                         
+	"DOB" DATE,                                                                    
+	"MOTHERS_MAIDEN_NAME" VARCHAR2(150),                                           
+	"CUST_CATEGORY" VARCHAR2(1),                                                   
+	"APP_NO" VARCHAR2(25),                                                         
+	"MAIL_TO" VARCHAR2(1),                                                         
+	"MOBILE_NO" VARCHAR2(25),                                                      
+	"EMAIL_ID" VARCHAR2(50),                                                       
+	"CORPORATE_CUST" VARCHAR2(1),                                                  
+	"CORPORATE_ID" VARCHAR2(150),                                                  
+	"MAKER_ID" VARCHAR2(25),                                                       
+	"MAKER_DTTM" DATE,                                                             
+	"CHECKER_ID" VARCHAR2(25),                                                     
+	"CHECKER_DTTM" DATE,                                                           
+	"ADDRESS" VARCHAR2(1000),                                                      
+	"REC_STATUS" VARCHAR2(2),                                                      
+	"REMARKS" VARCHAR2(500),                                                       
+	"EMPLOYEE_ID" VARCHAR2(20),                                                    
+	"PASSPORT_NO" VARCHAR2(25),                                                    
+	"DEPARTMENT" VARCHAR2(100),                                                    
+	"DESIGNATION" VARCHAR2(100),                                                   
+	"BRANCH_NAME" VARCHAR2(100),                                                   
+	"LOCATION" VARCHAR2(100),                                                      
+	"PASSPORT_COUNTRY" VARCHAR2(10),                                               
+	"PASSPORT_EXP_DATE" DATE,                                                      
+	"PAN_NO" VARCHAR2(50),                                                         
+	"CUST_REF_NO" VARCHAR2(20),                                                    
+	"KYC_FLAG" VARCHAR2(5),                                                        
+	"MARKETING_FLAG" VARCHAR2(10),                                                 
+	"CUSTOMER_NUMBER" VARCHAR2(100),                                               
+	"PINFO_FLAG" VARCHAR2(4000),                                                   
+	"SEC_QUES_ANS" VARCHAR2(2000),                                                 
+	"STAFF_ID" VARCHAR2(2000),                                                     
+	"SEC_QUES" VARCHAR2(2000),                                                     
+	"BSB_NO" VARCHAR2(2000),                                                       
+	"CIF_NO" VARCHAR2(2000),                                                       
+	"SEC_ACCESS_CODE" VARCHAR2(2000),                                              
+	"REP_FLAG" VARCHAR2(4000),                                                     
+	"PO_BOX" VARCHAR2(15),                                                         
+	"PARENT_CIN" VARCHAR2(20),                                                     
+	"CUSTOMER_ID" VARCHAR2(25),                                                    
+	"UB_ACC_NUMBER" VARCHAR2(50),                                                  
+	"PREFERRED_NAME" VARCHAR2(50),                                                 
+	"MEMBERSHIP_NO" VARCHAR2(100),                                                 
+	"MAIN_BANK" VARCHAR2(100),                                                     
+	"BANK_ACC_NUMBER" VARCHAR2(50),                                                
+	"MEMBER_SINCE" VARCHAR2(10),    
+	CREATION_MODE	VARCHAR2(15),
+CUSTOM_SECRUITY_QUES	VARCHAR2(255),
+IS_FIRSTTIME_LOGIN	VARCHAR2(2),
+REG_STATUS  	VARCHAR2(12),
+FORGOT_PASS_RETRY_LIMIT	NUMBER(2),
+OTP_RETRY_LIMIT	NUMBER(2),
+OTP_RETRY_USED_CNT	NUMBER(2),
+FORGOT_PASS_RETRY_CNT	NUMBER(2),
+IS_CARD_INSUR_USED	VARCHAR2(2),
+IS_LIFE_INSUR_USED	VARCHAR2(2),
+                                               
+	 CONSTRAINT "CUSTOMER_MASTER_CIN_PK" PRIMARY KEY ("CIN"));                     
+                                                                                
+                                                                                
+
+ 
+         
+         

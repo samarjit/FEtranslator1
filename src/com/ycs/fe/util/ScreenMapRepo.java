@@ -45,7 +45,7 @@ public class ScreenMapRepo {
 					
 			if(scrXmlFromCache == null){
 				String screenpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
-				InputStream scrxml = new BufferedInputStream(new FileInputStream(screenpath+"\\screenmap.xml"));
+				InputStream scrxml = new BufferedInputStream(new FileInputStream(screenpath+"/screenmap.xml"));
 			
 				doc = new SAXReader().read(scrxml);
 				root = doc.getRootElement();
@@ -112,7 +112,7 @@ public class ScreenMapRepo {
 			
 		if(scrXmlFromCache == null){
 			String screenpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes/map");
-			InputStream scrxml = new BufferedInputStream(new FileInputStream(screenpath+"\\screenmap.xml"));
+			InputStream scrxml = new BufferedInputStream(new FileInputStream(screenpath+"/screenmap.xml"));
 		
 			doc = new SAXReader().read(scrxml);
 			root = doc.getRootElement();
