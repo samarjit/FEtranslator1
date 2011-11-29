@@ -9,9 +9,11 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.ycs.fe.exception.FrontendException;
 
@@ -42,11 +44,13 @@ public class FileService extends ActionSupport {
 				path += relativePath;
 				jores.put("relativePath", relativePath);
 			}
-			System.out.println("relativePath:"+relativePath+"\n fullpath:"+path);
+//			System.out.println("relativePath:"+relativePath+"\n fullpath:"+path);
 			File fi = new File(path);
 			if(fi.exists()){
 				if(fi.isFile()){
-					jores.put("file", fi.getAbsolutePath()); 
+//					jores.put("file", fi.getAbsolutePath()); 
+					System.out.println(ServletActionContext.getServletContext().getRealPath("/"));
+					jores.put("file", ServletActionContext.getRequest().getContextPath()+relativePath); 
 				}else{
 					for (File ftemp: fi.listFiles()) {
 						if(ftemp.isFile()){
@@ -87,7 +91,7 @@ public class FileService extends ActionSupport {
 	private String findRealDirPath(String dirAlias){
 	   String path = "";
 		if("EMAIL_TEMPLATES".equals(dirAlias)){
-			path = "F:/eclipse/workspace/HTMLProcessor/FEtranslator/src";
+			path = "C:/Eclipse/workspace1/FEtranslator1/WebContent";
 		}
 		return path;
 	}

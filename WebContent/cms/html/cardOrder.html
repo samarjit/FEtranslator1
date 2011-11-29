@@ -159,7 +159,7 @@
                 var value = $('#productCode').val();
                 $('#productName').html(text);
                 if (value != "") {
-                    jQuery.get("jsrpc.action?screenName=cardOrder&panelName=plastic&submitdata={plastic:[{whereval:'" + value + "', command:'getPlasticDetails'}]}", function(data){
+                    jQuery.get("jsrpc.action?screenName=cardOrder&panelName=plastic&submitdata={formplastic:[{whereval:'" + value + "', command:'getPlasticDetails'}]}", function(data){
                         var json = jQuery.parseJSON(data);
                       //  alert(JSONstring.make(json));
                         populatePlasticDetails(json);

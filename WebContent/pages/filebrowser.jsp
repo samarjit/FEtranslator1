@@ -1,13 +1,20 @@
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@taglib prefix="sj" uri="/struts-jquery-tags"%>
+
 <html>
 <head>
+<%
+response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
+response.setHeader("Pragma","no-cache"); //HTTP 1.0
+response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
+%>
 <s:head/>
 <script src="http://code.jquery.com/jquery-latest.js" ></script>
 
 
-<script>
+<script><!--
 var url = "<s:url action="fileservice.action"/>";
+var ctxpath = "${pageContext.request.contextPath}";
 var dirAlias="EMAIL_TEMPLATES";
 $(document).ready(function(){
 	$.ajaxSetup({
@@ -39,13 +46,14 @@ function getListing(param) {
 		if(typeof(data.files)!= 'undefined' && data.files.length >0){
 			 
 			$.each(data.files, function (i,v){
-				$("<div class='files'><a href='javascript:getListing(\""+v+"\")'>"+v+"</a></div>").appendTo($("#res"));
+				$("<div class='files'>file:<a href='"+ctxpath+data.relativePath+"/"+v+"'>"+v+"</a></div>").appendTo($("#res"));
+				//$("<div class='files'>file:<a href='javascript:getListing(\""+v+"\")'>"+v+"</a></div>").appendTo($("#res"));
 			});
 		}
 		if(typeof(data.dirs)!= 'undefined' && data.dirs.length >0){
 			
 			$.each(data.dirs,  function (i,v){
-				$("<div class='files'><a href='javascript:getListing(\""+v+"\")'>"+v+"</a></div>").appendTo($("#res"));
+				$("<div class='files'>dir:<a href='javascript:getListing(\""+v+"\")'>"+v+"</a></div>").appendTo($("#res"));
 			});
 		}
 		
@@ -75,10 +83,12 @@ function getListing(param) {
 		},"text");
 }
 
-</script>
+--></script>
 
 </head>
 <body>
+
+   <br/>
 <s:url action="fileservice.action" />
 <div id="relativePathView"></div>
 Relative Path:<div id="relativePath"><s:property value="relativePath"/></div>

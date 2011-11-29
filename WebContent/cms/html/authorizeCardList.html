@@ -24,9 +24,9 @@
             $(document).ready(function(){
 				iadt.setFieldlist(fieldlist);
 				//jqgridjson();
-				getJqgridData();
+				//getJqgridData();
 				//calljqgrid();
-				//getOrderList();				
+				getOrderList();				
             });
 			
 			function jqgridjson(){
@@ -115,7 +115,7 @@
 						var formdata = json.data.form1;
 						iadt.updateUIRows(formdata);
                     });
-					tableToGrid("#tablespace");
+					//tableToGrid("#tablespace");
 			}
 			
 			function OnAuthorize(){
