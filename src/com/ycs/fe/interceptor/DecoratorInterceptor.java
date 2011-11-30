@@ -56,12 +56,18 @@ public class DecoratorInterceptor implements Interceptor {
              }
 		 });
 		 logger.debug("DecoratorInterceptor:Before invocation.invoke");
-		 
-		 String result =  invocation.invoke();
-		       
+		 String result = null;
+		 try{
+			result = invocation.invoke();
+		 }catch(Exception e){
+			 logger.error("YCS: invocation caused exception, do not know how to handle!");
+		 }
+		 logger.debug("DecoratorInterceptor:After invocation.invoke result of invocation:"+result);      
 //			logger.debug( "DecoratorInterceptor:request.getContentLength() expecting first element <root>:"+wrapper.toString());
 			String resulthtml = null;
-			if(XMLResult.class.getName().equals(invocation.getResult().getClass().getCanonicalName())){
+			if(invocation.getResult()== null){
+				logger.debug("YCS: Try to figure out if this is normal!");
+			}else if(XMLResult.class.getName().equals(invocation.getResult().getClass().getCanonicalName())){
 				resulthtml = processor.process(wrapper.toString(), invocation);
 			}
 			

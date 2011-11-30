@@ -280,13 +280,12 @@
   			<!-- this is onload -->
   			<xs:element name="onload" minOccurs="0" maxOccurs="unbounded">
 			<xs:annotation>
-			      <xs:documentation>Tooltip: bulkcmd will get executed once per request</xs:documentation>
+			      <xs:documentation>Tooltip: onload will get executed once per page load, or whenever decorator interceptor is called- common.action or subclass of common.action</xs:documentation>
 			     </xs:annotation>
   				<xs:complexType>
-  					<xs:attribute name="name" use="required"
-  						type="xs:string" />
   					<xs:attribute name="opt" use="required"
   						type="xs:string" />
+  				    <xs:attribute name="result" use="required" />
   				</xs:complexType>
   			</xs:element>
   		</xs:sequence>

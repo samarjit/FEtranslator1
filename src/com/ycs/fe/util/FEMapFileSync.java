@@ -10,10 +10,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -25,7 +27,9 @@ import javax.xml.ws.soap.SOAPBinding;
 
 import net.sf.json.JSONObject;
 
+import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.struts2.ServletActionContext;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -33,6 +37,8 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
+
+ 
 
 public class FEMapFileSync {
 	private static Logger logger = Logger.getLogger(FEMapFileSync.class);
@@ -91,9 +97,11 @@ public class FEMapFileSync {
 //		if(hmLocalFiles.get("screenmap") != jsonRemoteFiles.getLong("screenmap"))
 //			fileListToSync.add(filePaths.get("screenmap"));
 		HashMap<String, Long> localMapp = getTimestampsMapXML();
+		System.out.println(localMapp);
 		for (Entry<String, Long> entry : localMapp.entrySet()) {
 			try {
 					if(jsonRemoteFiles.get(entry.getKey())!= null && (jsonRemoteFiles.getLong(entry.getKey()) >= entry.getValue())){
+						System.out.println("Same timestamp: " +entry.getKey());
 					}else{	 
 						String debugStr = "Local"+entry.getKey()+" "+new Date(entry.getValue());
 						if(jsonRemoteFiles.get(entry.getKey())!= null)debugStr += " remote: "+ jsonRemoteFiles.get(entry.getKey());
@@ -116,8 +124,29 @@ public class FEMapFileSync {
 	
 	public void uploadFiles(){
 		try {
+			Logger logger = Logger.getRootLogger();
+			Enumeration appenders = logger.getAllAppenders();
+			for  (; appenders.hasMoreElements();) {
+				Appender elm = (Appender) appenders.nextElement();
+				
+				System.out.println(elm.getName());
+			}
+			 
+		 
+			logger.removeAllAppenders();
+			PropertyConfigurator.configureAndWatch(getClass().getResource("/log4j.properties").getPath());
+			appenders = logger.getAllAppenders();
+			for  (; appenders.hasMoreElements();) {
+				Appender elm = (Appender) appenders.nextElement();
+				
+				System.out.println(elm.getName());
+			}
+			
 			String tplpath = ServletActionContext.getServletContext().getRealPath("WEB-INF/classes");
-			URL url = new URL("http://localhost:8183/WS/fservice?wsdl");
+			ResourceBundle rb = ResourceBundle.getBundle("path_config");
+			String wsbasepath = rb.getString("be.webservice.basepath");
+			
+			URL url = new URL(wsbasepath+"/fservice?wsdl");
 			QName qname = new QName("http://util.fe.ycs.com/", "FileSyncImplService");
 			MTOMFeature feature = new MTOMFeature();
 			Service service1 = Service.create(url, qname);
@@ -131,7 +160,7 @@ public class FEMapFileSync {
 			String receivedFromBE = fileServer.getTimestampsMapXML();
 			logger.debug("receivedFromBE:"+receivedFromBE);
 			ArrayList<String> fileListToSync = compareFiles(receivedFromBE);
-			logger.debug("List to sync:"+fileListToSync);
+			logger.fatal("List to sync:"+fileListToSync);
 			
 			for (String filePaths : fileListToSync) {
 				DataHandler dh =  null;
@@ -198,7 +227,9 @@ public class FEMapFileSync {
 	 */
 	public static void main(String[] args) {
 		try {
-			URL url = new URL("http://localhost:8183/WS/fservice?wsdl");
+			ResourceBundle rb = ResourceBundle.getBundle("path_config");
+			String wsbasepath = rb.getString("be.webservice.basepath");
+			URL url = new URL(wsbasepath+"/fservice?wsdl");
 			QName qname = new QName("http://util.fe.ycs.com/", "FileSyncImplService");
 			Service service = Service.create(url, qname);
 			FileSync imageServer = service.getPort(FileSync.class);

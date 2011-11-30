@@ -38,10 +38,15 @@ public class ReturnCommandProcessor {
 		pgReturnType.nextScreenName = screenName;
 		pgReturnType.resultPage = screenName;
 		
-		if(submitdataObj == null || submitdataObj.isNullObject()){ //onload assume return type is self
-			pgReturnType.nextScreenName = screenName;
-			pgReturnType.resultName = screenName;
-			pgReturnType.resultPage = screenName;
+		if(submitdataObj == null || submitdataObj.isNullObject()){ //onload assume return type is self- changed on nov 3
+//			pgReturnType.nextScreenName = screenName;
+//			pgReturnType.resultName = screenName;
+//			pgReturnType.resultPage = screenName;
+			Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/onload");
+    		System.out.println("/root/screen/commands/onload");
+    		String strResult  = elmCmd.attributeValue("result");
+    		resolveResult(pgReturnType, strResult);
+    		pgReturnType.nextScreenName = screenName;
 		}else{
 		if(resDTO!= null && resDTO.getResult()!=null && !"".equals(resDTO.getResult()))	{
 			resolveResult(pgReturnType, resDTO.getResult());
@@ -103,24 +108,25 @@ public class ReturnCommandProcessor {
 		}else if(strResult.endsWith("jsp")){
 			pgReturnType.resultName = "dispatcher";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
 		}else if(strResult.endsWith("html")){
 			pgReturnType.resultName = "dispatcher";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 5);
 		}else if(strResult.endsWith("htm")){
 			pgReturnType.resultName = "dispatcher";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
+			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
 		}else{
 			pgReturnType.resultName = strResult;
-			pgReturnType.resultPage = strResult;
+			pgReturnType.resultName = strResult;
 			if(strResult.lastIndexOf('.') >-1){
 			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.'));
 			}else{
 				pgReturnType.nextScreenName = strResult;
 			}
 		}
+		pgReturnType.nextScreenName = pgReturnType.resultPage;
 	}
 	
 }

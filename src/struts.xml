@@ -73,7 +73,10 @@
 			
 			<interceptor name="decorator" class="com.ycs.fe.interceptor.DecoratorInterceptor" />
 			<interceptor-stack name="myCustomStack">
-				<interceptor-ref name="defaultStack" />	
+				<interceptor-ref name="defaultStack" >
+				    <param name="exception.logEnabled">true</param>
+				    <param name="exception.logLevel">ERROR</param>
+				</interceptor-ref>	
 				<interceptor-ref name="decorator" />
 			</interceptor-stack>
 		</interceptors>

@@ -29,28 +29,33 @@ public class LabelFactory implements LocaleProvider{
 	 * @return label from screen map xml or fieldName if label not found 
 	 */
 	public String getLabel(String screenName, String fieldName){
-		String label = null;
+		String retlabel = null;
 		try {
 			ScreenDetails screenDetails = ScreenMapRepo.findScreenDetails(screenName);
-			Label label2 = screenDetails.nameLabelMap.get(fieldName);
+			Label label = screenDetails.nameLabelMap.get(fieldName);
 			String key;
 			String value = null;
-				key = label2.key;
-				value = label2.value;
-				label = getTextProvider().getText(key);
 			
+			if(label == null){
+				logger.debug("Label not defined in xml; label"+fieldName + "screen "+screenName);
+				retlabel = fieldName;
+			}else{
+				key = label.key;
+				value = label.value;
+				retlabel = getTextProvider().getText(key);
+			}
 //			AppCacheManager.putElementInCache(screenName+"_label", "label", labelList);
 			
-			if(!(label != null && !"".equals(label))){
+			if(!(retlabel != null && !"".equals(retlabel))){
 				//label not found
-				label = value;
+				retlabel = value;
 			}
-		} catch (FrontendException e) {
+		} catch (Exception e) {
 			logger.debug("Label retrieval failed for label"+fieldName + "screen "+screenName);
-			label = fieldName;
+			retlabel = fieldName;
 		}
 			
-		return label;
+		return retlabel;
 	}
 	
 	

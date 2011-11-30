@@ -8,6 +8,7 @@
 <body>
 <h2>Index</h2><br/>
 <hr/>
+
 Debugging tools
 
 <a href="<%=ctxstr%>/config-browser/actionNames.action?namespace=%2Fconfig-browser" >config browser</a>|
