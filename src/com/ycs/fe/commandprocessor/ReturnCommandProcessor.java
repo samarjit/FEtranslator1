@@ -38,7 +38,7 @@ public class ReturnCommandProcessor {
 		pgReturnType.nextScreenName = screenName;
 		pgReturnType.resultPage = screenName;
 		
-		if(submitdataObj == null || submitdataObj.isNullObject()){ //onload assume return type is self- changed on nov 3
+		if(submitdataObj == null ||  submitdataObj.isNullObject()){ //onload assume return type is self- changed on nov 3
 //			pgReturnType.nextScreenName = screenName;
 //			pgReturnType.resultName = screenName;
 //			pgReturnType.resultPage = screenName;
@@ -48,35 +48,39 @@ public class ReturnCommandProcessor {
     		resolveResult(pgReturnType, strResult);
     		pgReturnType.nextScreenName = screenName;
 		}else{
-		if(resDTO!= null && resDTO.getResult()!=null && !"".equals(resDTO.getResult()))	{
-			resolveResult(pgReturnType, resDTO.getResult());
-		}else
-		 if(submitdataObj.get("bulkcmd") !=null){
-			 String cmd =     submitdataObj.getString("bulkcmd");
-	    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/bulkcmd[@name='"+cmd+"' ] ");
-	    		System.out.println("/root/screen/commands/bulkcmd[@name='"+cmd+"' ] ");
-	    		String strResult  = elmCmd.attributeValue("result");
-	    		resolveResult(pgReturnType, strResult);
-		 } else {
-			for (String dataSetkey : itr) { //form1, form2 ...skip txnrec,sessionvars
-		    	//txnrec & sessionvars is just a group of data not a processing command
-//		    	if( dataSetkey.equals("txnrec")   || dataSetkey.equals("sessionvars")||  dataSetkey.equals("pagination"))continue;
-				if(! dataSetkey.startsWith("form"))continue;
-				
-		    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
-		    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction
-		    		String cmd = ((JSONObject) jsonRecord).getString("command");
-		    		if(cmd !=null && !"".equals(cmd)){
-			    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
-			    		System.out.println("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
-			    		String strResult  = elmCmd.attributeValue("result");
-			    		
-			    		resolveResult(pgReturnType, strResult);
-			    		break;
-		    		}
-		    	}
-		    }
-		 }
+			if(resDTO!= null && resDTO.getResult()!=null && !"".equals(resDTO.getResult()))	{
+				String strResultScrName = resDTO.getResultScrName();
+	    		pgReturnType.nextScreenName = (strResultScrName != null && !strResultScrName.equals(""))?strResultScrName:screenName;
+				resolveResult(pgReturnType, resDTO.getResult());
+			}else if(submitdataObj.get("bulkcmd") !=null){
+				 String cmd =     submitdataObj.getString("bulkcmd");
+		    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/bulkcmd[@name='"+cmd+"' ] ");
+		    		System.out.println("/root/screen/commands/bulkcmd[@name='"+cmd+"' ] ");
+		    		String strResult  = elmCmd.attributeValue("result");
+		    		String strResultScrName = elmCmd.attributeValue("resultScrName");
+		    		pgReturnType.nextScreenName = (strResultScrName != null && !strResultScrName.equals(""))?strResultScrName:screenName;
+		    		resolveResult(pgReturnType, strResult);
+			 } else {
+				for (String dataSetkey : itr) { //form1, form2 ...skip txnrec,sessionvars
+			    	//txnrec & sessionvars is just a group of data not a processing command
+	//		    	if( dataSetkey.equals("txnrec")   || dataSetkey.equals("sessionvars")||  dataSetkey.equals("pagination"))continue;
+					if(! dataSetkey.startsWith("form"))continue;
+					
+			    	JSONArray dataSetJobj = ((JSONObject) submitdataObj).getJSONArray(dataSetkey);
+			    	for (Object jsonRecord : dataSetJobj) { //rows in dataset a Good place to insert DB Transaction
+			    		String cmd = ((JSONObject) jsonRecord).getString("command");
+			    		if(cmd !=null && !"".equals(cmd)){
+				    		Element elmCmd = (Element) rootXml.selectSingleNode("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
+				    		System.out.println("/root/screen/commands/cmd[@name='"+cmd+"' ] ");
+				    		String strResult  = elmCmd.attributeValue("result");
+				    		String strResultScrName = elmCmd.attributeValue("resultScrName");
+				    		pgReturnType.nextScreenName = (strResultScrName != null && !strResultScrName.equals(""))?strResultScrName:screenName;
+				    		resolveResult(pgReturnType, strResult);
+				    		break;
+			    		}
+			    	}
+			    }
+			 }
 		}
 		
 		if(!(pgReturnType.resultName != null && !"".equals(pgReturnType.resultName)))
@@ -100,33 +104,34 @@ public class ReturnCommandProcessor {
 		}else if(strResult.endsWith("ftl")){
 			pgReturnType.resultName = "freemarker";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
+//			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
 		}else if(strResult.endsWith("vm")){
 			pgReturnType.resultName = "velocity";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
+//			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 3);
 		}else if(strResult.endsWith("jsp")){
 			pgReturnType.resultName = "dispatcher";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
+//			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
 		}else if(strResult.endsWith("html")){
 			pgReturnType.resultName = "dispatcher";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 5);
+//			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 5);
 		}else if(strResult.endsWith("htm")){
 			pgReturnType.resultName = "dispatcher";
 			pgReturnType.resultPage = strResult;
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
+//			pgReturnType.nextScreenName = strResult.substring(0,strResult.length() - 4);
 		}else{
-			pgReturnType.resultName = strResult;
-			pgReturnType.resultName = strResult;
-			if(strResult.lastIndexOf('.') >-1){
-			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.'));
-			}else{
-				pgReturnType.nextScreenName = strResult;
-			}
+//			pgReturnType.resultName = strResult;
+//			pgReturnType.resultName = strResult;
+//			if(strResult.lastIndexOf('.') >-1){
+//			pgReturnType.nextScreenName = strResult.substring(0,strResult.lastIndexOf('.'));
+//			}else{
+//				pgReturnType.nextScreenName = strResult;
+//			}
+			logger.error("There is no result type mapping for "+strResult);
 		}
-		pgReturnType.nextScreenName = pgReturnType.resultPage;
+		
 	}
 	
 }

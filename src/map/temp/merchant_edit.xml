@@ -26,10 +26,10 @@
 		<anyprocs>
 		</anyprocs>
 		<commands>
-			<cmd name="customerregister" opt="buslogic:cusreg" instack="form1" result="" processor="bl"/>
-			<cmd name="requestVerifiyCode" opt="buslogic:cusreg" instack="form1" result="" processor="bl"/>
-			<cmd name="loadques" opt="sqlselect:loadques" instack="form1" result="registrationPage" processor="crud"/>
-			<cmd name="loadLoginPage" opt="" instack="form1" result="loginPage" processor=""/>
+			<cmd name="customerregister" opt="buslogic:cusreg" instack="form1" result="" />
+			<cmd name="requestVerifiyCode" opt="buslogic:cusreg" instack="form1" result="" />
+			<cmd name="loadques" opt="sqlselect:loadques" instack="form1" result="registrationPage" />
+			<cmd name="loadLoginPage" opt="" instack="form1" result="loginPage" />
 		</commands>
 	</screen>
 

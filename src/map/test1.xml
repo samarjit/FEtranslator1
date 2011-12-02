@@ -93,7 +93,7 @@
             </proc>
         </anyprocs>
         <commands>
-            <cmd name="getPlasticDetails" opt="jsonrpc:plasticDetails" instack="form1" result="ajax|{screenName}" processor="crud"/>
+            <cmd name="getPlasticDetails" opt="jsonrpc:plasticDetails" instack="form1" result="ajax|{screenName}"  />
         </commands>
     </screen>
     

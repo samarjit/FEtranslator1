@@ -1,8 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@taglib prefix="s" uri="/struts-tags" %>
+
 <html>
     <head>
-        <title>Universal Bank</title>
+        <title>Merchant Edit</title>
         <link href="../css/body.css" rel="stylesheet" type="text/css">
         <link href="../css/main.css" rel="stylesheet" type="text/css">
 		<script  src="../js/jquery-1.4.4.min.js"></script>
@@ -27,7 +28,7 @@
 				iadt.setFieldlist(fieldlist);
 				
 				//getJqgridData();
-				calljqgrid();
+				//calljqgrid();
 				//getOrderList();				
             });
 			
@@ -39,10 +40,10 @@
 			      	datatype: "json",
 			      	colNames:['Merchant Id','Merchant Type','Merchant Location','Status'      	],
 			      	colModel:[
-			      	{name: 'merchantid', index: 'merchantid' ,editable:true, width:200 },
-			      	{name: 'merchanttype', index: 'merchanttype' ,editable:true, width:200 },
-			      	{name: 'merchantlocation', index: 'merchantlocation' ,editable:true, width:300 },
-			      	{name: 'status', index: 'status' ,editable:true, width:80 }
+			      	{name: 'merchantid', index: 'merchantid' , width:200 },
+			      	{name: 'merchanttype', index: 'merchanttype' , width:200 },
+			      	{name: 'merchantlocation', index: 'merchantlocation' , width:300 },
+			      	{name: 'status', index: 'status' , width:80 }
 			      	],
 			      	rowNum: 10,
 			      	rowList: [ 10, 20, 30],
@@ -54,7 +55,6 @@
 			    		repeatitems : false,
 			    		id: "0"
 			    	},
-			       editurl: "simpleform.action?screenName=JspTestEdit&bulkcmd=frmgrid",
 			       caption: "Merchant List"
 			   } ).navGrid('#pagerid',{edit:true,add:true,del:true});
 			
@@ -80,18 +80,14 @@
 					//tableToGrid("#tablespace");
 			}
 			
-			function gotoEditPage(){
-					var act  = "jsrpc.action?screenName=JspTest&submitdata={bulkcmd:'fromViewTransition'}";					
-					var frm = document.getElementById("form1");
-					frm.action = act;
-					frm.submit();
-				}
-			
+		
 			
         </script>
     </head>
     <body>
     <s:property value="jsrule" />
+    <s:property value="#resultDTO" />
+   resDTO= ${resultDTO.data.formonload[0].merchantlocation}
     	<table width="100%" cellpadding="4" cellspacing="0" border="0" class="head1"  height="20" >
                 <tr>
                     <td>
@@ -107,12 +103,22 @@
                 </tr>
 				
 		</table>
-		 <table id="listid" width="500px"></table>
+		 <table id="listid" ></table>
 		 <div id="pagerid"></div>
 		 
 		 
-        <form name="form1" id="form1" method="post">
-        	 <button type="button" onclick="gotoEditPage()">Goto Edit</button>
+        <form name="form1" id="form1" method="post" action="simpleform.action?screenName=JspTestEdit">
+        	 <table>
+        	 
+
+        	   <tr><td>Merchant Id </td><td><s:property value="#resultDTO.data.formonload[0].merchantid"  /></td></tr>
+        	   <tr><td>Merchant Type </td><td><s:property value="#resultDTO.data.formonload[0].merchanttype"  /></td></tr>
+        	   <tr><td>Merchant Location </td><td><s:property value="#resultDTO.data.formonload[0].merchantlocation"  /></td></tr>
+        	   <tr><td>Status </td><td><s:property value="#resultDTO.data.formonload[0].status"  /></td></tr>
+        	 </table>
+        	 
+        	 
+        	 <button >Back</button>
         </form>
     </body>
     <html>

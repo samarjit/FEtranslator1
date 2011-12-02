@@ -14,6 +14,7 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.interceptor.ParameterAware;
 
+import com.ycs.fe.dto.PageReturnType;
 import com.ycs.fe.dto.ResultDTO;
 import com.ycs.fe.util.ReplaceAlias;
 
@@ -32,10 +33,8 @@ public class SimpleFormAction extends CommonActionSupport implements ParameterAw
 	private static final long serialVersionUID = 1L;
 	private Map<String, String[]> parameters;
 
-	@Action(value="simpleform",
-			results={@Result(name="success",type="stream",params={"contentType","text/html","inputName","inputStream"})}
-//	results={@Result(name="success",location="/test.jsp")}
-	)
+//	@Action(value="simpleform",results={@Result(name="success",type="stream",params={"contentType","text/html","inputName","inputStream"})}
+//	)
 	public String execute() throws Exception{
 		String resultHtml = "{}";
 		ResultDTO resDTO = new ResultDTO() ;
@@ -91,7 +90,17 @@ public class SimpleFormAction extends CommonActionSupport implements ParameterAw
 		}
 		logger.debug("End SimpleFormAction Sent back to client:"+resultHtml);
 		inputStream = new ByteArrayInputStream(resultHtml.getBytes());
-		return SUCCESS;//commonExecute();
+		
+		System.out.println("result beginning to process");
+		JSONObject jsonRecord = new JSONObject(true);
+		if(bulkcmd!= null){
+			jsonRecord = new JSONObject();
+			jsonRecord.put("bulkcmd", bulkcmd);
+		}
+		PageReturnType pg = setResult(resultHtml, jsonRecord, resDTO);
+		logger.error("Result Page:"+ pg.resultName);
+		return pg.resultName;
+		//return SUCCESS;//commonExecute();
 	}
 
 

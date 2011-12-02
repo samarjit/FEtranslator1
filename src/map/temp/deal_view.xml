@@ -36,7 +36,7 @@
 		<anyprocs>
 		</anyprocs>
 		<commands>
-		 <cmd name="loginvalidation" opt="buslogic:login" instack="form1" result="" processor="bl"/>
+		 <cmd name="loginvalidation" opt="buslogic:login" instack="form1" result=""  />
 		 <bulkcmd name="search_mer"  opt="jsonrpc:search_mer" result="ajax" />
 		 <bulkcmd name="search_deal"  opt="jsonrpc:search_deal" result="ajax" />
 		</commands>

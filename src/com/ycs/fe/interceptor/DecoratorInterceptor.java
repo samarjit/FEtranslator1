@@ -66,7 +66,7 @@ public class DecoratorInterceptor implements Interceptor {
 //			logger.debug( "DecoratorInterceptor:request.getContentLength() expecting first element <root>:"+wrapper.toString());
 			String resulthtml = null;
 			if(invocation.getResult()== null){
-				logger.debug("YCS: Try to figure out if this is normal!");
+				logger.debug("YCS: Try to figure out if this is normal! invocation result being null");
 			}else if(XMLResult.class.getName().equals(invocation.getResult().getClass().getCanonicalName())){
 				resulthtml = processor.process(wrapper.toString(), invocation);
 			}

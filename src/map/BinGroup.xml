@@ -43,7 +43,7 @@
 			<proc></proc>
 		</anyprocs>
 		<commands>
-			<cmd name="getbindetails" opt="jsonrpc:getbindetails" instack="form1" result="ajax" processor="crud"></cmd>
+			<cmd name="getbindetails" opt="jsonrpc:getbindetails" instack="form1" result="ajax" ></cmd>
 		</commands>
 	</screen>
 

@@ -259,7 +259,7 @@
   						type="xs:string" />
   					<xs:attribute name="opt" use="required"
   						type="xs:string" />
-  					<xs:attribute name="processor" use="optional"
+  					<xs:attribute name="resultScrName" use="optional"
   						type="xs:string" />
   					<xs:attribute name="result" use="required" />
   				</xs:complexType>
@@ -275,6 +275,7 @@
   					<xs:attribute name="opt" use="required"
   						type="xs:string" />
   					<xs:attribute name="result" use="required" />
+  					<xs:attribute name="resultScrName" use="optional" />
   				</xs:complexType>
   			</xs:element>
   			<!-- this is onload -->

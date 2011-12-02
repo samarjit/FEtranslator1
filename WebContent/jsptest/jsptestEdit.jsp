@@ -107,7 +107,7 @@
 		 <div id="pagerid"></div>
 		 
 		 
-        <form name="form1" id="form1" method="post">
+        <form name="form1" id="form1" method="post" action="simpleform.action?screenName=JspTestEdit">
         	 <table>
         	  <tr><td>Merchant Id </td><td><input name="merchantid" id="merchantid" value="${resultDTO.data.formonload[0].merchantid}"/></td></tr>
         	   <tr><td>Merchant Type </td><td><input name="merchanttype" id="merchanttype" value="${resultDTO.data.formonload[0].merchanttype}"/></td></tr>
@@ -121,6 +121,9 @@
         	   <tr><td>Merchant Location </td><td><s:property value="#resultDTO.data.formonload[0].merchantlocation"  /></td></tr>
         	   <tr><td>Status </td><td><s:property value="#resultDTO.data.formonload[0].status"  /></td></tr>
         	 </table>
+        	 
+        	 bulkcmd: <input name="bulkcmd" value="frmgridadd"/>
+        	 <button >submit</button>
         </form>
     </body>
     <html>

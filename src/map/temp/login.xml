@@ -30,7 +30,7 @@
 		<anyprocs>
 		</anyprocs>
 		<commands>
-		 <cmd name="loginvalidation" opt="buslogic:login" instack="form1" result="" processor="bl"/>
+		 <cmd name="loginvalidation" opt="buslogic:login" instack="form1" result="" />
 		</commands>
 	</screen>
 
