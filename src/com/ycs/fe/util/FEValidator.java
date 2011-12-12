@@ -253,15 +253,15 @@ public class FEValidator  implements LocaleProvider{
 					if (strmandatory != null
 							&& ("yes".equals(strmandatory) || "true"
 									.equals(strmandatory))) {
-						field.put("mandatory", true);
+						field.put("required", true);
 						if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
-						fldRuleStr ="mandatory: true";
-						fldMsgStr = "mandatory: 'This field is required'";
+						fldRuleStr ="required: true";
+						fldMsgStr = "required: '"+strLabel+" is required'";
 					}
 					if(strdbcolsize != null && !"".equals(strdbcolsize)){
 						if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
 						fldRuleStr += "maxlength:"+strdbcolsize;
-						fldMsgStr += "maxlength: 'The length should be less than {0}'";
+						fldMsgStr += "maxlength: 'The length of "+strLabel+" should be less than {0}'";
 					}
 					if(strdbdatatype != null && !"".equals(strdbdatatype)){
 						DataType type = PrepstmtDTO.getDataTypeFrmStr(strdbdatatype);
@@ -270,21 +270,21 @@ public class FEValidator  implements LocaleProvider{
 					  	case LONG:
 					  		if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
 					  			fldRuleStr += "integer:true";
-					  			fldMsgStr += "integer: 'Must be integer'";break;
+					  			fldMsgStr += "integer: '"+strLabel+" must be integer'";break;
 					  	case FLOAT: 
 					  	case DOUBLE:
 					  		if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
 					  			fldRuleStr += "number:true";
-			  					fldMsgStr += "number: 'Must be decimal'";break;
+			  					fldMsgStr += "number: '"+strLabel+" must be decimal'";break;
 					  	case DATEDDMMYYYY:
 					  		if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
 						  		fldRuleStr += "dateITA:true";
-			  					fldMsgStr += "dateITA: 'Must be date'";break;
+			  					fldMsgStr += "dateITA: '"+strLabel+" must be date'";break;
 					  	case DATE_NS:
 					  	case TIMESTAMP:
 					  		if(!first1){fldRuleStr += ","; fldMsgStr +=","; }first1 = false;
 						  		fldRuleStr += "date:true";
-			  					fldMsgStr += "number: 'Must be date'";break;
+			  					fldMsgStr += "number: '"+strLabel+" must be date'";break;
 						case STRING:
 							default:
 						}

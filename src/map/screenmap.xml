@@ -29,5 +29,6 @@
  <screen name="JspTestViewDetails" mappingxml="map/jsptest/jsptestViewDetails.xml" />
  <screen name="JspTestEdit" mappingxml="map/jsptest/jsptestEdit.xml" />
  <screen name="JspTestEditAjax" mappingxml="map/jsptest/jsptestEditAjax.xml" />
+ <screen name="JspTestEditCrud" mappingxml="map/jsptest/jsptestEditCrud.xml" />
  
 </root>

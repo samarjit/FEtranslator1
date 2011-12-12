@@ -25,7 +25,7 @@ public class LabelFactory implements LocaleProvider{
 	
 	/**
 	 * @param screenName
-	 * @param fieldName "name" attribute of the FieldElement
+	 * @param fieldName "name" attribute of the FieldElement forname in XML
 	 * @return label from screen map xml or fieldName if label not found 
 	 */
 	public String getLabel(String screenName, String fieldName){
@@ -42,7 +42,7 @@ public class LabelFactory implements LocaleProvider{
 			}else{
 				key = label.key;
 				value = label.value;
-				retlabel = getTextProvider().getText(key);
+				retlabel = getTextProvider().getText(key, value);
 			}
 //			AppCacheManager.putElementInCache(screenName+"_label", "label", labelList);
 			
