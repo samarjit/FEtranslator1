@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../config.xsd">
+  <screen name="CustomerMaster">
+    <htmltemplate></htmltemplate>
+    <includedjsp></includedjsp>
+    <callbackclass></callbackclass>
+    <scripts>
+      <scriptinclude></scriptinclude>
+    </scripts>
+    <stylesheets>
+      <styleinclude></styleinclude>
+    </stylesheets>
+    <sessionvars></sessionvars>
+    <crud>
+       <jsonrpc outstack="formonload" id="onloadqry1">SELECT USER_ID "userid",NRIC "nric",DOB "dob",FIRST_NAME "firstname",LAST_NAME "lastname",GENDER "gender",MOBILE_NO "mobileno" FROM CUSTOMER_MASTER 
+	   </jsonrpc>
+       <jsonrpc outstack="formpagination" id="gridonload">SELECT USER_ID "userid",NRIC "nric",DOB "dob",FIRST_NAME "firstname",LAST_NAME "lastname",GENDER "gender",MOBILE_NO "mobileno" FROM CUSTOMER_MASTER 
+			<countquery pagesize="10">select count('x') from CUSTOMER_MASTER </countquery>
+	   </jsonrpc>
+      <sqlinsert id="frmgridadd" outstack="inst">insert into CUSTOMER_MASTER( USER_ID, NRIC, DOB, FIRST_NAME, LAST_NAME, GENDER, MOBILE_NO) values ( #inp.form1[0].USER_ID, #inp.form1[0].NRIC, #inp.form1[0].DOB, #inp.form1[0].FIRST_NAME, #inp.form1[0].LAST_NAME, #inp.form1[0].GENDER, #inp.form1[0].MOBILE_NO )</sqlinsert>
+      <sqldelete id="frmgriddel" outstack="delt">delete from CUSTOMER_MASTER WHERE USER_ID = #inp.form1[0].id|STRING</sqldelete>
+      <sqlupdate id="frmgridedit" outstack="updt">update CUSTOMER_MASTER set  NRIC = #inp.form1[0].NRIC, DOB = #inp.form1[0].DOB, FIRST_NAME = #inp.form1[0].FIRST_NAME, LAST_NAME = #inp.form1[0].LAST_NAME, GENDER = #inp.form1[0].GENDER, MOBILE_NO = #inp.form1[0].MOBILE_NO WHERE USER_ID=#inp.form1[0].USER_ID</sqlupdate>
+    
+    </crud>
+    <dm>
+      <txnproc id="" outstack=""/>
+    </dm>
+    <bl id="">
+      <buslogic id="" method=""/>
+    </bl>
+    <anyprocs>
+      <proc id="" outstack=""/>
+    </anyprocs>
+    <commands>
+      <cmd instack="" name="" opt=""  result="" />
+      <bulkcmd name="fromViewTransition" opt="" result="ajax" resultScrName="CustomerMaster" />
+      <bulkcmd name="frmgridadd" opt="sqlinsert:frmgridadd" result="ajax" resultScrName="CustomerMaster"/>
+      <bulkcmd name="frmgridedit" opt="sqlupdate:frmgridedit" result="ajax"/>
+      <bulkcmd name="frmgriddel" opt="sqldelete:frmgriddel" result="ajax"/>
+      <bulkcmd name="griddel" opt="sqldelete:griddel" result="ajax"/>
+      <bulkcmd name="gridonload" opt="jsonrpc:gridonload" result="ajax"/>
+      <onload opt="jsonrpc:onloadqry1" result="/jsptest/CustomerMaster.jsp"/>
+    </commands>
+  </screen>
+  <panels>
+    <panel id="">
+    <fields>
+       <field>
+        <validationfld dbcolsize="20" name="userid" column="USER_ID" mandatory="yes" forid="userid" dbdatatype="STRING" />
+		<validationfld dbcolsize="10" name="nric" column="NRIC" mandatory="yes" forid="nric" dbdatatype="STRING" />
+		<validationfld dbcolsize="20" name="dob" column="DOB" mandatory="yes" forid="dob" dbdatatype="DATE_NS" />
+		<validationfld dbcolsize="25" name="firstname" column="FIRST_NAME" mandatory="yes" forid="firstname" dbdatatype="STRING" />
+		<validationfld dbcolsize="25" name="lastname" column="LAST_NAME" mandatory="yes" forid="lastname" dbdatatype="STRING" />
+		<validationfld dbcolsize="1" name="gender" column="GENDER" mandatory="yes" forid="gender" dbdatatype="STRING" />
+		<validationfld dbcolsize="8" name="mobileno" column="MOBILE_NO" mandatory="yes" forid="mobileno" dbdatatype="INT" />
+		
+		<label replace="modify" key="userid" value="User Id" forname="userid"/>
+		<label replace="modify" key="nric" value="Nric" forname="nric"/>
+		<label replace="modify" key="dob" value="Dob" forname="dob"/>
+		<label replace="modify" key="firstname" value="First Name" forname="firstname"/>
+		<label replace="modify" key="lastname" value="Last Name" forname="lastname"/>
+		<label replace="modify" key="gender" value="Gender" forname="gender"/>
+		<label replace="modify" key="mobileno" value="Mobile No" forname="mobileno"/>
+
+        
+       </field>
+    </fields>
+      <button forid="" id="" onclick="" replace="modify" type="">button</button>
+    </panel>
+  </panels>
+</root>

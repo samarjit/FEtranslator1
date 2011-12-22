@@ -281,17 +281,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
         <version>${drools.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-persistence-jpa</artifactId>
-        <version>${drools.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-persistence-jpa</artifactId>
-        <type>test-jar</type>
-        <version>${drools.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.mvel</groupId>
         <artifactId>mvel2</artifactId>
         <version>2.1.beta2</version>
@@ -302,20 +291,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
       	<groupId>org.slf4j</groupId>
       	<artifactId>slf4j-api</artifactId>
       	<version>1.6.0</version>
-      	<type>jar</type>
-      	<scope>compile</scope>
-      </dependency>
-      <dependency>
-      	<groupId>org.slf4j</groupId>
-      	<artifactId>slf4j-log4j12</artifactId>
-      	<version>1.6.0</version>
-      	<type>jar</type>
-      	<scope>compile</scope>
-      </dependency>
-      <dependency>
-      	<groupId>opensymphony</groupId>
-      	<artifactId>quartz</artifactId>
-      	<version>1.6.3</version>
       	<type>jar</type>
       	<scope>compile</scope>
       </dependency>
@@ -333,6 +308,27 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 <!--   		<type>jar</type><systemPath>C:\Program Files\Java\jdk1.6.0_23\lib\tools.jar</systemPath> -->
 <!--   		<scope>system</scope> -->
 <!--   	  </dependency> -->
+  	 
+  	<dependency>
+  		<groupId>org.quartz-scheduler</groupId>
+  		<artifactId>quartz</artifactId>
+  		<version>2.1.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-log4j12</artifactId>
+  		<version>1.6.4</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.jcraft</groupId>
+  		<artifactId>jsch</artifactId>
+  		<version>0.1.45</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.jgeppert.struts2.jquery</groupId>
+  		<artifactId>struts2-jquery-grid-plugin</artifactId>
+  		<version>2.5.3</version>
+  	</dependency>
   </dependencies>
   <dependencyManagement>
   	<dependencies>

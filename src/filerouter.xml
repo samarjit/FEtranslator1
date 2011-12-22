@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+	<be_sftp_ip>127.0.0.1</be_sftp_ip>
+	<be_sftp_id>samarjit</be_sftp_id>
+	<be_sftp_pass>samarjitpass</be_sftp_pass>
+	<be_app_path>sg_src</be_app_path>
+	<local_path>C:/Users/Samarjit/Desktop/sharpkeys2</local_path>
+	<filejob name="TxnIn">
+		<direction>in</direction>
+		<remote_sftp_ip>localhost</remote_sftp_ip>
+		<remote_sftp_id>samarjit</remote_sftp_id>
+		<remote_sftp_pass>samarjitpass</remote_sftp_pass>
+		<remote_rel_path>remotes/txnfile</remote_rel_path>
+		<filter day="prev" type="regex">txnFile%tY%1$tm%1$td*csv</filter>
+		<be_rel_path>txn_file/inbox</be_rel_path>
+	</filejob>
+	<filejob name="ReloadIn">
+		<direction>in</direction>
+		<remote_sftp_ip>localhost</remote_sftp_ip>
+		<remote_sftp_id>samarjit</remote_sftp_id>
+		<remote_sftp_pass>samarjitpass</remote_sftp_pass>
+		<remote_rel_path>.</remote_rel_path>
+		<filter day="prev" type="regex">reloadFile%tY%1$tm%1$td*csv</filter>
+		<be_rel_path>reload_file/inbox</be_rel_path>
+	</filejob>
+	<filejob name="S@WOut">
+		<direction>out</direction>
+		<remote_sftp_ip>localhost</remote_sftp_ip>
+		<remote_sftp_id>samarjit</remote_sftp_id>
+		<remote_sftp_pass>samarjitpass</remote_sftp_pass>
+		<remote_rel_path>remotes/sawfile</remote_rel_path>
+		<filter day="prev" type="regex">batchtopup%tY%1$tm%1$td*csv</filter>
+		<be_rel_path>saw_file/inbox</be_rel_path>
+	</filejob>
+	<filejob name="S@WIn">
+		<direction>in</direction>
+		<remote_sftp_ip>localhost</remote_sftp_ip>
+		<remote_sftp_id>samarjit</remote_sftp_id>
+		<remote_sftp_pass>samarjitpass</remote_sftp_pass>
+		<remote_rel_path>.</remote_rel_path>
+		<filter day="prev" type="regex">sawFile%tY%1$tm%1$td*csv</filter>
+		<be_rel_path>reload_file/inbox</be_rel_path>
+	</filejob>
+	<filejob name="PAOut">
+		<direction>out</direction>
+		<filter day="prev" type="regex">PAin%tY%1$tm%1$td*csv</filter>
+		<be_rel_path>pa_file/inbox</be_rel_path>
+	</filejob>
+	<filejob name="PAIn">
+		<direction>in</direction>
+		<filter day="prev" type="regex">PAin%tY%1$tm%1$td*csv</filter>
+		<be_rel_path>pa_file/inbox</be_rel_path>
+	</filejob>
+</root>

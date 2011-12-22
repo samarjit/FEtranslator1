@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<job-scheduling-data xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd"
+  version="1.8">
+
+    <schedule>
+        <job>
+            <name>my-very-clever-job</name>
+            <group>MYJOB_GROUP</group>
+
+            <description>The job description</description>
+            <job-class>com.ycs.ezlink.scheduler.filerouter.FileRouterJob</job-class>
+            <job-data-map >
+                <entry>
+                    <key>fileType</key>
+                    <value>TxnIn</value>
+                </entry>
+            </job-data-map>
+        </job>
+		<job>
+            <name>dir-tracker</name>
+            <group>MYJOB_GROUP</group>
+
+            <description>The job description</description>
+            <job-class>com.ycs.ezlink.scheduler.filerouter.MyDirScanJob</job-class>
+            <job-data-map >
+                <entry>
+                    <key>DIRECTORY_NAME</key>
+                    <value>C:/Users/Samarjit/Desktop/sharpkeys2/dir_scanner</value>
+                </entry>
+                <entry>
+                    <key>DIRECTORY_SCAN_LISTENER_NAME</key>
+                    <value>MyDirListener</value>
+                </entry>
+            </job-data-map>
+        </job>
+        <trigger>
+            <cron>
+                <name>my-trigger</name>
+                <group>MYTRIGGER_GROUP</group>
+                <job-name>my-very-clever-job</job-name>
+                <job-group>MYJOB_GROUP</job-group>
+                <cron-expression>0 0/10 * * * ?</cron-expression>
+            </cron>
+        </trigger>
+        
+        
+        <trigger>
+            <cron>
+                <name>dir-tracker-trigger</name>
+                <group>MYTRIGGER_GROUP</group>
+                <job-name>dir-tracker</job-name>
+                <job-group>MYJOB_GROUP</job-group>
+                <cron-expression>0/03 * * * * ?</cron-expression>
+            </cron>
+        </trigger> 
+        
+    </schedule>
+</job-scheduling-data>

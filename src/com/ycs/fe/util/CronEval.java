@@ -8,13 +8,16 @@
  *  @Date: June-01-2011
  */   
 package com.ycs.fe.util;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.List;
-import org.quartz.CronTrigger;
+
 import org.quartz.Trigger;
 import org.quartz.TriggerUtils;
-import org.quartz.impl.calendar.AnnualCalendar;
-import java.io.*;
+import org.quartz.impl.triggers.CronTriggerImpl;
+import org.quartz.spi.OperableTrigger;
 
 public class CronEval {    
      
@@ -23,7 +26,7 @@ public class CronEval {
     }     
   
   public void showTriggerFireTimes() throws ParseException, IOException {   
-    CronTrigger trigger = new CronTrigger();
+	CronTriggerImpl trigger = new CronTriggerImpl();
    // Fire at 10:15am every Monday, Tuesday, Wednesday, and Thursday    
    System.out.println("Enter Cron Expression");
    BufferedReader exprRdr = new BufferedReader(new InputStreamReader(System.in));
@@ -47,7 +50,7 @@ public class CronEval {
  }     
   
   @SuppressWarnings("rawtypes")  
-  private void outputFireTimeList(Trigger trigger, java.util.Calendar from, java.util.Calendar to) {
+  private void outputFireTimeList(OperableTrigger trigger, java.util.Calendar from, java.util.Calendar to) {
      
      List fireTimeList = TriggerUtils.computeFireTimesBetween(trigger, null, from.getTime(), to.getTime());
          for ( int i = 0; i < fireTimeList.size(); i++ ) {
