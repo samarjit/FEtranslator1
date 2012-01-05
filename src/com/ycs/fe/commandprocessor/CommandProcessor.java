@@ -1,15 +1,22 @@
 package com.ycs.fe.commandprocessor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 import org.dom4j.Element;
@@ -176,15 +183,28 @@ public class CommandProcessor {
 			logger.error("Processor not found",e);
 			if(resDTO == null)resDTO= new ResultDTO();
 			resDTO.addError("error.processornotfound");
+		}catch(Exception e){
+			if(resDTO == null)resDTO= new ResultDTO();
+			resDTO.addError("system.error");
+			logger.error(e);
 		}
 		
 		return resDTO;
 	}
 	
 	private String remoteCommandProcessor(String submitdataObj, String screenName) {
-		 QueryServiceService qss = new QueryServiceService();
+		ResourceBundle rb = ResourceBundle.getBundle("path_config");
+		String wsbasepath = rb.getString("be.webservice.basepath");
+		URL url = null;
+		try {
+			url = new URL(wsbasepath+"/qservice?wsdl");
+		} catch (MalformedURLException e) {
+			logger.error("remoteCommandProcessor URL exception",e);
+		}
+		QueryServiceService qss = new QueryServiceService(url, new QName("http://ws.ycs.com/", "QueryServiceService"));
 		 QueryService queryServicePort = qss.getQueryServicePort();
 		 String strResDTO = queryServicePort.remoteCommandProcessor(submitdataObj, screenName);
+		 logger.debug("Ret from BE: "+StringUtils.abbreviate(strResDTO, 100) );
 		return strResDTO;
 	}
 

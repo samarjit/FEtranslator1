@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../config.xsd">
+  <screen name="EzlRetnFileTrack">
+    <htmltemplate></htmltemplate>
+    <includedjsp></includedjsp>
+    <callbackclass></callbackclass>
+    <scripts>
+      <scriptinclude></scriptinclude>
+    </scripts>
+    <stylesheets>
+      <styleinclude></styleinclude>
+    </stylesheets>
+    <sessionvars></sessionvars>
+    <crud>
+       <jsonrpc outstack="formonload" id="onloadqry1">SELECT FILE_REF_ID "filerefid",SENT_FILE_NAME "sentfilename",SENT_FILE_TYPE "sentfiletype",SENT_STATUS "sentstatus",SENT_ERROR_MSG "senterrormsg",SENT_DATE "sentdate",RECV_FILE_NAME "recvfilename",RECV_DATE "recvdate",RECV_STATUS "recvstatus",RECV_ERROR_MSG "recverrormsg",RECV_FILE_TYPE "recvfiletype" FROM EZL_RETN_FILE_TRACK 
+			<countquery pagesize="10">select count('x') from EZL_RETN_FILE_TRACK </countquery>
+	   </jsonrpc>
+       <jsonrpc outstack="formpagination" id="gridonload">SELECT FILE_REF_ID "filerefid",SENT_FILE_NAME "sentfilename",SENT_FILE_TYPE "sentfiletype",SENT_STATUS "sentstatus",SENT_ERROR_MSG "senterrormsg",SENT_DATE "sentdate",RECV_FILE_NAME "recvfilename",RECV_DATE "recvdate",RECV_STATUS "recvstatus",RECV_ERROR_MSG "recverrormsg",RECV_FILE_TYPE "recvfiletype" FROM EZL_RETN_FILE_TRACK 
+			<countquery pagesize="10">select count('x') from EZL_RETN_FILE_TRACK </countquery>
+	   </jsonrpc>
+    <sqlinsert id="frmgridadd" outstack="inst">insert into EZL_RETN_FILE_TRACK( FILE_REF_ID, SENT_FILE_NAME, SENT_FILE_TYPE, SENT_STATUS, SENT_ERROR_MSG, SENT_DATE, RECV_FILE_NAME, RECV_DATE, RECV_STATUS, RECV_ERROR_MSG, RECV_FILE_TYPE) values ( #inp.form1[0].FILE_REF_ID, #inp.form1[0].SENT_FILE_NAME, #inp.form1[0].SENT_FILE_TYPE, #inp.form1[0].SENT_STATUS, #inp.form1[0].SENT_ERROR_MSG, #inp.form1[0].SENT_DATE, #inp.form1[0].RECV_FILE_NAME, #inp.form1[0].RECV_DATE, #inp.form1[0].RECV_STATUS, #inp.form1[0].RECV_ERROR_MSG, #inp.form1[0].RECV_FILE_TYPE )</sqlinsert>
+      <sqlinsert id="gridadd" outstack="inst">insert into EZL_RETN_FILE_TRACK( FILE_REF_ID, SENT_FILE_NAME, SENT_FILE_TYPE, SENT_STATUS, SENT_ERROR_MSG, SENT_DATE, RECV_FILE_NAME, RECV_DATE, RECV_STATUS, RECV_ERROR_MSG, RECV_FILE_TYPE) values ( #inp.form1[0].FILE_REF_ID, #inp.form1[0].SENT_FILE_NAME, #inp.form1[0].SENT_FILE_TYPE, #inp.form1[0].SENT_STATUS, #inp.form1[0].SENT_ERROR_MSG, #inp.form1[0].SENT_DATE, #inp.form1[0].RECV_FILE_NAME, #inp.form1[0].RECV_DATE, #inp.form1[0].RECV_STATUS, #inp.form1[0].RECV_ERROR_MSG, #inp.form1[0].RECV_FILE_TYPE )</sqlinsert>
+      <sqldelete id="frmgriddel" outstack="delt">delete from EZL_RETN_FILE_TRACK WHERE FILE_REF_ID = #inp.form1[0].FILE_REF_ID|STRING</sqldelete>
+      <sqldelete id="griddel" outstack="delt">delete from EZL_RETN_FILE_TRACK WHERE FILE_REF_ID = #inp.form1[0].id|STRING</sqldelete>
+      <sqlupdate id="frmgridedit" outstack="updt">update EZL_RETN_FILE_TRACK set  SENT_FILE_NAME = #inp.form1[0].SENT_FILE_NAME, SENT_FILE_TYPE = #inp.form1[0].SENT_FILE_TYPE, SENT_STATUS = #inp.form1[0].SENT_STATUS, SENT_ERROR_MSG = #inp.form1[0].SENT_ERROR_MSG, SENT_DATE = #inp.form1[0].SENT_DATE, RECV_FILE_NAME = #inp.form1[0].RECV_FILE_NAME, RECV_DATE = #inp.form1[0].RECV_DATE, RECV_STATUS = #inp.form1[0].RECV_STATUS, RECV_ERROR_MSG = #inp.form1[0].RECV_ERROR_MSG, RECV_FILE_TYPE = #inp.form1[0].RECV_FILE_TYPE WHERE FILE_REF_ID=#inp.form1[0].FILE_REF_ID</sqlupdate>
+      <sqlupdate id="gridedit" outstack="updt">update EZL_RETN_FILE_TRACK set  SENT_FILE_NAME = #inp.form1[0].SENT_FILE_NAME, SENT_FILE_TYPE = #inp.form1[0].SENT_FILE_TYPE, SENT_STATUS = #inp.form1[0].SENT_STATUS, SENT_ERROR_MSG = #inp.form1[0].SENT_ERROR_MSG, SENT_DATE = #inp.form1[0].SENT_DATE, RECV_FILE_NAME = #inp.form1[0].RECV_FILE_NAME, RECV_DATE = #inp.form1[0].RECV_DATE, RECV_STATUS = #inp.form1[0].RECV_STATUS, RECV_ERROR_MSG = #inp.form1[0].RECV_ERROR_MSG, RECV_FILE_TYPE = #inp.form1[0].RECV_FILE_TYPE WHERE FILE_REF_ID=#inp.form1[0].id|STRING</sqlupdate>
+    
+    </crud>
+    <dm>
+      <txnproc id="" outstack=""/>
+    </dm>
+    <bl id="">
+      <buslogic id="" method=""/>
+    </bl>
+    <anyprocs>
+      <proc id="" outstack=""/>
+    </anyprocs>
+     <commands>
+       <cmd instack="" name="" opt=""  result="" />
+      <bulkcmd name="fromViewTransition" opt="" result="ajax" resultScrName="EzlRetnFileTrack" />
+      <bulkcmd name="frmgridadd" opt="sqlinsert:frmgridadd" result="ajax" resultScrName="EzlRetnFileTrack"/>
+      <bulkcmd name="frmgridedit" opt="sqlupdate:frmgridedit" result="ajax"/>
+      <bulkcmd name="frmgriddel" opt="sqldelete:frmgriddel" result="ajax"/>
+      <bulkcmd name="griddel" opt="sqldelete:griddel" result="ajax"/>
+      <bulkcmd name="gridedit" opt="sqlupdate:gridedit" result="ajax"/>
+      <bulkcmd name="gridadd" opt="sqlinsert:gridadd" result="ajax"/>
+      <bulkcmd name="gridonload" opt="jsonrpc:gridonload" result="ajax"/>
+      <onload opt="jsonrpc:onloadqry1" result="/jsptest/EzlRetnFileTrack.jsp"/>
+    </commands>
+  </screen>
+  <panels>
+    <panel id="">
+       <fields>
+          <field>
+          	<validationfld dbcolsize="20" name="filerefid" column="FILE_REF_ID" mandatory="yes" forid="filerefid" dbdatatype="STRING" />
+			<validationfld dbcolsize="100" name="sentfilename" column="SENT_FILE_NAME" mandatory="yes" forid="sentfilename" dbdatatype="STRING" />
+			<validationfld dbcolsize="50" name="sentfiletype" column="SENT_FILE_TYPE" mandatory="yes" forid="sentfiletype" dbdatatype="STRING" />
+			<validationfld dbcolsize="10" name="sentstatus" column="SENT_STATUS" mandatory="yes" forid="sentstatus" dbdatatype="STRING" />
+			<validationfld dbcolsize="50" name="senterrormsg" column="SENT_ERROR_MSG" mandatory="yes" forid="senterrormsg" dbdatatype="STRING" />
+			<validationfld dbcolsize="0" name="sentdate" column="SENT_DATE" mandatory="yes" forid="sentdate" dbdatatype="DATE_NS" />
+			<validationfld dbcolsize="100" name="recvfilename" column="RECV_FILE_NAME" mandatory="yes" forid="recvfilename" dbdatatype="STRING" />
+			<validationfld dbcolsize="0" name="recvdate" column="RECV_DATE" mandatory="yes" forid="recvdate" dbdatatype="DATE_NS" />
+			<validationfld dbcolsize="10" name="recvstatus" column="RECV_STATUS" mandatory="yes" forid="recvstatus" dbdatatype="STRING" />
+			<validationfld dbcolsize="50" name="recverrormsg" column="RECV_ERROR_MSG" mandatory="yes" forid="recverrormsg" dbdatatype="STRING" />
+			<validationfld dbcolsize="50" name="recvfiletype" column="RECV_FILE_TYPE" mandatory="yes" forid="recvfiletype" dbdatatype="STRING" />
+			
+			<label replace="modify" key="filerefid" value="File Ref Id" forname="filerefid"/>
+			<label replace="modify" key="sentfilename" value="Sent File Name" forname="sentfilename"/>
+			<label replace="modify" key="sentfiletype" value="Sent File Type" forname="sentfiletype"/>
+			<label replace="modify" key="sentstatus" value="Sent Status" forname="sentstatus"/>
+			<label replace="modify" key="senterrormsg" value="Sent Error Msg" forname="senterrormsg"/>
+			<label replace="modify" key="sentdate" value="Sent Date" forname="sentdate"/>
+			<label replace="modify" key="recvfilename" value="Recv File Name" forname="recvfilename"/>
+			<label replace="modify" key="recvdate" value="Recv Date" forname="recvdate"/>
+			<label replace="modify" key="recvstatus" value="Recv Status" forname="recvstatus"/>
+			<label replace="modify" key="recverrormsg" value="Recv Error Msg" forname="recverrormsg"/>
+			<label replace="modify" key="recvfiletype" value="Recv File Type" forname="recvfiletype"/>
+
+          </field>
+       </fields>
+      <button forid="" id="" onclick="" replace="modify" type="">button</button>
+    </panel>
+  </panels>
+</root>

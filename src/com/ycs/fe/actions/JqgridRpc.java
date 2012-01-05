@@ -265,7 +265,14 @@ public class JqgridRpc extends ActionSupport {
 			}
 //			oResult.put("rows", oAllrows );
 			oResult.put("rows", jrow2);
+			//"errors":[],"fieldErrors":null,"messages":["SUCCESS:10|"]
+			JSONObject userdata = new JSONObject();
+			userdata.put("errors", resDTO.getErrors());
 			
+			userdata.put("fieldErrors", (resDTO.getFieldErrors()==null)?null:resDTO.getFieldErrors());
+			userdata.put("messages", resDTO.getMessages());
+			
+			oResult.put("userdata", userdata);
 			jobj = oResult;
 		}
 		logger.debug(jobj.toString());

@@ -13,6 +13,7 @@
     <sessionvars></sessionvars>
     <crud>
         <jsonrpc outstack="formonload" id="onloadqry1">SELECT CARD_NO "cardno",CIN "cin",PRODUCT_TYPE "producttype",CARD_STATUS "cardstatus",STATUS_FLAG "statusflag",MAKER_DTTM "makerdttm" FROM CARD_MASTER 
+		    <countquery pagesize="10">select count('x') from CARD_MASTER </countquery>
 	   </jsonrpc>
        <jsonrpc outstack="formpagination" id="gridonload">SELECT CARD_NO "cardno",CIN "cin",PRODUCT_TYPE "producttype",CARD_STATUS "cardstatus",STATUS_FLAG "statusflag",MAKER_DTTM "makerdttm" FROM CARD_MASTER 
 			<countquery pagesize="10">select count('x') from CARD_MASTER </countquery>

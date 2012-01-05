@@ -1,16 +1,16 @@
 <!DOCTYPE script PUBLIC "-//W3C//DTD XHTML 1.1 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@taglib prefix="s"  uri="/struts-tags" %>
 <%@taglib prefix="sj"  uri="/struts-jquery-tags" %>
-<%@taglib prefix="sjg"  uri="/struts-jquery-grid-tags" %>
+
 <html>
 <head>
  
 <sj:head jqueryui="true" jquerytheme="redmond"  />
-<link rel="stylesheet" type="text/css" href="../jqgrid/css/ui.jqgrid.css">
+<link rel="stylesheet" type="text/css" href="../css/ui.jqgrid.css">
 <script src="../js/jquery.validate.js" > </script>
 <script src="../js/additional-methods.js" > </script>
-<script src="../jqgrid/js/i18n/grid.locale-en.js" > </script>
-<script src="../jqgrid/js/jquery.jqGrid.min.js" > </script>
+<script src="../js/i18n/grid.locale-en.js" > </script>
+<script src="../js/jquery.jqGrid.min.js" > </script>
  
 
 <script>
@@ -87,7 +87,7 @@ jQuery("#listid").jqGrid( {
 		    	},
 		       editurl: "${pageContext.request.contextPath}/html/simpleform.action?screenName=CardBlockRefund&bulkcmd=frmgrid",
    caption: "XXXXType the Caption here"
-} ).navGrid('#pager1',{edit:true,add:true,del:true});
+} ).navGrid('#pagerid',{edit:true,add:true,del:true});
 jQuery("#listid").jqGrid('navButtonAdd','#pagerid',{caption:"Edit",
 	onClickButton:function(){
 		var gsr = jQuery("#listid").jqGrid('getGridParam','selrow');
