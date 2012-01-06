@@ -55,7 +55,7 @@ public class JqgridRpc extends ActionSupport {
 	private String searchField;
 	private String searchString;
 	private String searchOper;
-	
+	private static final String STACK = "formpagination";
 	public JqgridRpc() {
 		super();
 		screenName="ProgramSetup";
@@ -197,7 +197,7 @@ public class JqgridRpc extends ActionSupport {
 			} catch (FrontendException e) {
 				logger.error("screenDetailsRetrievalError",e);
 			}
-			String stack = "formpagination";
+			
 			JSONObject submitdataObj = JSONObject.fromObject(submitdata);
 			PaginationDTO pageDTO = new PaginationDTO();
 			pageDTO.setPage(page);
@@ -225,7 +225,7 @@ public class JqgridRpc extends ActionSupport {
 			  
 			  JSONObject pagination = JSONObject.fromObject(pageDTO);
 			  JSONObject pagestack = new JSONObject();
-			  pagestack.put(stack, pagination);
+			  pagestack.put(STACK, pagination);
 			  submitdataObj.put("pagination", pagestack);
 //			  JSONObject bulkcmd = JSONObject.fromObject("{'bulkcmd':'gridtest'}");
 //			  submitdataObj.put("bulkcmd", "prodgrid");
@@ -236,7 +236,9 @@ public class JqgridRpc extends ActionSupport {
 			  			logger.debug("back from cmd processor:"+ JSONObject.fromObject(resDTO));
 			  			logger.debug("back from cmd processor pagination:"+  resDTO.getPagination());
 			
-			  JSONArray jrow2 = JSONObject.fromObject(resDTO.getData()).getJSONArray(stack);
+			  JSONArray jrow2 = null;
+			   if(JSONObject.fromObject(resDTO.getData()).containsKey(STACK))   
+			     jrow2 =  JSONObject.fromObject(resDTO.getData()).getJSONArray(STACK);
 			//convert back to jqgrid format
 			/*for (Object row1 : jrow2) {
 				JSONObject eachRow = (JSONObject)row1;
@@ -256,7 +258,7 @@ public class JqgridRpc extends ActionSupport {
 			}
 			*/
 			Map<String, Map<String, Integer>> pagingMultiForm = resDTO.getPagination();
-			Map<String, Integer> pageingRet = pagingMultiForm.get(stack);
+			Map<String, Integer> pageingRet = pagingMultiForm.get(STACK);
 			if(pageingRet != null){
 				oResult.put("page", pageingRet.get("currentpage"));
 				oResult.put("total", pageingRet.get("totalpage"));

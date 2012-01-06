@@ -18,13 +18,42 @@
 	<s:if test = "jsrule != null" >
 		 rulesframework =  ${jsrule};
 	</s:if>
-        	var fieldlist = "cin, nric, fname, lname, gender, dob, custcategory, makerid, secques, secquesans, membershipno, creationmode, regstatus, smsblastsubscribed, emailblastsubscribed, cardinsurancesubscribed, cardinsurpolicyyrstart, cardinsurpolicynum, mobileatreg, progunsubscribedreason, producttype".split(",");
+    var fieldlist = "cin, nric, fname, lname, gender, dob, custcategory, makerid, secques, secquesans, membershipno, creationmode, regstatus, smsblastsubscribed, emailblastsubscribed, cardinsurancesubscribed, cardinsurpolicyyrstart, cardinsurpolicynum, mobileatreg, progunsubscribedreason, producttype".split(",");
    $(document).ready(function(){
 	//iadt.setFieldlist(fieldlist);
+	globalAjaxErrorSetup();
 	$("#form1").validate($.extend(rulesframework,{debug: true}));
 	calljqgrid();		
    });
-  var lastsel= {};
+   function showAjaxError(request, type, errorThrown)
+   {
+       var message = "There was an error with the AJAX request.\n";
+       switch (type) {
+           case 'timeout':
+               message += "The request timed out.";
+               break;
+           case 'notmodified':
+               message += "The request was not modified but was not retrieved from the cache.";
+               break;
+           case 'parseerror':
+               message += "XML/Json format is bad.";
+               break;
+           default:
+               message += "HTTP Error (" +type+" "+ request.status + " " + request.statusText + ").";
+       }
+       message += "\n";
+       alert(message);
+   }
+   function globalAjaxErrorSetup(){
+	   $( "#globalajaxerror" ).ajaxError(function(e, jqxhr, settings, exception) {
+		     alert( "Triggered ajaxError handler." +exception);
+			 if(window.console){
+				 console.log("Ajax ecxcetion:");
+				 console.log(exception);
+				 }  
+		 });
+	} 
+  var lastsel= "";
   function calljqgrid(formdata){
    jQuery("#listid").jqGrid( {
 
@@ -78,7 +107,7 @@
 			    		$("#messagegrid").text(JSON.stringify(jQuery("#listid").getGridParam('userData'), null, 2));
 			    	},
 			       editurl: "${pageContext.request.contextPath}/html/simpleform.action?screenName=CustomerMaster&bulkcmd=grid",
-       caption: "XXXXType the Caption here"
+       caption: "Customer Master"
    } ).navGrid('#pagerid',{edit:true,add:true,del:true});
    jQuery("#listid").jqGrid('navButtonAdd','#pagerid',{caption:"Edit",
 		onClickButton:function(){
@@ -97,7 +126,7 @@
 			function(data){
 		var json = jQuery.parseJSON(data);
 		jQuery("#listid").trigger("reloadGrid");
-      });
+      }).error(showAjaxError);
   }
 </script>
 
@@ -108,7 +137,7 @@
 		 <div id="pagerid"></div>
 		 <div id="messagegrid"></div>
 <!--Submit Form -->
-<form name="form1" id="form1" method="post" action="${pageContext.request.contextPath}/html/simpleform.action?screenName=CustomerMaster">
+<form name="form1" id="form1" method="post" action="${pageContext.request.contextPath}/html/simpleform.action?screenName=CustomerMaster" >
         	 <table>
         	   <tr><td>Cin </td><td><input name="cin" id="cin" value="${resultDTO.data.formonload[0].cin}"/></td></tr>
         	   <tr><td>Nric </td><td><input name="nric" id="nric" value="${resultDTO.data.formonload[0].nric}"/></td></tr>
